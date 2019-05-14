@@ -1,0 +1,46 @@
+{
+  "name": "svelte-spa-router",
+  "version": "1.0.0",
+  "description": "Router for SPAs using Svelte 3",
+  "main": "router.svelte",
+  "svelte": "router.svelte",
+  "scripts": {
+    "build-example": "(cd example && npx rollup -c)",
+    "start-example": "npx sirv example/dist",
+    "eslint": "npx eslint -c .eslintrc.yml --ext .js,.svelte,.html .",
+    "lint": "npm run eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ItalyPaleAle/svelte-spa-router.git"
+  },
+  "keywords": [
+    "router",
+    "svelte",
+    "svelte3",
+    "spa"
+  ],
+  "author": "Alessandro Segala (@ItalyPaleAle)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ItalyPaleAle/svelte-spa-router/issues"
+  },
+  "homepage": "https://github.com/ItalyPaleAle/svelte-spa-router#readme",
+  "dependencies": {
+    "regexparam": "^1.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-plugin-html": "^5.0.4",
+    "eslint-plugin-svelte3": "^1.1.0",
+    "rollup": "^1.11.3",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-node-resolve": "^4.2.4",
+    "rollup-plugin-svelte": "^5.0.3",
+    "sirv-cli": "^0.4.0",
+    "svelte": "^3.3.0"
+  },
+  "peerDependencies": {
+    "svelte": "^3.3.0"
+  }
+}

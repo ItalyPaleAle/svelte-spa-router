@@ -1,0 +1,32 @@
+{
+    "eslint.validate": [
+        "javascript",
+        "html",
+        "svelte"
+    ],
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "search.exclude": {
+        "**/node_modules": true,
+        "dist/": true
+    },
+    "files.exclude": {
+        "**/node_modules": true
+    },
+    "[html]": {
+        "editor.tabSize": 2
+    },
+    "[svelte]": {
+        "editor.tabSize": 4
+    },
+    "[scss]": {
+        "editor.tabSize": 2
+    },
+    "[yaml]": {
+        "editor.tabSize": 2
+    },
+    "[javascript]": {
+        "editor.tabSize": 4
+    }
+}
