@@ -35,9 +35,10 @@ window.addEventListener('hashchange', () => {
  * @param {string} [className] - CSS class to apply to the element when active; default value is "active"
  */
 export default function active(node, path, className) {
-    if (!path) {
+    // Path defaults to link target
+    if (!path && node.hasAttribute('href')) {
         path = node.getAttribute('href')
-        if (path[0] === '#') {
+        if (path && path.length > 1 && path.charAt(0) == '#') {
             path = path.substring(1)
         }
     }
