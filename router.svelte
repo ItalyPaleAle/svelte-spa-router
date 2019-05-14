@@ -3,7 +3,7 @@ import {readable} from 'svelte/store'
 
 /**
  * Returns the current location from the hash.
- * 
+ *
  * @returns {string} Current location
  */
 export function getLocation() {
@@ -31,7 +31,7 @@ export const location = readable(
 
 /**
  * Navigates to a new page programmatically.
- * 
+ *
  * @param {string} location - Path to navigate to (must start with `/`)
  */
 export function push(location) {
@@ -76,13 +76,13 @@ export function replace(location) {
 
 /**
  * Svelte Action that enables a link element (`<a>`) to use our history management.
- * 
+ *
  * For example:
- * 
+ *
  * ````html
  * <a href="/books" use:link>View books</a>
  * ````
- * 
+ *
  * @param {HTMLElement} node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
  */
 export function link(node) {
@@ -118,7 +118,7 @@ import {onDestroy} from 'svelte'
 
 /**
  * Dictionary of all routes, in the format `'/path': component`.
- * 
+ *
  * For example:
  * ````js
  * import HomeRoute from './routes/HomeRoute.svelte'
@@ -139,7 +139,7 @@ export let routes = {}
 class RouteItem {
     /**
      * Initializes the object and creates a regular expression from the path, using regexparam.
-     * 
+     *
      * @param {string} path - Path to the route (must start with '/' or '*')
      * @param {SvelteComponent} component - Svelte component for the route
      */
@@ -162,7 +162,7 @@ class RouteItem {
      * Checks if `path` matches the current route.
      * If there's a match, will return the list of parameters from the URL (if any).
      * In case of no match, the method will return `null`.
-     * 
+     *
      * @param {string} path - Path to test
      * @returns {null|Object.<string, string>} List of paramters from the URL if there's a match, or `null` otherwise.
      */
