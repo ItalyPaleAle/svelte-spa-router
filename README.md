@@ -195,9 +195,11 @@ import active from 'svelte-spa-router/active'
 </style>
 
 <a href="/hello/user" use:link use:active={'/hello/*', 'active'}>Say hi!</a>
+<a href="/hello/user" use:link use:active>Say hi again!</a>
 ````
 
 The `active` action accepts 2 arguments:
 
-- The first is the path that, when matched, makes the link active. In the example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to.
+- The first is the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to.
+When the first argument is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
 - The second is the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
