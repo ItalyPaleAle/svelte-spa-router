@@ -1,13 +1,8 @@
 import regexparam from 'regexparam'
+import {getLocation} from './router.svelte'
 
 // List of nodes to update
 let nodes = []
-
-// Get the current location
-function getLocation() {
-    const hashPosition = window.location.href.indexOf('#/')
-    return (hashPosition > -1) ? window.location.href.substr(hashPosition + 1) : '/'
-}
 
 // Current location
 let location = getLocation()
@@ -33,22 +28,13 @@ window.addEventListener('hashchange', () => {
 }, false)
 
 /**
- * Returns the current active location, as the hash of the current page
- * 
- * @returns {string} current location
- */
-export function current() {
-    return location
-}
-
-/**
  * Svelte Action for automatically adding the "active" class to elements (links, or any other DOM element) when the current location matches a certain path.
  * 
  * @param {HTMLElement} node - The target node (automatically set by Svelte)
  * @param {string} path - Path expression that makes the link active when matched (must start with '/' or '*')
  * @param {string} [className] - CSS class to apply to the element when active; default value is "active"
  */
-export function active(node, path, className) {
+export default function active(node, path, className) {
     // Default class name
     if (!className) {
         className = 'active'

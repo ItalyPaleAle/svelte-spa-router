@@ -1,5 +1,15 @@
 <script context="module">
 /**
+ * Returns the current location from the hash.
+ * 
+ * @returns {string} Current location
+ */
+export function getLocation() {
+    const hashPosition = window.location.href.indexOf('#/')
+    return (hashPosition > -1) ? window.location.href.substr(hashPosition + 1) : '/'
+}
+
+/**
  * Navigates to a new page programmatically.
  * 
  * @param {string} location - Path to navigate to (must start with `/`)
@@ -104,6 +114,13 @@ import {onDestroy} from 'svelte'
 export let routes = {}
 
 /**
+ * Current location string, from the hash.
+ * 
+ * Treat this value as read-only; changing its value from outside of this module can lead to unexpected states.
+ */
+export let location = getLocation()
+
+/**
  * Container for a route: path, component
  */
 class RouteItem {
@@ -162,8 +179,7 @@ let componentParams = {}
 
 // Handle hash change events
 function locationHashChanged() {
-    const hashPosition = window.location.href.indexOf('#/')
-    const location = (hashPosition > -1) ? window.location.href.substr(hashPosition + 1) : '/'
+    location = getLocation()
 
     // Find a route matching the location
     component = null
