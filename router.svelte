@@ -1,4 +1,6 @@
 <script context="module">
+import {readable} from 'svelte/store'
+
 /**
  * Returns the current location from the hash.
  * 
@@ -8,6 +10,24 @@ export function getLocation() {
     const hashPosition = window.location.href.indexOf('#/')
     return (hashPosition > -1) ? window.location.href.substr(hashPosition + 1) : '/'
 }
+
+/**
+ * Readable store that returns the current location
+ */
+export const location = readable(
+    getLocation(),
+    // eslint-disable-next-line prefer-arrow-callback
+    function start(set) {
+        const update = () => {
+            set(getLocation())
+        }
+        window.addEventListener('hashchange', update, false)
+
+        return function stop() {
+            window.removeEventListener('hashchange', update, false)
+        }
+    }
+)
 
 /**
  * Navigates to a new page programmatically.
@@ -50,7 +70,7 @@ export function replace(location) {
         history.replaceState(undefined, undefined, '#' + location)
 
         // The method above doesn't trigger the hashchange event, so let's do that manually
-        window.dispatchEvent('hashchange')
+        window.dispatchEvent(new Event('hashchange'))
     }, 0)
 }
 
@@ -114,13 +134,6 @@ import {onDestroy} from 'svelte'
 export let routes = {}
 
 /**
- * Current location string, from the hash.
- * 
- * Treat this value as read-only; changing its value from outside of this module can lead to unexpected states.
- */
-export let location = getLocation()
-
-/**
  * Container for a route: path, component
  */
 class RouteItem {
@@ -179,7 +192,7 @@ let componentParams = {}
 
 // Handle hash change events
 function locationHashChanged() {
-    location = getLocation()
+    const location = getLocation()
 
     // Find a route matching the location
     component = null
