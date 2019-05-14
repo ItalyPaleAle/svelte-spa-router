@@ -11,9 +11,9 @@ export default {
     '/hello/:first/:last?': Name,
 
     // Wildcard parameter
-    //'/wild': Wild,
+    '/wild': Wild,
     '/wild/*': Wild,
-    
+
     // Catch-all, must be last
     '*': NotFound,
 }
