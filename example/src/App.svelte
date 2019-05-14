@@ -31,13 +31,13 @@ Current path: {$location}
 
 <script>
 // Import the router component
-// Normally, this would be import: `import Router from 'svelte-spa-router'
+// Normally, this would be import: `import Router from 'svelte-spa-router'`
 import Router from '../../router.svelte'
 // Import the "link" action and the methods to control history programmatically from the same module, as well as the location store
 import {link, push, pop, replace, location} from '../../router.svelte'
 
 // Import the "active" action
-// Normally, this would be import: `import active from 'svelte-spa-router/active'
+// Normally, this would be import: `import active from 'svelte-spa-router/active'`
 import active from '../../active'
 
 // Import the list of routes
