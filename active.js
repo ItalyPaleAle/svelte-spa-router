@@ -31,10 +31,17 @@ window.addEventListener('hashchange', () => {
  * Svelte Action for automatically adding the "active" class to elements (links, or any other DOM element) when the current location matches a certain path.
  * 
  * @param {HTMLElement} node - The target node (automatically set by Svelte)
- * @param {string} path - Path expression that makes the link active when matched (must start with '/' or '*')
+ * @param {string} [path] - Path expression that makes the link active when matched (must start with '/' or '*'); default is the link's href
  * @param {string} [className] - CSS class to apply to the element when active; default value is "active"
  */
 export default function active(node, path, className) {
+    if (!path) {
+        path = node.getAttribute('href')
+        if (path[0] === '#') {
+            path = path.substring(1)
+        }
+    }
+
     // Default class name
     if (!className) {
         className = 'active'
