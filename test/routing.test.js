@@ -3,7 +3,7 @@
 const assert = require('assert')
 
 describe('<Router> component', () => {
-    it.skip('renders on the page', (browser) => {
+    it('renders on the page', (browser) => {
         browser
             .url('http://localhost:5000')
             .expect.element('body').to.be.present.before(1000)
@@ -15,7 +15,7 @@ describe('<Router> component', () => {
         browser.end()
     })
 
-    it.skip('current path appears', (browser) => {
+    it('current path appears', (browser) => {
         browser
             .url('http://localhost:5000')
             .waitForElementVisible('#currentpath')
@@ -24,7 +24,7 @@ describe('<Router> component', () => {
         browser.end()
     })
 
-    it.skip('selecting route from hash', (browser) => {
+    it('selecting route from hash', (browser) => {
         // Main route
         browser
             .url('http://localhost:5000/#/')
@@ -50,7 +50,7 @@ describe('<Router> component', () => {
         browser.end()
     })
 
-    it.skip('loading page with hash', (browser) => {
+    it('loading page with hash', (browser) => {
         browser
             .url('http://localhost:5000/#/hello/svelte')
             .waitForElementVisible('#currentpath')
@@ -61,7 +61,7 @@ describe('<Router> component', () => {
         browser.end()
     })
 
-    it.skip('refreshing page', (browser) => {
+    it('refreshing page', (browser) => {
         // /hello/svelte
         browser
             .url('http://localhost:5000/#/hello/svelte')
@@ -79,7 +79,7 @@ describe('<Router> component', () => {
             })
     })
 
-    it.skip('catch-all route', (browser) => {
+    it('catch-all route', (browser) => {
         browser
             .url('http://localhost:5000/#/does/not/exist')
             .waitForElementVisible('h2.routetitle')
@@ -89,7 +89,7 @@ describe('<Router> component', () => {
         browser.end()
     })
 
-    it.skip('clicking on link', (browser) => {
+    it('clicking on link', (browser) => {
         browser
             .url('http://localhost:5000/#/')
             .waitForElementVisible('ul.navigation-links')
@@ -106,7 +106,7 @@ describe('<Router> component', () => {
             })
     })
 
-    it.skip('back and forward buttons', (browser) => {
+    it('back and forward buttons', (browser) => {
         browser
             .url('http://localhost:5000/#/hello/svelte/user')
             .waitForElementVisible('ul.navigation-links')
@@ -139,7 +139,7 @@ describe('<Router> component', () => {
             })
     })
 
-    it.skip('push method', (browser) => {
+    it('push method', (browser) => {
         browser
             .url('http://localhost:5000/#/')
             .waitForElementVisible('p.navigation-buttons')
@@ -157,7 +157,7 @@ describe('<Router> component', () => {
             })
     })
 
-    it.skip('pop method', (browser) => {
+    it('pop method', (browser) => {
         // Click on link
         browser
             .url('http://localhost:5000/#/wild/something')
@@ -181,7 +181,7 @@ describe('<Router> component', () => {
             })
     })
 
-    it.skip('replace method', (browser) => {
+    it('replace method', (browser) => {
         // Click on link
         browser
             .url('http://localhost:5000/#/wild/something')
