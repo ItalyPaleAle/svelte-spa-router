@@ -1,3 +1,7 @@
 example
 .eslint*
 .vscode
+*.log
+nightwatch.json
+test
+reports

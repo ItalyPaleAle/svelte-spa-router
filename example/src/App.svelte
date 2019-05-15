@@ -1,23 +1,21 @@
 <h1>svelte-spa-router example</h1>
 <!-- Navigation links, using the "link" action -->
 <!-- Also, use the "active" action to add the "active" CSS class when the URL matches -->
-<ul>
+<ul class="navigation-links">
     <li><a href="/" use:link use:active>Home</a></li>
     <li><a href="/hello/svelte" use:link use:active={'/hello/*', 'active'}>Say hi!</a></li>
     <li><a href="/does/not/exist" use:link>Not found</a></li>
 </ul>
 
 <!-- Navigate with buttons -->
-<p>
+<p class="navigation-buttons">
     <button on:click={() => push('/wild/something')}>Visit /wild/something</button>
     <button on:click={() => pop()}>Go back</button>
     <button on:click={() => replace('/wild/replaced')}>Replace current page</button>
 </p>
 
 <!-- Show the current path -->
-<pre><code>
-Current path: {$location}
-</code></pre>
+<p>Current path: <code id="currentpath">{$location}</code></p>
 
 <!-- Show the router -->
 <Router {routes}/>

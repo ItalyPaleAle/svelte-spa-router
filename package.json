@@ -6,9 +6,11 @@
   "svelte": "router.svelte",
   "scripts": {
     "build-example": "(cd example && npx rollup -c)",
-    "start-example": "npx sirv example/dist",
+    "start-example": "npx http-server -p 5000 example/dist",
     "eslint": "npx eslint -c .eslintrc.yml --ext .js,.svelte,.html .",
-    "lint": "npm run eslint"
+    "lint": "npm run eslint",
+    "nightwatch": "npx nightwatch",
+    "test": "npm run nightwatch && npm run lint"
   },
   "repository": {
     "type": "git",
@@ -30,14 +32,16 @@
     "regexparam": "^1.2.1"
   },
   "devDependencies": {
+    "chromedriver": "^74.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-html": "^5.0.4",
     "eslint-plugin-svelte3": "^1.1.0",
+    "nightwatch": "^1.0.19",
     "rollup": "^1.11.3",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-node-resolve": "^4.2.4",
     "rollup-plugin-svelte": "^5.0.3",
-    "sirv-cli": "^0.4.0",
+    "http-server": "^0.11.1",
     "svelte": "^3.3.0"
   },
   "peerDependencies": {
