@@ -16,6 +16,6 @@ steps:
       npm install
       npm run build-example
       npm run start-example &
-      curl http://localhost:5000
+      sleep 10 && curl http://localhost:5000
       #npm run test
     displayName: 'Run tests'
