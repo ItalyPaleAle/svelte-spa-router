@@ -1,11 +1,11 @@
 import regexparam from 'regexparam'
-import {getLocation} from './router.svelte'
+import {loc} from './router.svelte'
 
 // List of nodes to update
 let nodes = []
 
 // Current location
-let location = getLocation()
+let location
 
 // Function that updates all nodes marking the active ones
 function checkActive(el) {
@@ -18,14 +18,14 @@ function checkActive(el) {
     }
 }
 
-// Listener that records the current active hash
-window.addEventListener('hashchange', () => {
-    // Get the updated value for location
-    location = getLocation()
+// Listen to changes in the location
+loc.subscribe((value) => {
+    // Update the location
+    location = value.location + (value.querystring ? '?' + value.querystring : '')
 
     // Update all nodes
     nodes.map(checkActive)
-}, false)
+})
 
 /**
  * Svelte Action for automatically adding the "active" class to elements (links, or any other DOM element) when the current location matches a certain path.

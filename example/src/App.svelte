@@ -14,8 +14,15 @@
     <button on:click={() => replace('/wild/replaced')}>Replace current page</button>
 </p>
 
+<!-- Query string -->
+<a href="/hello/svelte?quantity=100" use:link use:active={'/hello/*'}>Querystring args</a>
+
 <!-- Show the current path -->
-<p>Current path: <code id="currentpath">{$location}</code></p>
+<p>
+    Current path: <code id="currentpath">{$location}</code>
+    <br/>
+    Querystring: <code id="currentqs">{$querystring}</code>
+</p>
 
 <!-- Show the router -->
 <Router {routes}/>
@@ -32,7 +39,7 @@
 // Normally, this would be import: `import Router from 'svelte-spa-router'`
 import Router from '../../router.svelte'
 // Import the "link" action and the methods to control history programmatically from the same module, as well as the location store
-import {link, push, pop, replace, location} from '../../router.svelte'
+import {link, push, pop, replace, location, querystring} from '../../router.svelte'
 
 // Import the "active" action
 // Normally, this would be import: `import active from 'svelte-spa-router/active'`
