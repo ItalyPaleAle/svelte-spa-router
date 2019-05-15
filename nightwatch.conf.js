@@ -26,6 +26,7 @@ module.exports = {
                 chromeOptions: {
                     args: [
                         '--headless',
+                        '--no-sandbox',
                         '--disable-gpu'
                     ]
                 }
