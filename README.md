@@ -177,6 +177,29 @@ import {location} from 'svelte-spa-router'
 <p>The current page is: {$location}</p>
 ````
 
+### Querystring parameters
+
+You can also extract "querystring" parameters from the hash of the page. This isn't the _real_ querystring, as it's located after the `#` character in the URL, but it can be used in a similar way. For example: `#/books?show=authors,titles&order=1`.
+
+When svelte-spa-router finds a "querystring" in the hash, it separates that from the location and returns it as a string in the Svelte store `$querystring`. For example:
+
+````html
+<script>
+import {location, querystring} from 'svelte-spa-router'
+</script>
+<p>The current page is: {$location}</p>
+<p>The querystring is: {$querystring}</p>
+````
+
+With the example above, this would print:
+
+````text
+The current page is: /books
+The querystring is: show=authors,titles&order=1
+````
+
+It's important to note that, to keep this component lightweight, svelte-spa-router **does not parse** the "querystring". If you want to parse the value of `$querystring`, you can use third-party modules such as [qs](https://www.npmjs.com/package/qs) in your application.
+
 ### Highlight active links
 
 svelte-spa-router has built-in support for automatically marking links as "active", with the `use:active` action.
