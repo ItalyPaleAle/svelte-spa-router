@@ -20,7 +20,9 @@ steps:
       npm run build-example
       npm run start-example &
       SERVER_PID=$!
-      sleep 10
+      echo "Server started with PID ${SERVER_PID}"
+      sleep 5
+      curl http://localhost:5000
       npm run test
       kill $SERVER_PID
     displayName: 'Run tests'
