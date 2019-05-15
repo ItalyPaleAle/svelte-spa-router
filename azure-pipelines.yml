@@ -19,6 +19,8 @@ steps:
       npm install
       npm run build-example
       npm run start-example &
-      sleep 10 && curl http://localhost:5000
-      #npm run test
+      SERVER_PID=$!
+      sleep 10
+      npm run test
+      kill $SERVER_PID
     displayName: 'Run tests'
