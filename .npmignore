@@ -2,6 +2,9 @@ example
 .eslint*
 .vscode
 *.log
-nightwatch.json
+nightwatch.conf.js
 test
 reports
+**/.DS_Store
+azure-pipelines.yaml
+.gitattributes
