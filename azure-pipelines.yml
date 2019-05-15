@@ -18,11 +18,10 @@ steps:
   - script: |
       npm install
       npm run build-example
-      npm run start-example &
+      npx http-server -p -s 5000 example/dist &
       SERVER_PID=$!
       echo "Server started with PID ${SERVER_PID}"
       sleep 5
-      curl http://localhost:5000
       npm run test
       kill $SERVER_PID
     displayName: 'Run tests'
