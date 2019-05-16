@@ -18,7 +18,7 @@ module.exports = {
         type: 'mocha',
         options: {
             ui: 'bdd',
-            reporter: 'xunit'
+            reporter: 'list'
         }
     },
 
