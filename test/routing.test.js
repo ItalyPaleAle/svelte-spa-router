@@ -32,6 +32,7 @@ describe('<Router> component', () => {
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Home!')
             .expect.element('#currentpath').text.to.equal('/')
+        browser.expect.element('#currentqs').text.to.equal('')
 
         // /wild
         browser
@@ -39,6 +40,7 @@ describe('<Router> component', () => {
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Wild')
             .expect.element('#currentpath').text.to.equal('/wild')
+        browser.expect.element('#currentqs').text.to.equal('')
 
         // /hello/svelte
         browser
@@ -46,6 +48,7 @@ describe('<Router> component', () => {
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
+        browser.expect.element('#currentqs').text.to.equal('')
 
         browser.end()
     })
@@ -57,6 +60,7 @@ describe('<Router> component', () => {
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
+        browser.expect.element('#currentqs').text.to.equal('')
 
         browser.end()
     })
@@ -68,12 +72,14 @@ describe('<Router> component', () => {
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
+        browser.expect.element('#currentqs').text.to.equal('')
         
         browser
             .refresh(() => {
                 browser.waitForElementVisible('h2.routetitle')
                     .assert.containsText('h2.routetitle', 'Hi there!')
                     .expect.element('#currentpath').text.to.equal('/hello/svelte')
+                browser.expect.element('#currentqs').text.to.equal('')
 
                 browser.end()
             })
@@ -85,6 +91,7 @@ describe('<Router> component', () => {
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'NotFound')
             .expect.element('#currentpath').text.to.equal('/does/not/exist')
+        browser.expect.element('#currentqs').text.to.equal('')
 
         browser.end()
     })
@@ -217,6 +224,27 @@ describe('<Router> component', () => {
                                 })
                         })
                     })
+            })
+    })
+
+    it('querystring from hash', (browser) => {
+        // /hello/svelte?search=query&sort=0
+        browser
+            .url('http://localhost:5000/#/hello/svelte?search=query&sort=0')
+            .waitForElementVisible('h2.routetitle')
+            .assert.containsText('h2.routetitle', 'Hi there!')
+            .expect.element('#currentpath').text.to.equal('/hello/svelte')
+        browser.expect.element('#currentqs').text.to.equal('search=query&sort=0')
+        
+        // Refresh the page
+        browser
+            .refresh(() => {
+                browser.waitForElementVisible('h2.routetitle')
+                    .assert.containsText('h2.routetitle', 'Hi there!')
+                    .expect.element('#currentpath').text.to.equal('/hello/svelte')
+                browser.expect.element('#currentqs').text.to.equal('search=query&sort=0')
+
+                browser.end()
             })
     })
 })

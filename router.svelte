@@ -1,20 +1,36 @@
 <script context="module">
-import {readable} from 'svelte/store'
+import {readable, derived} from 'svelte/store'
 
+/**
+ * @typedef {Object} Location
+ * @property {string} location - Location (page/view), for example `/book`
+ * @property {string} [querystring] - Querystring from the hash, as a string not parsed
+ */
 /**
  * Returns the current location from the hash.
  *
- * @returns {string} Current location
+ * @returns {Location} Location object
+ * @private
  */
-export function getLocation() {
+function getLocation() {
     const hashPosition = window.location.href.indexOf('#/')
-    return (hashPosition > -1) ? window.location.href.substr(hashPosition + 1) : '/'
+    let location = (hashPosition > -1) ? window.location.href.substr(hashPosition + 1) : '/'
+
+    // Check if there's a querystring
+    const qsPosition = location.indexOf('?')
+    let querystring = ''
+    if (qsPosition > -1) {
+        querystring = location.substr(qsPosition + 1)
+        location = location.substr(0, qsPosition)
+    }
+
+    return {location, querystring}
 }
 
 /**
- * Readable store that returns the current location
+ * Readable store that returns the current full location (incl. querystring)
  */
-export const location = readable(
+export const loc = readable(
     getLocation(),
     // eslint-disable-next-line prefer-arrow-callback
     function start(set) {
@@ -27,6 +43,22 @@ export const location = readable(
             window.removeEventListener('hashchange', update, false)
         }
     }
+)
+
+/**
+ * Readable store that returns the current location
+ */
+export const location = derived(
+    loc,
+    ($loc) => $loc.location
+)
+
+/**
+ * Readable store that returns the current querystring
+ */
+export const querystring = derived(
+    loc,
+    ($loc) => $loc.querystring
 )
 
 /**
@@ -114,7 +146,6 @@ export function link(node) {
 
 <script>
 import regexparam from 'regexparam'
-import {onDestroy} from 'svelte'
 
 /**
  * Dictionary of all routes, in the format `'/path': component`.
@@ -191,14 +222,13 @@ let component = null
 let componentParams = {}
 
 // Handle hash change events
-function locationHashChanged() {
-    const location = getLocation()
-
+// Listen to changes in the $loc store and update the page
+$: {
     // Find a route matching the location
     component = null
     let i = 0
     while (!component && i < routesList.length) {
-        const match = routesList[i].match(location)
+        const match = routesList[i].match($loc.location)
         if (match) {
             component = routesList[i].component
             componentParams = match
@@ -206,13 +236,4 @@ function locationHashChanged() {
         i++
     }
 }
-
-// Listen to "hashChange" events, and trigger it right away
-window.addEventListener('hashchange', locationHashChanged, false)
-locationHashChanged()
-
-// When the component is destroyed, remove the event listener
-onDestroy(() => {
-    window.removeEventListener('hashchange', locationHashChanged, false)
-})
 </script>
