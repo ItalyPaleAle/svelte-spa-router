@@ -2,9 +2,14 @@
 import {readable, derived} from 'svelte/store'
 
 /**
+ * @typedef {Object} Location
+ * @property {string} location - Location (page/view), for example `/book`
+ * @property {string} [querystring] - Querystring from the hash, as a string not parsed
+ */
+/**
  * Returns the current location from the hash.
  *
- * @returns {object}
+ * @returns {Location} Location object
  * @private
  */
 function getLocation() {
@@ -219,7 +224,6 @@ let componentParams = {}
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 $: {
-    console.log('called', $loc)
     // Find a route matching the location
     component = null
     let i = 0
