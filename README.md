@@ -67,7 +67,7 @@ const routes = {
     '/': Home,
 
     // Using named parameters, with last being optional
-    '/author/:first/:last?': Name,
+    '/author/:first/:last?': Author,
 
     // Wildcard parameter
     '/book/*': Book,
