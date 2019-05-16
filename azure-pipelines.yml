@@ -24,4 +24,5 @@ steps:
       sleep 5
       npm run test
       kill $SERVER_PID
+      npm run lint
     displayName: 'Run tests'

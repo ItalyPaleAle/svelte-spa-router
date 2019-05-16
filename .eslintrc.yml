@@ -14,7 +14,7 @@ settings:
   svelte3/ignore-styles: true
   html:
     indent: 0
-    report-bad-indent: warn
+    report-bad-indent: error
     html-extensions:
       - .html
       #- .svelte
@@ -38,7 +38,7 @@ rules:
   no-var:
     - error
   prefer-const:
-    - warn
+    - error
   no-unused-vars:
     - error
     - args: none
@@ -91,15 +91,15 @@ rules:
     - error
     - never
   prefer-arrow-callback:
-    - warn
+    - error
   no-return-await:
     - error
   no-console:
-    - warn
+    - error
   no-nested-ternary:
     - error
   no-unneeded-ternary:
-    - warn
+    - error
   no-unexpected-multiline:
     - error
   lines-around-directive:

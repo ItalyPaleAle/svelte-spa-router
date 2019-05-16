@@ -6,6 +6,8 @@ module.exports = {
         'test/'
     ],
 
+    output_folder: 'result',
+
     webdriver: {
         start_process: true,
         server_path: 'node_modules/.bin/chromedriver',
@@ -15,7 +17,8 @@ module.exports = {
     test_runner: {
         type: 'mocha',
         options: {
-            ui: 'bdd'
+            ui: 'bdd',
+            reporter: 'xunit'
         }
     },
 
