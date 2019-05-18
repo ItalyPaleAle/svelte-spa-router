@@ -4,11 +4,16 @@ svelte-spa-router is simple by design. A minimal router is easy to learn and imp
 
 Thanks to the many features of Svelte 3 or other components in the ecosystem, svelte-spa-router can be used to get many more "advanced" features. This document explains how to achieve certain results with svelte-spa-router beyond what's offered by the component itself.
 
+- [Route transitions](#route-transitions)
+- [Querystring parsing](#querystring-parsing)
+- [Nested routers](#nested-routers)
+- [Route groups](#route-groups)
+
 ## Route transitions
 
-It's easy to add a nice transition between routes, by leveraging the built-in [transitions](https://svelte.dev/docs#Transitions) of Svelte 3.
+It's easy to add a nice transition between routes, leveraging the built-in [transitions](https://svelte.dev/docs#Transitions) of Svelte 3.
 
-For example, to make your components fade in gracefully, you can wrap the markup in a container (e.g. `<div>`, or `<section>`, etc) and attach a Svelte transition to them. For example:
+For example, to make your components fade in gracefully, you can wrap the markup in a container (e.g. `<div>`, or `<section>`, etc) and attach a Svelte transition to that. For example:
 
 ````html
 <div in:fade="{{duration: 500}}">
@@ -20,7 +25,7 @@ import {fade} from 'svelte/transition'
 </script>
 ````
 
-When you apply the transition to multiple components, navigation can appear smooth:
+When you apply the transition to multiple components, you can get a smooth transition effect:
 
 ![Example of transitions](/img/transitions.gif)
 
@@ -47,7 +52,7 @@ The current page is: /search
 The querystring is: query=hello+world&sort=title
 ````
 
-Most times, however, you might want to parse the "querystring" into a dictionary, to be able to use those value inside your application easily. There are multiple ways of doing that (some as simple as [a few lines of JavaScript](https://stackoverflow.com/questions/2090551/parse-query-string-in-javascript)), but a good, robust and safe solution is to rely on the popular library [qs](https://www.npmjs.com/package/qs).
+Most times, however, you might want to parse the "querystring" into a dictionary, to be able to use those values inside your application easily. There are multiple ways of doing that (some as simple as [a few lines of JavaScript](https://stackoverflow.com/questions/2090551/parse-query-string-in-javascript)), but a good, robust and safe solution is to rely on the popular library [qs](https://www.npmjs.com/package/qs).
 
 For example, changing the component above to:
 
@@ -63,7 +68,7 @@ $: parsed = parse($querystring)
 <code>{JSON.stringify(parsed)}</code>
 ````
 
-With the same URL, the result would be:
+With the same URL as before, the result would be:
 
 ````text
 {"query":"hello world","sort":"title"}
@@ -122,12 +127,11 @@ export let params = {}
 
 This works as you would expect:
 
-- `#/hello/John` will show the `ShortName` component and will pass "John" as `params.first`
-- `#/hello/Jane/Doe` will show the `FullName` component and will pass "Jane" as `params.first`, and "Doe" as `params.last`
+- `#/hello/John` will show the `ShortName` component and pass "John" as `params.first`
+- `#/hello/Jane/Doe` will show the `FullName` component, pass "Jane" as `params.first`, and "Doe" as `params.last`
+- Both routes will also display the `Hello!` header.
 
-Both routes will also display the `Hello!` header.
-
-Both routes will first load the `Hello` route, as they both match `/hello/*` in the outer router. The inner router then will load the separate components based on the path.
+Both routes first load the `Hello` route, as they both match `/hello/*` in the outer router. The inner router then loads the separate components based on the path.
 
 Features like highlighting active links will still work, regardless of where those links are placed in the page (in which component).
 
@@ -135,7 +139,7 @@ However, keep in mind that routes are still defined in absolute terms also in in
 
 ## Route groups
 
-You can get the same result by creating a Svelte component which nests other components. For example:
+You can get route groups by creating a Svelte component which nests the other components. For example:
 
 ````html
 <!-- RouteA.svelte -->

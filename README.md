@@ -228,3 +228,12 @@ The `active` action accepts 2 arguments:
 - The first is the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to.
 When the first argument is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
 - The second is the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
+
+## Advanced usage
+
+Check out the [Advanced Usage](/Advanced%20Usage.md) documentation for using:
+
+- [Route transitions](/Advanced%20Usage.md#route-transitions)
+- [Querystring parsing](/Advanced%20Usage.md#querystring-parsing)
+- [Nested routers](/Advanced%20Usage.md#nested-routers)
+- [Route groups](/Advanced%20Usage.md#route-groups)
