@@ -45,7 +45,7 @@ You can include the router in any project using Svelte 3.
 To add svelte-spa-router to your project:
 
 ````sh
-npm install --save svelte-spa-router
+npm install --save-dev svelte-spa-router
 ````
 
 ### Define your routes
