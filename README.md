@@ -1,6 +1,9 @@
 # svelte-spa-router
 
-[![Build Status](https://dev.azure.com/italypaleale/italypaleale/_apis/build/status/ItalyPaleAle.svelte-spa-router?branchName=master)](https://dev.azure.com/italypaleale/italypaleale/_build/latest?definitionId=16&branchName=master) ![npm](https://img.shields.io/npm/v/svelte-spa-router.svg) ![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg) [![dependencies Status](https://david-dm.org/ItalyPaleAle/svelte-spa-router/status.svg)](https://david-dm.org/ItalyPaleAle/svelte-spa-router)
+[![Build Status](https://dev.azure.com/italypaleale/italypaleale/_apis/build/status/ItalyPaleAle.svelte-spa-router?branchName=master)](https://dev.azure.com/italypaleale/italypaleale/_build/latest?definitionId=16&branchName=master) 
+[![npm](https://img.shields.io/npm/v/svelte-spa-router.svg)](https://www.npmjs.com/package/svelte-spa-router)
+[![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/blob/master/LICENSE.md)
+[![dependencies Status](https://david-dm.org/ItalyPaleAle/svelte-spa-router/status.svg)](https://david-dm.org/ItalyPaleAle/svelte-spa-router)
 
 This module is a router for [Svelte 3](https://github.com/sveltejs/svelte) applications, specifically optimized for Single Page Applications (SPA).
 
