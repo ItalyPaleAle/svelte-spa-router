@@ -1,6 +1,6 @@
 {
   "name": "svelte-spa-router",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Router for SPAs using Svelte 3",
   "main": "router.svelte",
   "svelte": "router.svelte",
@@ -35,16 +35,16 @@
     "chromedriver": "^73.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-html": "^5.0.5",
-    "eslint-plugin-svelte3": "^1.1.0",
-    "nightwatch": "^1.0.19",
-    "rollup": "^1.12.1",
+    "eslint-plugin-svelte3": "^1.2.3",
+    "nightwatch": "^1.1.11",
+    "rollup": "^1.12.3",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-svelte": "^5.0.3",
     "http-server": "^0.11.1",
-    "svelte": "^3.3.0"
+    "svelte": "^3.4.2"
   },
   "peerDependencies": {
-    "svelte": "^3.3.0"
+    "svelte": "^3.4.2"
   }
 }
