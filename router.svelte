@@ -135,6 +135,7 @@ export function link(node) {
         event.preventDefault()
 
         // Push link click
+        const href = event.target.getAttribute('href')
         push(href)
 
         return false
