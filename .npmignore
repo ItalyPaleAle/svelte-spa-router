@@ -10,3 +10,6 @@ azure-pipelines.yml
 azure-pipelines.yaml
 .gitattributes
 svelte-spa-router*.tgz
+img
+*.md
+!README.md
