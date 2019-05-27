@@ -6,7 +6,7 @@
   "svelte": "router.svelte",
   "scripts": {
     "build-example": "(cd example && npx rollup -c)",
-    "start-example": "npx http-server -p 5000 example/dist",
+    "start-example": "npx http-server@0.9.0 -p 5000 example/dist",
     "eslint": "npx eslint -c .eslintrc.yml --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch",
