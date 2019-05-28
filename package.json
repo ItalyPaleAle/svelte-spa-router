@@ -6,7 +6,7 @@
   "svelte": "router.svelte",
   "scripts": {
     "build-example": "(cd example && npx rollup -c)",
-    "start-example": "npx http-server -p 5000 example/dist",
+    "start-example": "npx serve -n -l 5000 example/dist",
     "eslint": "npx eslint -c .eslintrc.yml --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch",
@@ -37,14 +37,14 @@
     "eslint-plugin-html": "^5.0.5",
     "eslint-plugin-svelte3": "^1.2.3",
     "nightwatch": "^1.1.11",
-    "rollup": "^1.12.3",
+    "rollup": "^1.12.4",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-svelte": "^5.0.3",
-    "http-server": "^0.11.1",
-    "svelte": "^3.4.2"
+    "serve": "^11.0.0",
+    "svelte": "^3.4.4"
   },
   "peerDependencies": {
-    "svelte": "^3.4.2"
+    "svelte": "^3.4.4"
   }
 }
