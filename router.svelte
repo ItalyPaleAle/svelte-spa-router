@@ -134,8 +134,15 @@ export function link(node) {
         // Disable normal click event
         event.preventDefault()
 
-        // Push link click
-        const href = event.target.getAttribute('href')
+        // Push link or link children click
+        let href
+        let target = event.target
+        while ((href = target.getAttribute('href')) === null) {
+            target = target.parentElement
+            if (target === null) {
+                throw Error('Could not find corresponding href value')
+            }
+        }
         push(href)
 
         return false

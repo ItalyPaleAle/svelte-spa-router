@@ -7,6 +7,9 @@ export default {
     // Exact path
     '/': Home,
 
+    // Allow children to also signal link activation
+    '/brand': Home,
+    
     // Using named parameters, with last being optional
     '/hello/:first/:last?': Name,
 

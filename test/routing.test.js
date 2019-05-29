@@ -113,6 +113,19 @@ describe('<Router> component', () => {
             })
     })
 
+    it('clicking link with children', (browser) => {
+        browser
+            .url('http://localhost:5000/#/hello/world')
+            .waitForElementVisible('ul.navigation-links')
+            .click('.navigation-links li a p', () => {
+                browser
+                    .waitForElementVisible('h2.routetitle')
+                    .assert.containsText('h2.routetitle', 'Home!')
+                    .expect.element('#currentpath').text.to.equal('/brand')
+                browser.expect.element('#currentqs').text.to.equal('')
+            })
+    })
+
     it('back and forward buttons', (browser) => {
         browser
             .url('http://localhost:5000/#/hello/svelte/user')

@@ -9,7 +9,7 @@ describe('use:active action', () => {
             .waitForElementVisible('ul.navigation-links')
             .elements('css selector', 'ul.navigation-links li a', (elements) => {
                 assert(elements)
-                assert.equal(elements.value.length, 3)
+                assert.equal(elements.value.length, 4)
 
                 // Check which elements are active
                 browser
@@ -28,7 +28,7 @@ describe('use:active action', () => {
             .waitForElementVisible('ul.navigation-links')
             .elements('css selector', 'ul.navigation-links li a', (elements) => {
                 assert(elements)
-                assert.equal(elements.value.length, 3)
+                assert.equal(elements.value.length, 4)
 
                 // Check which elements are active
                 // The href on the link is different from the path making the link active
