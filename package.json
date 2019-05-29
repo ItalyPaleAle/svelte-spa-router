@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ItalyPaleAle/svelte-spa-router.git"
+    "url": "git+https://github.com/primos63/svelte-spa-router.git"
   },
   "keywords": [
     "router",
@@ -32,7 +32,7 @@
     "regexparam": "^1.2.1"
   },
   "devDependencies": {
-    "chromedriver": "^73.0.0",
+    "chromedriver": "^74.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-html": "^5.0.5",
     "eslint-plugin-svelte3": "^1.2.3",
