@@ -3,6 +3,7 @@
 <!-- Also, use the "active" action to add the "active" CSS class when the URL matches -->
 <ul class="navigation-links">
     <li><a href="/" use:link use:active>Home</a></li>
+    <li><a href="/brand" use:link><p>Brand</p></a></li>
     <li><a href="/hello/svelte" use:link use:active={'/hello/*', 'active'}>Say hi!</a></li>
     <li><a href="/does/not/exist" use:link>Not found</a></li>
 </ul>
