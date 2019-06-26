@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/ItalyPaleAle/svelte-spa-router#readme",
   "dependencies": {
-    "regexparam": "^1.2.1"
+    "regexparam": "^1.2.2"
   },
   "devDependencies": {
     "chromedriver": "^74.0.0",
