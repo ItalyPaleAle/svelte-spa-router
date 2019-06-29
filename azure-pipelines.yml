@@ -15,14 +15,28 @@ steps:
       versionSpec: '10.x'
     displayName: 'Install Node.js'
 
-  - script: |
+  - bash: |
       npm install
+    displayName: 'Install dependencies from npm'
+
+  - bash: |
       npm run build-example
+    displayName: 'Build example project'
+
+  - bash: |
+      set -e
+
       ./node_modules/.bin/serve -n -l 5000 example/dist &
       SERVER_PID=$!
+
       echo "Server started with PID ${SERVER_PID}"
       sleep 5
+
       npm run test
+      
       kill $SERVER_PID
-      npm run lint
     displayName: 'Run tests'
+
+  - bash: |
+      npm run lint
+    displayName: 'Run linter'
