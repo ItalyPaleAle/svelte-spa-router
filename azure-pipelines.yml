@@ -17,12 +17,27 @@ steps:
 
   - script: |
       npm install
+    displayName: 'Install dependencies from npm'
+
+  - script: |
       npm run build-example
+    displayName: 'Build example project'
+
+  - script: |
       ./node_modules/.bin/serve -n -l 5000 example/dist &
       SERVER_PID=$!
+
       echo "Server started with PID ${SERVER_PID}"
       sleep 5
+
       npm run test
+      STATUS_CODE=$?
       kill $SERVER_PID
-      npm run lint
+      if [ "$STATUS_CODE" != "0" ]; then
+        exit $STATUS_CODE
+      fi
     displayName: 'Run tests'
+
+  - script: |
+      npm run lint
+    displayName: 'Run linter'
