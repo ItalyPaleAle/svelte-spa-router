@@ -51,8 +51,6 @@ describe('<Router> component', () => {
         browser.expect.element('#currentqs').text.to.equal('')
 
         browser.end()
-
-        throw Error('Making it fail')
     })
 
     it('loading page with hash', (browser) => {
