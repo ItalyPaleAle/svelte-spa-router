@@ -7,7 +7,7 @@
   "scripts": {
     "build-example": "(cd example && npx rollup -c)",
     "start-example": "npx serve -n -l 5000 example/dist",
-    "eslint": "npx eslint -c .eslintrc.yml --ext .js,.svelte,.html .",
+    "eslint": "npx eslint -c .eslintrc.js --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch",
     "test": "npm run nightwatch"
@@ -33,18 +33,18 @@
   },
   "devDependencies": {
     "chromedriver": "^74.0.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-html": "^5.0.5",
-    "eslint-plugin-svelte3": "^1.2.3",
-    "nightwatch": "^1.1.12",
-    "rollup": "^1.15.1",
-    "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-node-resolve": "^5.0.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-svelte3": "^2.7.3",
+    "nightwatch": "^1.1.13",
+    "rollup": "^1.17.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^5.1.0",
-    "serve": "^11.0.1",
-    "svelte": "^3.5.1"
+    "serve": "^11.1.0",
+    "svelte": "^3.6.10"
   },
   "peerDependencies": {
-    "svelte": "^3.5.1"
+    "svelte": "^3.5.0"
   }
 }
