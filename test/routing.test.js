@@ -117,7 +117,7 @@ describe('<Router> component', () => {
         browser
             .url('http://localhost:5000/#/hello/world')
             .waitForElementVisible('ul.navigation-links')
-            .click('.navigation-links li a p', () => {
+            .click('.navigation-links li a b', () => {
                 browser
                     .waitForElementVisible('h2.routetitle')
                     .assert.containsText('h2.routetitle', 'Home!')
