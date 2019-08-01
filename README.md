@@ -97,7 +97,7 @@ import Router from 'svelte-spa-router'
 
 Then, display the router anywhere you'd like by placing the component in the markup. For example:
 
-````html
+````svelte
 <body>
     <Router {routes}/>
 </body>
@@ -111,13 +111,13 @@ That's it! You already have all that you need for a fully-functional routing exp
 
 You can navigate between pages with normal anchor (`<a>`) tags. For example:
 
-````html
+````svelte
 <a href="#/book/123">Thus Spoke Zarathustra</a>
 ````
 
 Rather than having to type `#` before each link, you can also use the `use:link` action:
 
-````html
+````svelte
 <script>
 import {link} from 'svelte-spa-router'
 </script>
@@ -142,7 +142,7 @@ replace('/book/3')
 
 These methods can be used inside Svelte markup too, for example:
 
-````html
+````svelte
 <button on:click={() => push('/page')}>Go somewhere</button>
 ````
 
@@ -163,7 +163,7 @@ If your route contains any parameter, they will be made available to your compon
 
 For example, for a route `/name/:first/:last?`, you can create this Svelte component:
 
-````html
+````svelte
 <p>Your name is: <b>{params.first}</b> <b>{#if params.last}{params.last}{/if}</b></p>
 <script>
 // You need to define the component prop "params"
@@ -177,7 +177,7 @@ Non-named arguments are returned as `params.wild`.
 
 You can get the current page from the `$location` readable store. This is a Svelte store, so it can be used reactively too.
 
-````html
+````svelte
 <script>
 import {location} from 'svelte-spa-router'
 </script>
@@ -190,7 +190,7 @@ You can also extract "querystring" parameters from the hash of the page. This is
 
 When svelte-spa-router finds a "querystring" in the hash, it separates that from the location and returns it as a string in the Svelte store `$querystring`. For example:
 
-````html
+````svelte
 <script>
 import {location, querystring} from 'svelte-spa-router'
 </script>
@@ -213,7 +213,7 @@ svelte-spa-router has built-in support for automatically marking links as "activ
 
 For example, you can use the code below to add the CSS class `active` to links that are active:
 
-````html
+````svelte
 <script>
 import {link} from 'svelte-spa-router'
 import active from 'svelte-spa-router/active'

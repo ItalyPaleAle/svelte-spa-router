@@ -15,7 +15,7 @@ It's easy to add a nice transition between routes, leveraging the built-in [tran
 
 For example, to make your components fade in gracefully, you can wrap the markup in a container (e.g. `<div>`, or `<section>`, etc) and attach a Svelte transition to that. For example:
 
-````html
+````svelte
 <div in:fade="{{duration: 500}}">
     <h2>Component's code goes here</h2>
 </div>
@@ -37,7 +37,7 @@ As the main documentation for svelte-spa-router mentions, you can extract parame
 
 The router has built-in support for returning the value of the "querystring", but it only returns the full string and doesn't perform any parsing. Components can access the "querystring" part of the hash from the `$querystring` store in the svelte-spa-router component. For example:
 
-````html
+````svelte
 <script>
 import {location, querystring} from 'svelte-spa-router'
 </script>
@@ -56,7 +56,7 @@ Most times, however, you might want to parse the "querystring" into a dictionary
 
 For example, changing the component above to:
 
-````html
+````svelte
 <script>
 import {parse} from 'qs'
 import {querystring} from 'svelte-spa-router'
@@ -82,7 +82,7 @@ The `<Router>` component of svelte-spa-router can be nested without issues.
 
 For example, consider an app with these four components:
 
-````html
+````svelte
 <!-- App.svelte -->
 <Router {routes}/>
 <script>
@@ -141,7 +141,7 @@ However, keep in mind that routes are still defined in absolute terms also in in
 
 You can get route groups by creating a Svelte component which nests the other components. For example:
 
-````html
+````svelte
 <!-- RouteA.svelte -->
 <h2>This is route A</h2>
 
