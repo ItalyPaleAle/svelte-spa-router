@@ -83,6 +83,8 @@ const routes = {
 
 Routes must begin with `/` (or `*` for the catch-all route).
 
+Alternatively, you can also define your routes using custom regular expressions, as explained below.
+
 Note that the order matters! When your users navigate inside the app, the first matching path will determine which route to load. It's important that you leave any "catch-all" route (e.g. a "Page not found" one) at the end.
 
 ### Include the router view
@@ -233,6 +235,44 @@ The `active` action accepts 2 arguments:
 - The first is the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to.
 When the first argument is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
 - The second is the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
+
+### Define routes with custom regular expressions
+
+Since version 1.2 of svelte-spa-router, it's possible to define routes using custom regular expressions too, allowing for greater flexibility. However, this requires defining routes using a JavaScript Map rather than an object:
+
+````js
+import Home from './routes/Home.svelte'
+import Name from './routes/Name.svelte'
+import NotFound from './routes/NotFound.svelte'
+
+const routes = new Map()
+
+// You can still use strings to define routes
+routes.set('/', Home)
+routes.set('/hello/:first/:last?', Name)
+
+// The keys for the next routes are regular expressions
+// You will very likely always want to start the regular expression with ^
+routes.set(/^\/hola\/(.*)/i, Name)
+routes.set(/^\/buongiorno(\/([a-z]+))/i, Name)
+
+// Catch-all, must be last
+routes.set('*', NotFound)
+````
+
+When you define routes as regular expressions, the params prop is populated with an array with the result of the matches from the regular expression.
+
+For example, with this `Name.svelte` route:
+
+````svelte
+<p>Params is: <code>{JSON.stringify(params)}</code></p>
+<script>
+// You need to define the component prop "params"
+export let params = {}
+</script>
+````
+
+When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"]`. This is consistent with the results of [`RegExp.prototype.exec()`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec).
 
 ## Advanced usage
 
