@@ -2,7 +2,11 @@
 
 const assert = require('assert')
 
-describe('<Router> component', () => {
+describe('<Router> component', function() {
+    // Increase timeouts
+    this.slow(2000)
+    this.timeout(3000)
+
     it('renders on the page', (browser) => {
         browser
             .url('http://localhost:5000')

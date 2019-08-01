@@ -186,8 +186,11 @@ class RouteItem {
      * @param {SvelteComponent} component - Svelte component for the route
      */
     constructor(path, component) {
-        // Path must start with '/' or '*'
-        if (!path || path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*')) {
+        // Path must be a regular or expression, or a string starting with '/' or '*'
+        if (!path || 
+            (typeof path == 'string' && (path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*'))) ||
+            (typeof path == 'object' && !(path instanceof RegExp))
+        ) {
             throw Error('Invalid value for "path" argument')
         }
 
@@ -214,6 +217,11 @@ class RouteItem {
             return null
         }
 
+        // If the input was a regular expression, this._keys would be false, so return matches as is
+        if (this._keys === false) {
+            return matches
+        }
+
         const out = {}
         let i = 0
         while (i < this._keys.length) {
@@ -223,10 +231,14 @@ class RouteItem {
     }
 }
 
+// We need an iterable: if it's not a Map, use Object.entries
+const routesIterable = (routes instanceof Map) ? routes : Object.entries(routes)
+
 // Set up all routes
-const routesList = Object.keys(routes).map((path) => {
-    return new RouteItem(path, routes[path])
-})
+const routesList = []
+for (const [path, route] of routesIterable) {
+    routesList.push(new RouteItem(path, route))
+}
 
 // Props for the component to render
 let component = null
