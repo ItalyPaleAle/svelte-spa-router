@@ -252,7 +252,6 @@ $: {
     let i = 0
     while (!component && i < routesList.length) {
         const match = routesList[i].match($loc.location)
-        console.log(match)
         if (match) {
             component = routesList[i].component
             componentParams = match

@@ -1,7 +1,5 @@
 /*eslint-env mocha */
 
-const assert = require('assert')
-
 describe('<Router> component with routes in a Map', function() {
     // Increase timeouts
     this.slow(2000)
