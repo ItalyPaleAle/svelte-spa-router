@@ -2,7 +2,11 @@
 
 const assert = require('assert')
 
-describe('use:active action', () => {
+describe('use:active action', function() {
+    // Increase timeouts
+    this.slow(2000)
+    this.timeout(3000)
+
     it('active link', (browser) => {
         browser
             .url('http://localhost:5000/#/')
