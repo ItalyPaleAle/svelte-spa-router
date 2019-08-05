@@ -4,7 +4,9 @@ import Wild from './routes/Wild.svelte'
 import Regex from './routes/Regex.svelte'
 import NotFound from './routes/NotFound.svelte'
 
-// Use an object for routes unless we have the "routemap=1" querystring param
+// This demonstrates how to pass routes as a POJO (Plain Old JavaScript Object) or a JS Map
+// In this code sample we're using both (controlling at runtime what's enabled, by checking for the 'routemap=1' querystring parameter) just because we are using this code sample for tests too
+// In your code, you'll likely want to choose one of the two options only
 let routes
 const urlParams = new URLSearchParams(window.location.search)
 if (!urlParams.has('routemap')) {
