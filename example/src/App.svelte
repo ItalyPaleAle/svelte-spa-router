@@ -62,15 +62,15 @@ import routes from './routes'
 let dynamicLinks = [
     {
         id: 1,
-        link: "/hello/dynamic-link-1"
+        link: '/hello/dynamic-link-1'
     },
     {
         id: 2,
-        link: "/hello/dynamic-link-2"
+        link: '/hello/dynamic-link-2'
     },
     {
         id: 3,
-        link: "/hello/dynamic-link-3"
+        link: '/hello/dynamic-link-3'
     }
-];
+]
 </script>
