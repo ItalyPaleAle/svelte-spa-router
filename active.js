@@ -70,7 +70,7 @@ export default function active(node, path, className) {
     return {
         // When the element is destroyed, remove it from the list
         destroy() {
-            nodes = nodes.splice(nodes.indexOf(el), 1)
+            nodes.splice(nodes.indexOf(el), 1)
         }
     }
 }
