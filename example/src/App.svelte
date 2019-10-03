@@ -8,6 +8,16 @@
     <li><a href="/does/not/exist" use:link>Not found</a></li>
 </ul>
 
+<h2>Dynamic links</h2>
+<ul class="navigation-dynamic-links">
+{#each dynamicLinks as dl}
+    <li>
+        <a id="dynamic-link-{dl.id}" href={dl.link} use:link use:active>Dynamic Link {dl.id}</a>
+         - 
+        <i id="delete-link-{dl.id}" on:click={() => dynamicLinks = dynamicLinks.filter(e => e.id != dl.id)}>delete link</i>
+    </li>
+{/each}
+</ul>
 <!-- Navigate with buttons -->
 <p class="navigation-buttons">
     <button on:click={() => push('/wild/something')}>Visit /wild/something</button>
@@ -48,4 +58,19 @@ import active from '../../active'
 
 // Import the list of routes
 import routes from './routes'
+
+let dynamicLinks = [
+    {
+        id: 1,
+        link: "/hello/dynamic-link-1"
+    },
+    {
+        id: 2,
+        link: "/hello/dynamic-link-2"
+    },
+    {
+        id: 3,
+        link: "/hello/dynamic-link-3"
+    }
+];
 </script>
