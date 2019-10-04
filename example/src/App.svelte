@@ -28,6 +28,17 @@
 <!-- Show the router -->
 <Router {routes}/>
 
+<h2>Dynamic links</h2>
+<ul class="navigation-dynamic-links">
+{#each dynamicLinks as dl (dl.id)}
+    <li>
+        <a id="dynamic-link-{dl.id}" href={dl.link} use:link use:active>Dynamic Link {dl.id}</a>
+         - 
+        <i id="delete-link-{dl.id}" on:click={() => dynamicLinks = dynamicLinks.filter(e => e.id != dl.id)}>delete link</i>
+    </li>
+{/each}
+</ul>
+
 <style>
 /* Style for "active" links; need to mark this :global because the router adds the class directly */
 :global(a.active) {
@@ -48,4 +59,19 @@ import active from '../../active'
 
 // Import the list of routes
 import routes from './routes'
+
+let dynamicLinks = [
+    {
+        id: 1,
+        link: '/hello/dynamic-link-1'
+    },
+    {
+        id: 2,
+        link: '/hello/dynamic-link-2'
+    },
+    {
+        id: 3,
+        link: '/hello/dynamic-link-3'
+    }
+]
 </script>

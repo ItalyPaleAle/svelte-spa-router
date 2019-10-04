@@ -46,6 +46,23 @@ describe('use:active action', function() {
             })
     })
 
+    it('active dynamic links', (browser) => {
+
+        // Check if elements are still tagged active after one is removed
+        browser
+            .url('http://localhost:5000/#/')
+            .waitForElementVisible('ul.navigation-dynamic-links')
+            // delete second link
+            .click('i[id=delete-link-2]')
+            .pause(1000)
+            // click second link
+            .click('a[id=dynamic-link-1]')
+            .pause(1000)
+            //check for active class on link-1
+            .expect.element('a[id=dynamic-link-1]').to.have.attribute('class').which.contains('active')
+        browser.end()
+    })
+
     it('navigating pages', (browser) => {
         browser
             .url('http://localhost:5000/#/hello/world')
