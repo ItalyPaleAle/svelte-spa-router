@@ -1,4 +1,4 @@
-# Advnaced usage
+# Advanced usage
 
 svelte-spa-router is simple by design. A minimal router is easy to learn and implement, adds minimum overhead, and leaves more control in the hands of the developers.
 
