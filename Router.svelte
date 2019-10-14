@@ -132,8 +132,8 @@ export function link(node) {
         throw Error('Invalid value for "href" attribute')
     }
 
-    // onclick event handler
-    node.addEventListener('click', (event) => {
+    // event handler
+    function eventHandler (event) {
         // Disable normal click event
         event.preventDefault()
 
@@ -149,6 +149,9 @@ export function link(node) {
         push(href)
 
         return false
+    }
+    ['click', 'auxclick'].forEach(e => {
+        node.addEventListener(e, eventHandler)
     })
 }
 </script>
