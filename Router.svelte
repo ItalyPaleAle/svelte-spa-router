@@ -70,13 +70,13 @@ export const querystring = derived(
  * @param {string} location - Path to navigate to (must start with `/`)
  */
 export function push(location) {
-    if (!location || location.length < 1 || location.charAt(0) != '/') {
+    if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
         throw Error('Invalid parameter location')
     }
 
     // Execute this code when the current call stack is complete
     setTimeout(() => {
-        window.location.hash = location.charAt(0) == '#' ? location : '#' + location
+        window.location.hash = '#' + location
     }, 0)
 }
 
