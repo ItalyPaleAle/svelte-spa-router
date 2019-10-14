@@ -131,28 +131,8 @@ export function link(node) {
     if (!href || href.length < 1 || href.charAt(0) != '/') {
         throw Error('Invalid value for "href" attribute')
     }
+    // add # to every attribute
     node.setAttribute('href', '#' + href)
-
-    // event handler
-    function eventHandler(event) {
-        // Disable normal click event
-        event.preventDefault()
-
-        // Push link or link children click
-        let href
-        let target = event.target
-        while ((href = target.getAttribute('href')) === null) {
-            target = target.parentElement
-            if (target === null) {
-                throw Error('Could not find corresponding href value')
-            }
-        }
-        // removing the hash
-        push(href.substr(1))
-
-        return false
-    }
-    node.addEventListener('click', eventHandler)
 }
 </script>
 
