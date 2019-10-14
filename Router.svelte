@@ -133,7 +133,7 @@ export function link(node) {
     }
 
     // event handler
-    function eventHandler (event) {
+    function eventHandler(event) {
         // Disable normal click event
         event.preventDefault()
 
