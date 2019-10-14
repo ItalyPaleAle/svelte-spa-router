@@ -76,7 +76,7 @@ export function push(location) {
 
     // Execute this code when the current call stack is complete
     setTimeout(() => {
-        window.location.hash = location
+        window.location.hash = location.charAt(0) == '#' ? location : '#' + location
     }, 0)
 }
 
