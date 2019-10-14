@@ -76,7 +76,7 @@ export function push(location) {
 
     // Execute this code when the current call stack is complete
     setTimeout(() => {
-        window.location.hash = '#' + location
+        window.location.hash = location
     }, 0)
 }
 
@@ -131,6 +131,7 @@ export function link(node) {
     if (!href || href.length < 1 || href.charAt(0) != '/') {
         throw Error('Invalid value for "href" attribute')
     }
+    node.setAttribute('href', '#' + href)
 
     // event handler
     function eventHandler(event) {
@@ -146,13 +147,12 @@ export function link(node) {
                 throw Error('Could not find corresponding href value')
             }
         }
-        push(href)
+        // removing the hash
+        push(href.substr(1))
 
         return false
     }
-    ['click', 'auxclick'].forEach(e => {
-        node.addEventListener(e, eventHandler)
-    })
+    node.addEventListener('click', eventHandler)
 }
 </script>
 

@@ -17,7 +17,7 @@ describe('use:active action', function() {
 
                 // Check which elements are active
                 browser
-                    .elements('css selector', 'ul.navigation-links li a.active[href="/"]', (elements) => {
+                    .elements('css selector', 'ul.navigation-links li a.active[href="#/"]', (elements) => {
                         assert(elements)
                         assert.equal(elements.value.length, 1)
 
@@ -37,7 +37,7 @@ describe('use:active action', function() {
                 // Check which elements are active
                 // The href on the link is different from the path making the link active
                 browser
-                    .elements('css selector', 'ul.navigation-links li a.active[href="/hello/svelte"]', (elements) => {
+                    .elements('css selector', 'ul.navigation-links li a.active[href="#/hello/svelte"]', (elements) => {
                         assert(elements)
                         assert.equal(elements.value.length, 1)
 
@@ -68,7 +68,7 @@ describe('use:active action', function() {
             .url('http://localhost:5000/#/hello/world')
             .waitForElementVisible('ul.navigation-links')
             // There should be just one element active
-            .elements('css selector', 'ul.navigation-links li a.active[href="/hello/svelte"]', (elements) => {
+            .elements('css selector', 'ul.navigation-links li a.active[href="#/hello/svelte"]', (elements) => {
                 assert(elements)
                 assert.equal(elements.value.length, 1)
 

@@ -104,7 +104,7 @@ describe('<Router> component', function() {
         browser
             .url('http://localhost:5000/#/')
             .waitForElementVisible('ul.navigation-links')
-            .click('.navigation-links a[href="/hello/svelte"]', () => {
+            .click('.navigation-links a[href="#/hello/svelte"]', () => {
                 browser
                     .waitForElementVisible('h2.routetitle')
                     .assert.containsText('h2.routetitle', 'Hi there!')
@@ -138,7 +138,7 @@ describe('<Router> component', function() {
 
         // Click on link
         browser
-            .click('.navigation-links a[href="/hello/svelte"]', () => {
+            .click('.navigation-links a[href="#/hello/svelte"]', () => {
                 browser
                     .waitForElementVisible('#nameparams')
                     .expect.element('#nameparams').text.to.equal('Your name is: svelte')
@@ -186,7 +186,7 @@ describe('<Router> component', function() {
         browser
             .url('http://localhost:5000/#/wild/something')
             .waitForElementVisible('ul.navigation-links')
-            .click('.navigation-links a[href="/hello/svelte"]', () => {
+            .click('.navigation-links a[href="#/hello/svelte"]', () => {
                 // Pop button
                 browser
                     .waitForElementVisible('p.navigation-buttons')
@@ -210,7 +210,7 @@ describe('<Router> component', function() {
         browser
             .url('http://localhost:5000/#/wild/something')
             .waitForElementVisible('ul.navigation-links')
-            .click('.navigation-links a[href="/hello/svelte"]', () => {
+            .click('.navigation-links a[href="#/hello/svelte"]', () => {
                 // Replace button
                 browser
                     .waitForElementVisible('p.navigation-buttons')
