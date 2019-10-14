@@ -70,7 +70,7 @@ export const querystring = derived(
  * @param {string} location - Path to navigate to (must start with `/`)
  */
 export function push(location) {
-    if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
+    if (!location || location.length < 1 || location.charAt(0) != '/' || location.indexOf('#/') !== 0) {
         throw Error('Invalid parameter location')
     }
 
@@ -96,7 +96,7 @@ export function pop() {
  * @param {string} location - Path to navigate to (must start with `/`)
  */
 export function replace(location) {
-    if (!location || location.length < 1 || location.charAt(0) != '/') {
+    if (!location || location.length < 1 || location.charAt(0) != '/' || location.indexOf('#/') !== 0) {
         throw Error('Invalid parameter location')
     }
 
@@ -128,7 +128,7 @@ export function link(node) {
 
     // Destination must start with '/'
     const href = node.getAttribute('href')
-    if (!href || href.length < 1 || href.charAt(0) != '/') {
+    if (!href || href.length < 1 || href.charAt(0) != '/' || href.indexOf('#/') !== 0) {
         throw Error('Invalid value for "href" attribute')
     }
     // add # to every attribute
