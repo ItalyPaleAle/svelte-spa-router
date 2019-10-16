@@ -79,7 +79,6 @@ export function push(location) {
         window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
     }, 0)
 }
-window.routePush = push
 
 /**
  * Navigates back in history (equivalent to pressing the browser's back button).
