@@ -70,7 +70,7 @@ export const querystring = derived(
  * @param {string} location - Path to navigate to (must start with `/`)
  */
 export function push(location) {
-    if (!location || location.length < 1 || location.charAt(0) != '/') {
+    if (!location || location.length < 1 || location.charAt(0) != '/' || location.indexOf('#/') !== -1) {
         throw Error('Invalid parameter location')
     }
 
@@ -96,7 +96,7 @@ export function pop() {
  * @param {string} location - Path to navigate to (must start with `/`)
  */
 export function replace(location) {
-    if (!location || location.length < 1 || location.charAt(0) != '/') {
+    if (!location || location.length < 1 || location.charAt(0) != '/' || location.indexOf('#/') !== -1) {
         throw Error('Invalid parameter location')
     }
 
@@ -128,28 +128,11 @@ export function link(node) {
 
     // Destination must start with '/'
     const href = node.getAttribute('href')
-    if (!href || href.length < 1 || href.charAt(0) != '/') {
+    if (!href || href.length < 1 || href.charAt(0) != '/' || href.indexOf('#/') !== -1) {
         throw Error('Invalid value for "href" attribute')
     }
-
-    // onclick event handler
-    node.addEventListener('click', (event) => {
-        // Disable normal click event
-        event.preventDefault()
-
-        // Push link or link children click
-        let href
-        let target = event.target
-        while ((href = target.getAttribute('href')) === null) {
-            target = target.parentElement
-            if (target === null) {
-                throw Error('Could not find corresponding href value')
-            }
-        }
-        push(href)
-
-        return false
-    })
+    // add # to every attribute
+    node.setAttribute('href', '#' + href)
 }
 </script>
 
