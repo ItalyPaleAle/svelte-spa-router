@@ -158,3 +158,32 @@ import RouteB from './RouteB.svelte'
 ````
 
 When you add `GroupRoute` as a component in your router, you will render both `RouteA` and `RouteB`.
+
+## Async route loading 
+
+ Before use, install the svelte-spa-chunk module as follows. 
+
+```bash
+npm i svelte-spa-chunk
+```
+
+ Apply the following to the route map of the svelte-spa-router: 
+
+```typescript
+import { ChunkGenerator } from 'svelte-spa-chunk'
+import ChunkComponent from 'svelte-spa-chunk/Chunk.svelte'
+const Chunk = ChunkGenerator(ChunkComponent)
+
+/**
+ * @description Client Side Render Index
+ */
+export default {
+    
+    '/':        Chunk(()=> import('./main.svelte')),
+    '/a':       Chunk(()=> import('./a.svelte')),
+    '/b':       Chunk(()=> import('./b.svelte')),
+    '/async':   Chunk(()=> import('./async.svelte')),
+
+    '*':        Chunk(()=> import('./main.svelte')),
+}
+```
