@@ -67,18 +67,19 @@ export const querystring = derived(
 /**
  * Navigates to a new page programmatically.
  *
- * @param {string} location - Path to navigate to (must start with `/`)
+ * @param {string} location - Path to navigate to (must start with `/` or '#/')
  */
 export function push(location) {
-    if (!location || location.length < 1 || location.charAt(0) != '/' || location.indexOf('#/') !== -1) {
+    if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
         throw Error('Invalid parameter location')
     }
 
     // Execute this code when the current call stack is complete
     setTimeout(() => {
-        window.location.hash = '#' + location
+        window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
     }, 0)
 }
+window.routePush = push
 
 /**
  * Navigates back in history (equivalent to pressing the browser's back button).
@@ -93,16 +94,17 @@ export function pop() {
 /**
  * Replaces the current page but without modifying the history stack.
  *
- * @param {string} location - Path to navigate to (must start with `/`)
+ * @param {string} location - Path to navigate to (must start with `/` or '#/')
  */
 export function replace(location) {
-    if (!location || location.length < 1 || location.charAt(0) != '/' || location.indexOf('#/') !== -1) {
+    if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
         throw Error('Invalid parameter location')
     }
 
     // Execute this code when the current call stack is complete
     setTimeout(() => {
-        history.replaceState(undefined, undefined, '#' + location)
+        const dest = (location.charAt(0) == '#' ? '' : '#') + location
+        history.replaceState(undefined, undefined, dest)
 
         // The method above doesn't trigger the hashchange event, so let's do that manually
         window.dispatchEvent(new Event('hashchange'))
@@ -128,10 +130,11 @@ export function link(node) {
 
     // Destination must start with '/'
     const href = node.getAttribute('href')
-    if (!href || href.length < 1 || href.charAt(0) != '/' || href.indexOf('#/') !== -1) {
+    if (!href || href.length < 1 || href.charAt(0) != '/') {
         throw Error('Invalid value for "href" attribute')
     }
-    // add # to every attribute
+
+    // Add # to every href attribute
     node.setAttribute('href', '#' + href)
 }
 </script>
