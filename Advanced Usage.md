@@ -8,6 +8,7 @@ Thanks to the many features of Svelte 3 or other components in the ecosystem, sv
 - [Querystring parsing](#querystring-parsing)
 - [Nested routers](#nested-routers)
 - [Route groups](#route-groups)
+- [Async route loading](#async-route-loading)
 
 ## Route transitions
 
@@ -161,16 +162,20 @@ When you add `GroupRoute` as a component in your router, you will render both `R
 
 ## Async route loading 
 
- Before use, install the svelte-spa-chunk module as follows. 
+> Note that this capability is provided by a third-party plugin [hmmhmmhm/svelte-spa-chunk](https://github.com/hmmhmmhm/svelte-spa-chunk) and is not part of the core svelte-spa-router project.
 
-```bash
+It's possible to load routes asynchronously, so the Svelte components are fetched from the server only when a route is loaded. When using tools like webpack or Parcel, the code can be automatically split into multiple files too.
+
+Install the svelte-spa-chunk plugin:
+
+````sh
 npm i svelte-spa-chunk
-```
+````
 
- Apply the following to the route map of the svelte-spa-router: 
+You can then define routes to be loaded asynchronously in your routes object, for example:
 
-```typescript
-import { ChunkGenerator } from 'svelte-spa-chunk'
+````js
+import {ChunkGenerator} from 'svelte-spa-chunk'
 import ChunkComponent from 'svelte-spa-chunk/Chunk.svelte'
 const Chunk = ChunkGenerator(ChunkComponent)
 
@@ -178,7 +183,6 @@ const Chunk = ChunkGenerator(ChunkComponent)
  * @description Client Side Render Index
  */
 export default {
-    
     '/':        Chunk(()=> import('./main.svelte')),
     '/a':       Chunk(()=> import('./a.svelte')),
     '/b':       Chunk(()=> import('./b.svelte')),
@@ -186,4 +190,4 @@ export default {
 
     '*':        Chunk(()=> import('./main.svelte')),
 }
-```
+````
