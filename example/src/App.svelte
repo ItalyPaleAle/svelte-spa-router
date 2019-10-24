@@ -26,7 +26,7 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes}/>
+<Router {routes} on:conditionsfail={conditionsfail} />
 
 <h2>Dynamic links</h2>
 <ul class="navigation-dynamic-links">
@@ -59,6 +59,11 @@ import active from '../../active'
 
 // Import the list of routes
 import routes from './routes'
+
+// Handles the "conditionsfail" dispatched by the router when a component can't be loaded because one of its pre-condition failed
+function conditionsfail(event) {
+    console.error('Caught event conditionsfail', event.detail)
+}
 
 let dynamicLinks = [
     {

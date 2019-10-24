@@ -4,6 +4,33 @@
 
 import {readable, derived} from 'svelte/store'
 
+export function wrap(route, ...conditions) {
+    // Parameter route and each item of conditions must be functions
+    if (!route || typeof route !=='function') {
+        throw Error('Invalid parameter route')
+    }
+    if (conditions && conditions.length) {
+        for (let i = 0; i < conditions.length; i++) {
+            if (!conditions[i] || typeof conditions[i] != 'function') {
+                throw Error('Invalid parameter conditions[' + i + ']')
+            }
+        }
+    }
+
+    // Returns an object that contains all the functions to execute too
+    const obj = {route}
+    if (conditions && conditions.length) {
+        obj.conditions = conditions
+    }
+
+    // The _sveltesparouter flag is to confirm the object was created by this router
+    Object.defineProperty(obj, '_sveltesparouter', {
+        value: true
+    })
+
+    return obj
+}
+
 /**
  * @typedef {Object} Location
  * @property {string} location - Location (page/view), for example `/book`
@@ -141,6 +168,7 @@ export function link(node) {
 <svelte:component this="{component}" params="{componentParams}" />
 
 <script>
+import {createEventDispatcher} from 'svelte'
 import regexparam from 'regexparam'
 
 /**
@@ -171,6 +199,10 @@ class RouteItem {
      * @param {SvelteComponent} component - Svelte component for the route
      */
     constructor(path, component) {
+        if (!component || (typeof component != 'function' && (typeof component != 'object' || component._sveltesparouter !== true))) {
+            throw Error('Invalid component object')
+        }
+
         // Path must be a regular or expression, or a string starting with '/' or '*'
         if (!path || 
             (typeof path == 'string' && (path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*'))) ||
@@ -182,7 +214,16 @@ class RouteItem {
         const {pattern, keys} = regexparam(path)
 
         this.path = path
-        this.component = component
+
+        // Check if the component is wrapped and we have conditions
+        if (typeof component == 'object' && component._sveltesparouter === true) {
+            this.component = component.route
+            this.conditions = component.conditions || []
+        }
+        else {
+            this.component = component
+            this.conditions = []
+        }
 
         this._pattern = pattern
         this._keys = keys
@@ -214,6 +255,21 @@ class RouteItem {
         }
         return out
     }
+
+    /**
+     * Executes all conditions (if any) to control whether the route can be shown. Conditions are executed in the order they are defined, and if a condition fails, the following ones aren't executed.
+     *
+     * @returns {bool} Returns true if all the conditions succeeded
+     */
+    checkConditions() {
+        for (let i = 0; i < this.conditions.length; i++) {
+            if (!this.conditions[i]()) {
+                return false
+            }
+        }
+
+        return true
+    }
 }
 
 // We need an iterable: if it's not a Map, use Object.entries
@@ -229,6 +285,9 @@ for (const [path, route] of routesIterable) {
 let component = null
 let componentParams = {}
 
+// Event dispatcher from Svelte
+const dispatch = createEventDispatcher()
+
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 $: {
@@ -238,6 +297,18 @@ $: {
     while (!component && i < routesList.length) {
         const match = routesList[i].match($loc.location)
         if (match) {
+            // Check if the route can be loaded - if all conditions succeed
+            if (!routesList[i].checkConditions()) {
+                // Trigger an event to notify the user
+                // Execute this code when the current call stack is complete
+                setTimeout(() => {
+                    dispatch('conditionsfail', {
+                        location: $loc.location,
+                        component: routesList[i].component
+                    })
+                }, 0)
+                break
+            }
             component = routesList[i].component
             componentParams = match
         }
