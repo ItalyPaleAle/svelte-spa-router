@@ -63,8 +63,15 @@ else {
     routes.set('/wild', Wild)
     routes.set('/wild/*', Wild)
 
-    // This route has a "beforeRoute" function that lets people in only 50% of times
-    routes.set('/lucky', BeforeHook)
+    // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
+    routes.set('/lucky', wrap(Lucky,
+        () => {
+            return (Math.random() > 0.5)
+        },
+        () => {
+            return true
+        }
+    ))
 
     // Regular expressions
     routes.set(/^\/regex\/(.*)?/i, Regex)

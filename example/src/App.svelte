@@ -28,6 +28,7 @@
 <!-- Show the router -->
 <Router {routes} on:conditionsfail={conditionsfail} />
 
+<!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
 <ul class="navigation-dynamic-links">
 {#each dynamicLinks as dl (dl.id)}
