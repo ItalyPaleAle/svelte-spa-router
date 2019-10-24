@@ -2,7 +2,7 @@ import regexparam from 'regexparam'
 import {loc} from './Router.svelte'
 
 // List of nodes to update
-let nodes = []
+const nodes = []
 
 // Current location
 let location

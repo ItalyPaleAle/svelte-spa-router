@@ -6,7 +6,7 @@ import {readable, derived} from 'svelte/store'
 
 export function wrap(route, ...conditions) {
     // Parameter route and each item of conditions must be functions
-    if (!route || typeof route !=='function') {
+    if (!route || typeof route != 'function') {
         throw Error('Invalid parameter route')
     }
     if (conditions && conditions.length) {

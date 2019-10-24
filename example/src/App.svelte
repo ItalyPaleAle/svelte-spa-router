@@ -63,6 +63,7 @@ import routes from './routes'
 
 // Handles the "conditionsfail" dispatched by the router when a component can't be loaded because one of its pre-condition failed
 function conditionsfail(event) {
+    // eslint-disable-next-line no-console
     console.error('Caught event conditionsfail', event.detail)
 }
 
