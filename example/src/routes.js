@@ -35,10 +35,21 @@ if (!urlParams.has('routemap')) {
 
         // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
         '/lucky': wrap(Lucky,
-            () => {
+            (loc) => {
+                // If there's a query-string parameter, override the random choice (tests need to be deterministic)
+                if (loc) {
+                    if (loc.querystring == 'pass=1') {
+                        return true
+                    }
+                    else if (loc.querystring == 'pass=0') {
+                        return false
+                    }
+                }
+                // Random
                 return (Math.random() > 0.5)
             },
-            () => {
+            (loc) => {
+                // Always returns true
                 return true
             }
         ),

@@ -26,7 +26,7 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes} on:conditionsFail={conditionsFail} on:routeLoaded={routeLoaded} />
+<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} />
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
@@ -41,7 +41,7 @@
 </ul>
 
 <!-- Used for testing -->
-<div id="logbox">{logbox}</div>
+<pre id="logbox">{logbox}</pre>
 
 <style>
 /* Style for "active" links; need to mark this :global because the router adds the class directly */
@@ -67,11 +67,11 @@ import routes from './routes'
 // Contains logging information used by tests
 let logbox = ''
 
-// Handles the "conditionsFail" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
-function conditionsFail(event) {
+// Handles the "conditionsFailed" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
+function conditionsFailed(event) {
     // eslint-disable-next-line no-console
-    console.error('Caught event conditionsFail', event.detail)
-    logbox = 'conditionsFail - ' + event.detail.component.name
+    console.error('Caught event conditionsFailed', event.detail)
+    logbox += 'conditionsFailed - ' + event.detail.component.name + '\n'
 
     // Replace the route
     replace('/wild/conditions-failed')
@@ -81,7 +81,7 @@ function conditionsFail(event) {
 function routeLoaded(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeLoaded', event.detail)
-    logbox = 'routeLoaded - ' + event.detail.component.name
+    logbox += 'routeLoaded - ' + event.detail.component.name + '\n'
 }
 
 let dynamicLinks = [
