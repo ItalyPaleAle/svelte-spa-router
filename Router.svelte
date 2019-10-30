@@ -288,6 +288,14 @@ let componentParams = {}
 // Event dispatcher from Svelte
 const dispatch = createEventDispatcher()
 
+// Just like dispatch, but executes on the next iteration of the event loop
+const dispatchNextTick = (name, detail) => {
+    // Execute this code when the current call stack is complete
+    setTimeout(() => {
+        dispatch(name, detail)
+    }, 0)
+}
+
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 $: {
@@ -297,20 +305,21 @@ $: {
     while (!component && i < routesList.length) {
         const match = routesList[i].match($loc.location)
         if (match) {
+            const detail = {
+                location: $loc.location,
+                component: routesList[i].component
+            }
+
             // Check if the route can be loaded - if all conditions succeed
             if (!routesList[i].checkConditions()) {
                 // Trigger an event to notify the user
-                // Execute this code when the current call stack is complete
-                setTimeout(() => {
-                    dispatch('conditionsfail', {
-                        location: $loc.location,
-                        component: routesList[i].component
-                    })
-                }, 0)
+                dispatchNextTick('conditionsFail', detail)
                 break
             }
             component = routesList[i].component
             componentParams = match
+
+            dispatchNextTick('routeLoaded', detail)
         }
         i++
     }

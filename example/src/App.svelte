@@ -26,7 +26,7 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes} on:conditionsfail={conditionsfail} />
+<Router {routes} on:conditionsFail={conditionsFail} on:routeLoaded={routeLoaded} />
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
@@ -61,10 +61,19 @@ import active from '../../active'
 // Import the list of routes
 import routes from './routes'
 
-// Handles the "conditionsfail" dispatched by the router when a component can't be loaded because one of its pre-condition failed
-function conditionsfail(event) {
+// Handles the "conditionsFail" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
+function conditionsFail(event) {
     // eslint-disable-next-line no-console
-    console.error('Caught event conditionsfail', event.detail)
+    console.error('Caught event conditionsFail', event.detail)
+
+    // Replace the route
+    replace('/wild/conditions-failed')
+}
+
+// Handles the "routeLoaded" event dispatched by the router after a route has been successfully loaded
+function routeLoaded(event) {
+    // eslint-disable-next-line no-console
+    console.info('Caught event routeLoaded', event.detail)
 }
 
 let dynamicLinks = [
