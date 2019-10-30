@@ -264,5 +264,18 @@ describe('<Router> component', function() {
                 browser.end()
             })
     })
+
+    it('routeLoaded event', (browser) => {
+        browser
+            .url('http://localhost:5000')
+            .waitForElementPresent('#logbox')
+            .expect.element('#logbox').text.to.equal('routeLoaded - Home')
+        
+        browser.url('http://localhost:5000/#/hello/svelte')
+            .waitForElementPresent('#logbox')
+            .expect.element('#logbox').text.to.equal('routeLoaded - Name')
+        
+        browser.end()
+    })
 })
 

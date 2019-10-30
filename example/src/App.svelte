@@ -40,6 +40,9 @@
 {/each}
 </ul>
 
+<!-- Used for testing -->
+<div id="logbox">{logbox}</div>
+
 <style>
 /* Style for "active" links; need to mark this :global because the router adds the class directly */
 :global(a.active) {
@@ -61,10 +64,14 @@ import active from '../../active'
 // Import the list of routes
 import routes from './routes'
 
+// Contains logging information used by tests
+let logbox = ''
+
 // Handles the "conditionsFail" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
 function conditionsFail(event) {
     // eslint-disable-next-line no-console
     console.error('Caught event conditionsFail', event.detail)
+    logbox = 'conditionsFail - ' + event.detail.component.name
 
     // Replace the route
     replace('/wild/conditions-failed')
@@ -74,6 +81,7 @@ function conditionsFail(event) {
 function routeLoaded(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeLoaded', event.detail)
+    logbox = 'routeLoaded - ' + event.detail.component.name
 }
 
 let dynamicLinks = [
