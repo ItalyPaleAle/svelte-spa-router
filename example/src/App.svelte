@@ -71,7 +71,7 @@ let logbox = ''
 function conditionsFailed(event) {
     // eslint-disable-next-line no-console
     console.error('Caught event conditionsFailed', event.detail)
-    logbox += 'conditionsFailed - ' + event.detail.component.name + '\n'
+    logbox += 'conditionsFailed - ' + JSON.stringify(event.detail) + '\n'
 
     // Replace the route
     replace('/wild/conditions-failed')
@@ -81,7 +81,7 @@ function conditionsFailed(event) {
 function routeLoaded(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeLoaded', event.detail)
-    logbox += 'routeLoaded - ' + event.detail.component.name + '\n'
+    logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
 }
 
 let dynamicLinks = [

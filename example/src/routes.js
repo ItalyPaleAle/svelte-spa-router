@@ -33,23 +33,24 @@ if (!urlParams.has('routemap')) {
         '/wild': Wild,
         '/wild/*': Wild,
 
-        // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
+        // This route has a pre-condition function that lets people in only 50% of times, and a second pre-condition that is always true
         '/lucky': wrap(Lucky,
-            (loc) => {
-                // If there's a query-string parameter, override the random choice (tests need to be deterministic)
-                if (loc) {
-                    if (loc.querystring == 'pass=1') {
-                        return true
-                    }
-                    else if (loc.querystring == 'pass=0') {
-                        return false
-                    }
+            (location, querystring) => {
+                // If there's a querystring parameter, override the random choice (tests need to be deterministic)
+                if (querystring == 'pass=1') {
+                    return true
+                }
+                else if (querystring == 'pass=0') {
+                    return false
                 }
                 // Random
                 return (Math.random() > 0.5)
             },
-            (loc) => {
-                // Always returns true
+            (location, querystring) => {
+                // This pre-condition is executed only if the first one succeeded
+                console.log('Pre-condition 2 executed', location, querystring)
+
+                // Always succeed
                 return true
             }
         ),

@@ -259,12 +259,13 @@ class RouteItem {
     /**
      * Executes all conditions (if any) to control whether the route can be shown. Conditions are executed in the order they are defined, and if a condition fails, the following ones aren't executed.
      *
-     * @param {Location} loc - Location object
+     * @param {string} location - Location path
+     * @param {string} querystring - Querystring
      * @returns {bool} Returns true if all the conditions succeeded
      */
-    checkConditions(loc) {
+    checkConditions(location, querystring) {
         for (let i = 0; i < this.conditions.length; i++) {
-            if (!this.conditions[i](loc)) {
+            if (!this.conditions[i](location, querystring)) {
                 return false
             }
         }
@@ -307,12 +308,13 @@ $: {
         const match = routesList[i].match($loc.location)
         if (match) {
             const detail = {
+                component: routesList[i].component.name,
                 location: $loc.location,
-                component: routesList[i].component
+                querystring: $loc.querystring
             }
 
             // Check if the route can be loaded - if all conditions succeed
-            if (!routesList[i].checkConditions($loc)) {
+            if (!routesList[i].checkConditions($loc.location, $loc.querystring)) {
                 // Trigger an event to notify the user
                 dispatchNextTick('conditionsFailed', detail)
                 break
