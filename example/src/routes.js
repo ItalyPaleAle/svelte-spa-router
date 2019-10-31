@@ -1,7 +1,13 @@
+// Import the "wrap" function
+// Normally, this would be import: `import {wrap} from 'svelte-spa-router'`
+import {wrap} from '../../Router.svelte'
+
+// Components
 import Home from './routes/Home.svelte'
 import Name from './routes/Name.svelte'
 import Wild from './routes/Wild.svelte'
 import Regex from './routes/Regex.svelte'
+import Lucky from './routes/Lucky.svelte'
 import NotFound from './routes/NotFound.svelte'
 
 // This demonstrates how to pass routes as a POJO (Plain Old JavaScript Object) or a JS Map
@@ -26,6 +32,28 @@ if (!urlParams.has('routemap')) {
         // Wildcard parameter
         '/wild': Wild,
         '/wild/*': Wild,
+
+        // This route has a pre-condition function that lets people in only 50% of times, and a second pre-condition that is always true
+        '/lucky': wrap(Lucky,
+            (location, querystring) => {
+                // If there's a querystring parameter, override the random choice (tests need to be deterministic)
+                if (querystring == 'pass=1') {
+                    return true
+                }
+                else if (querystring == 'pass=0') {
+                    return false
+                }
+                // Random
+                return (Math.random() > 0.5)
+            },
+            (location, querystring) => {
+                // This pre-condition is executed only if the first one succeeded
+                console.log('Pre-condition 2 executed', location, querystring)
+
+                // Always succeed
+                return true
+            }
+        ),
     
         // Catch-all, must be last
         '*': NotFound,
@@ -46,6 +74,16 @@ else {
     // Wildcard parameter
     routes.set('/wild', Wild)
     routes.set('/wild/*', Wild)
+
+    // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
+    routes.set('/lucky', wrap(Lucky,
+        () => {
+            return (Math.random() > 0.5)
+        },
+        () => {
+            return true
+        }
+    ))
 
     // Regular expressions
     routes.set(/^\/regex\/(.*)?/i, Regex)

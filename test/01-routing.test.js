@@ -252,7 +252,7 @@ describe('<Router> component', function() {
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('search=query&sort=0')
-        
+
         // Refresh the page
         browser
             .refresh(() => {
@@ -263,6 +263,52 @@ describe('<Router> component', function() {
 
                 browser.end()
             })
+    })
+
+    it('routeLoaded event', (browser) => {
+        browser
+            .url('http://localhost:5000')
+            .waitForElementPresent('#logbox')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"component":"Home","location":"/","querystring":""}')
+
+        browser.url('http://localhost:5000/#/hello/svelte')
+            .waitForElementPresent('#logbox')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"component":"Home","location":"/","querystring":""}\nrouteLoaded - {"component":"Name","location":"/hello/svelte","querystring":""}')
+
+        browser.end()
+    })
+
+    it('route conditions', (browser) => {
+        // Condition always passes
+        browser
+            .url('http://localhost:5000/#/lucky?pass=1')
+            .waitForElementVisible('#lucky')
+            .expect.element('#currentpath').text.to.equal('/lucky')
+        browser.expect.element('#lucky').text.to.equal('You\'re in!')
+
+        // Condition always fails
+        browser.url('http://localhost:5000/#/lucky?pass=0')
+            .waitForElementVisible('h2.routetitle')
+            .assert.containsText('h2.routetitle', 'Wild')
+            .expect.element('#currentpath').text.to.equal('/wild/conditions-failed')
+        browser.expect.element('#currentqs').text.to.equal('')
+
+        browser.end()
+    })
+
+    it('conditionsFailed event', (browser) => {
+        // Condition always passes
+        browser
+            .url('http://localhost:5000/#/lucky?pass=1')
+            .waitForElementPresent('#logbox')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"component":"Lucky","location":"/lucky","querystring":"pass=1"}')
+
+        // Condition always fails
+        browser.url('http://localhost:5000/#/lucky?pass=0')
+            .waitForElementPresent('#logbox')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"component":"Lucky","location":"/lucky","querystring":"pass=1"}\nconditionsFailed - {"component":"Lucky","location":"/lucky","querystring":"pass=0"}\nrouteLoaded - {"component":"Wild","location":"/wild/conditions-failed","querystring":""}')
+
+        browser.end()
     })
 })
 

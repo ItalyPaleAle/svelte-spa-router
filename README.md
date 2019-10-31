@@ -278,7 +278,10 @@ When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"
 
 Check out the [Advanced Usage](/Advanced%20Usage.md) documentation for using:
 
-- [Route transitions](/Advanced%20Usage.md#route-transitions)
+- [routeLoaded event](/Advanced%20Usage.md#routeloaded-event)
 - [Querystring parsing](/Advanced%20Usage.md#querystring-parsing)
+- [Route pre-conditions](/Advanced%20Usage.md#route-pre-conditions) ("Route guards")
+- [Route transitions](/Advanced%20Usage.md#route-transitions)
 - [Nested routers](/Advanced%20Usage.md#nested-routers)
 - [Route groups](/Advanced%20Usage.md#route-groups)
+- [Async route loading](/Advanced%20Usage.md#async-route-loading)

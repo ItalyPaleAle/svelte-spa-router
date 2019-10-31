@@ -26,8 +26,9 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes}/>
+<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} />
 
+<!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
 <ul class="navigation-dynamic-links">
 {#each dynamicLinks as dl (dl.id)}
@@ -38,6 +39,9 @@
     </li>
 {/each}
 </ul>
+
+<!-- Used for testing -->
+<pre id="logbox">{logbox}</pre>
 
 <style>
 /* Style for "active" links; need to mark this :global because the router adds the class directly */
@@ -59,6 +63,26 @@ import active from '../../active'
 
 // Import the list of routes
 import routes from './routes'
+
+// Contains logging information used by tests
+let logbox = ''
+
+// Handles the "conditionsFailed" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
+function conditionsFailed(event) {
+    // eslint-disable-next-line no-console
+    console.error('Caught event conditionsFailed', event.detail)
+    logbox += 'conditionsFailed - ' + JSON.stringify(event.detail) + '\n'
+
+    // Replace the route
+    replace('/wild/conditions-failed')
+}
+
+// Handles the "routeLoaded" event dispatched by the router after a route has been successfully loaded
+function routeLoaded(event) {
+    // eslint-disable-next-line no-console
+    console.info('Caught event routeLoaded', event.detail)
+    logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
+}
 
 let dynamicLinks = [
     {

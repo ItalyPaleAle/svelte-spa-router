@@ -4,33 +4,45 @@ svelte-spa-router is simple by design. A minimal router is easy to learn and imp
 
 Thanks to the many features of Svelte 3 or other components in the ecosystem, svelte-spa-router can be used to get many more "advanced" features. This document explains how to achieve certain results with svelte-spa-router beyond what's offered by the component itself.
 
-- [Route transitions](#route-transitions)
+- [routeLoaded event](#routeloaded-event)
 - [Querystring parsing](#querystring-parsing)
+- [Route pre-conditions](#route-pre-conditions) ("Route guards")
+- [Route transitions](#route-transitions)
 - [Nested routers](#nested-routers)
 - [Route groups](#route-groups)
 - [Async route loading](#async-route-loading)
 
-## Route transitions
+## `routeLoaded` event
 
-It's easy to add a nice transition between routes, leveraging the built-in [transitions](https://svelte.dev/docs#Transitions) of Svelte 3.
+The router emits the `routeLoaded` event after a route has been successfully loaded (and injected in the DOM). You can listen to this event and trigger any custom logic.
 
-For example, to make your components fade in gracefully, you can wrap the markup in a container (e.g. `<div>`, or `<section>`, etc) and attach a Svelte transition to that. For example:
+The event listener receives an `event` object that contains the following `detail` object:
 
-````svelte
-<div in:fade="{{duration: 500}}">
-    <h2>Component's code goes here</h2>
-</div>
-
-<script>
-import {fade} from 'svelte/transition'
-</script>
+````js
+event.detail = {
+    // The name of the Svelte component that was loaded
+    component: 'Book',
+    // The current path, equivalent to the value of the $location readable store
+    location: '/path',
+    // The "querystring" from the page's hash, equivalent to the value of the $querystring readable store
+    querystring: 'foo=bar'
+}
 ````
 
-When you apply the transition to multiple components, you can get a smooth transition effect:
+For example:
 
-![Example of transitions](/img/transitions.gif)
+````svelte
+<Router {routes} on:routeLoaded={routeLoaded} />
 
-For more details: [official documentation](https://svelte.dev/docs#Transitions) on Svelte transitions.
+<script>
+function routeLoaded(event) {
+    console.log('routeLoaded event')
+    console.log('Component', event.detail.component)
+    console.log('Location', event.detail.location)
+    console.log('Querystring', event.detail.querystring)
+}
+</script>
+````
 
 ## Querystring parsing
 
@@ -76,6 +88,118 @@ With the same URL as before, the result would be:
 ````
 
 qs supports advanced things such as arrays, nested objects, etc. Check out their [README](https://github.com/ljharb/qs) for more information.
+
+## Route pre-conditions
+
+You can define pre-conditions on routes, also known as "route guards". You can define one or more functions that the router will execute before loading the route that matches the current path. Your application can use pre-conditions to implement custom checks before routes are loaded, for example ensuring that users are authenticated.
+
+Pre-conditions are defined in the routes object, using the `wrap` method exported by the router rather than the Svelte component directly.
+
+The pre-condition functions receive two arguments:
+
+- `location`: the current path (just like the `$location` readable store)
+- `querystring`: the current "querystring" parameters from the page's hash (just like the `$querystring` readable store)
+
+The pre-condition functions must return a boolean indicating wether the condition succeeded (true) or failed (false).
+
+You can define any number of pre-conditions for each route, and they're executed in order. If all pre-conditions succeed (returning true), the route is loaded.
+
+If one condition fails, the router stops executing pre-conditions and does not load any route.
+
+Example:
+
+````svelte
+<!-- App.svelte -->
+<Router {routes}/>
+<script>
+import Router from 'svelte-spa-router'
+import {wrap} from 'svelte-spa-router'
+
+import Lucky from './Lucky.svelte'
+
+// Route definition object
+const routes = {
+    // This route has a pre-condition function that lets people in only 50% of times, and a second pre-condition that is always true
+    '/lucky': wrap(
+        // The Svelte component used by the route
+        Lucky,
+
+        // First pre-condition function
+        (location, querystring) => {
+            // Pre-condition succeeds only 50% of times
+            return (Math.random() > 0.5)
+        },
+
+        // Second pre-condition function
+        (location, querystring) => {
+            // This pre-condition is executed only if the first one succeeded
+            console.log('Pre-condition 2 executed', location, querystring)
+
+            // Always succeed
+            return true
+        }
+    )
+}
+</script>
+````
+
+In case a condition fails, the router emits the `conditionsFailed` event, with the following detail object:
+
+````js
+event.detail = {
+    // The name of the Svelte component that matched the path (but wasn't loaded)
+    component: 'Lucky',
+    // The current path, equivalent to the value of the $location readable store
+    location: '/lucky',
+    // The "querystring" from the page's hash, equivalent to the value of the $querystring readable store
+    querystring: 'foo=bar'
+}
+````
+
+You can listen to the `conditionsFailed` and perform actions in case no route wasn't loaded because of a failed pre-condition:
+
+````svelte
+<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} />
+
+<script>
+// Handles the "conditionsFailed" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
+function conditionsFailed(event) {
+    console.error('conditionsFailed event', event.detail)
+
+    // Perform any action, for example replacing the current route
+    if (event.detail.component == 'Lucky') {
+        replace('/hello/world')
+    }
+}
+
+// Handles the "routeLoaded" event dispatched by the router when a component was loaded
+function routeLoaded(event) {
+    console.log('routeLoaded event', event.detail)
+}
+</script>
+````
+
+## Route transitions
+
+It's easy to add a nice transition between routes, leveraging the built-in [transitions](https://svelte.dev/docs#Transitions) of Svelte 3.
+
+For example, to make your components fade in gracefully, you can wrap the markup in a container (e.g. `<div>`, or `<section>`, etc) and attach a Svelte transition to that. For example:
+
+````svelte
+<div in:fade="{{duration: 500}}">
+    <h2>Component's code goes here</h2>
+</div>
+
+<script>
+import {fade} from 'svelte/transition'
+</script>
+````
+
+When you apply the transition to multiple components, you can get a smooth transition effect:
+
+![Example of transitions](/img/transitions.gif)
+
+For more details: [official documentation](https://svelte.dev/docs#Transitions) on Svelte transitions.
 
 ## Nested routers
 
