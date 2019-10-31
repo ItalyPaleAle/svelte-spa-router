@@ -14,3 +14,4 @@ img
 *.md
 !README.md
 coverage
+.github
