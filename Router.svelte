@@ -162,34 +162,14 @@ export function link(node) {
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
-
-    // If a user wants to restore scroll positions, we do this to know when they are about to navigate to a new 'page'
-    // TODO: it seems I don't have reference to this var from context='module'; will need to fix this
-    //if (restoreScrollPosition) {
-    node.addEventListener('click', scrollstateHistoryHandler)
-    //}
 }
 
-/**
- * Handler attached to an anchor tag (above)
- *
- * @param {HTMLElementEventMap} event - an onclick event attached to an anchor tag
- */
-function scrollstateHistoryHandler(event) {
-    // Prevent default anchor onclick behaviour
-    event.preventDefault()
-    const href = event.currentTarget.getAttribute('href')
-    // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
-    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
-    // This will force an update as desired, but this time our scroll state will be attached
-    window.location.hash = href
-}
 </script>
 
-<svelte:component this="{component}" params="{componentParams}"/>
+<svelte:component this="{component}" params="{componentParams}" />
 
 <script>
-import {createEventDispatcher} from 'svelte'
+import {createEventDispatcher, afterUpdate} from 'svelte'
 import regexparam from 'regexparam'
 
 /**
@@ -212,8 +192,6 @@ export let routes = {}
 /**
  * If set to true, the router will restore scroll positions on back navigation
  * and scroll to top on forward navigation.
- *
- * Requires device to have history API support.
  */
 export let restoreScrollState = false
 
@@ -342,6 +320,29 @@ if (restoreScrollState) {
             previousScrollState = null
         }
     })
+
+    /**
+     * The handler attached to an anchor tag responsible for updating history with view state
+     *
+     * @param {HTMLElementEventMap} event - an onclick event attached to an anchor tag
+     */
+    function scrollstateHistoryHandler(event)  {
+        // Prevent default anchor onclick behaviour
+        event.preventDefault()
+        const href = event.currentTarget.getAttribute('href')
+        // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
+        history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
+        // This will force an update as desired, but this time our scroll state will be attached
+        window.location.hash = href
+    }
+
+    // Update all anchor nodes under the router only after everything has rendered
+    afterUpdate(() => {
+        let anchors = document.getElementsByTagName('a')
+        for (let i = 0; i < anchors.length; i++) {
+            anchors[i].addEventListener('click', scrollstateHistoryHandler)
+        }
+    })
 }
 
 // Handle hash change events
@@ -365,7 +366,6 @@ $: {
                 dispatchNextTick('conditionsFailed', detail)
                 break
             }
-
             component = routesList[i].component
             componentParams = match
 
