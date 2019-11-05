@@ -166,7 +166,7 @@ export function link(node) {
     // If a user wants to restore scroll positions, we do this to know when they are about to navigate to a new 'page'
     // TODO: it seems I don't have reference to this var from context='module'; will need to fix this
     //if (restoreScrollPosition) {
-        node.addEventListener('click', scrollstateHistoryHandler)
+    node.addEventListener('click', scrollstateHistoryHandler)
     //}
 }
 
@@ -215,7 +215,7 @@ export let routes = {}
  *
  * Requires device to have history API support.
  */
-export let restoreScrollState = false;
+export let restoreScrollState = false
 
 /**
  * Container for a route: path, component
@@ -337,12 +337,13 @@ if (restoreScrollState) {
         // navigation).
         if (event.state && event.state.scrollY) {
             previousScrollState = event.state
-        } else {
+        }
+        else
+        {
             previousScrollState = null
         }
     })
 }
-
 
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
@@ -376,7 +377,9 @@ $: {
                     setTimeout(() => {
                         window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
                     }, 0)
-                } else {
+                }
+                else
+                {
                     window.scrollTo(0, 0)
                 }
             }
