@@ -310,6 +310,22 @@ const dispatchNextTick = (name, detail) => {
 // If this is set, then that means we have popped into this var the state of our last scroll position
 let previousScrollState = null
 
+/**
+ * The handler attached to an anchor tag responsible for updating the
+ * current history state with the current scroll state
+ *
+ * @param {HTMLElementEventMap} event - an onclick event attached to an anchor tag
+ */
+function scrollstateHistoryHandler(event) {
+    // Prevent default anchor onclick behaviour
+    event.preventDefault()
+    const href = event.currentTarget.getAttribute('href')
+    // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
+    // This will force an update as desired, but this time our scroll state will be attached
+    window.location.hash = href
+}
+
 if (restoreScrollState) {
     window.addEventListener('popstate', (event) => {
         // If this event was from our history.replaceState, event.state will contain
@@ -323,25 +339,9 @@ if (restoreScrollState) {
         }
     })
 
-    /**
-     * The handler attached to an anchor tag responsible for updating the
-     * current history state with the current scroll state
-     *
-     * @param {HTMLElementEventMap} event - an onclick event attached to an anchor tag
-     */
-    function scrollstateHistoryHandler(event)  {
-        // Prevent default anchor onclick behaviour
-        event.preventDefault()
-        const href = event.currentTarget.getAttribute('href')
-        // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
-        history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
-        // This will force an update as desired, but this time our scroll state will be attached
-        window.location.hash = href
-    }
-
     // Update all anchor nodes under the router only after everything has rendered
     afterUpdate(() => {
-        let anchors = document.getElementsByTagName('a')
+        const anchors = document.getElementsByTagName('a')
         for (let i = 0; i < anchors.length; i++) {
             anchors[i].addEventListener('click', scrollstateHistoryHandler)
         }
