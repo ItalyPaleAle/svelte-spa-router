@@ -103,6 +103,8 @@ export function push(location) {
 
     // Execute this code when the current call stack is complete
     setTimeout(() => {
+        // TODO: this will include scroll state in history even when restoreScrollState is false
+        history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
         window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
     }, 0)
 }
@@ -322,7 +324,8 @@ if (restoreScrollState) {
     })
 
     /**
-     * The handler attached to an anchor tag responsible for updating history with view state
+     * The handler attached to an anchor tag responsible for updating the
+     * current history state with the current scroll state
      *
      * @param {HTMLElementEventMap} event - an onclick event attached to an anchor tag
      */
