@@ -137,17 +137,6 @@ export function replace(location) {
     }, 0)
 }
 
-function scrollstateHistoryHandler(e) {
-    // Prevent default anchor onclick behaviour
-    e.preventDefault()
-    const href = e.currentTarget.getAttribute('href')
-    // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
-    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
-    // This will force an update as desired, but this time our scroll state will be attached
-    window.location.hash = href
-}
-
-
 /**
  * Svelte Action that enables a link element (`<a>`) to use our history management.
  *
@@ -173,8 +162,27 @@ export function link(node) {
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
-    // Add custom click handler 
-    node.addEventListener('click', scrollstateHistoryHandler)
+
+    // If a user wants to restore scroll positions, we do this to know when they are about to navigate to a new 'page'
+    // TODO: it seems I don't have reference to this var from context='module'; will need to fix this
+    //if (restoreScrollPosition) {
+        node.addEventListener('click', scrollstateHistoryHandler)
+    //}
+}
+
+/**
+ * Handler attached to an anchor tag (above)
+ *
+ * @param {HTMLElementEventMap} event - an onclick event attached to an anchor tag
+ */
+function scrollstateHistoryHandler(event) {
+    // Prevent default anchor onclick behaviour
+    event.preventDefault()
+    const href = event.currentTarget.getAttribute('href')
+    // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
+    // This will force an update as desired, but this time our scroll state will be attached
+    window.location.hash = href
 }
 </script>
 
@@ -200,6 +208,14 @@ import regexparam from 'regexparam'
  * ````
  */
 export let routes = {}
+
+/**
+ * If set to true, the router will restore scroll positions on back navigation
+ * and scroll to top on forward navigation.
+ *
+ * Requires device to have history API support.
+ */
+export let restoreScrollState = false;
 
 /**
  * Container for a route: path, component
@@ -311,15 +327,21 @@ const dispatchNextTick = (name, detail) => {
     }, 0)
 }
 
-let previousScrollState = {}
+// If this is set, then that means we have popped into this var the state of our last scroll position
+let previousScrollState = null
 
-window.addEventListener('popstate', (event) => {
-    if (event.state) {
-        previousScrollState = event.state
-    } else {
-        previousScrollState = null
-    }
-})
+if (restoreScrollState) {
+    window.addEventListener('popstate', (event) => {
+        // If this event was from our history.replaceState, event.state will contain
+        // our scroll history. Otherwise, event.state will be null (like on forward
+        // navigation).
+        if (event.state && event.state.scrollY) {
+            previousScrollState = event.state
+        } else {
+            previousScrollState = null
+        }
+    })
+}
 
 
 // Handle hash change events
@@ -347,12 +369,16 @@ $: {
             component = routesList[i].component
             componentParams = match
 
-            if (previousScrollState) {
-                setTimeout(() => {
-                    window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
-                }, 0)
-            } else {
-                window.scrollTo(0, 0)
+            if (restoreScrollState) {
+                if (previousScrollState) {
+                    // Needs to be done on next tick
+                    // TODO: This causes a brief flash if there is a lot of content to scroll
+                    setTimeout(() => {
+                        window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
+                    }, 0)
+                } else {
+                    window.scrollTo(0, 0)
+                }
             }
 
             dispatchNextTick('routeLoaded', detail)
