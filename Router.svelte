@@ -338,8 +338,7 @@ if (restoreScrollState) {
         if (event.state && event.state.scrollY) {
             previousScrollState = event.state
         }
-        else
-        {
+        else {
             previousScrollState = null
         }
     })
@@ -378,8 +377,7 @@ $: {
                         window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
                     }, 0)
                 }
-                else
-                {
+                else {
                     window.scrollTo(0, 0)
                 }
             }
