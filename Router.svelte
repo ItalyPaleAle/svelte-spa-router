@@ -137,11 +137,14 @@ export function replace(location) {
     }, 0)
 }
 
-function track(e) {
-    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, window.location.tag , null);
-    e.preventDefault();
-    const href = e.currentTarget.getAttribute('href');
-    window.location.hash = href;
+function scrollstateHistoryHandler(e) {
+    // Prevent default anchor onclick behaviour
+    e.preventDefault()
+    const href = e.currentTarget.getAttribute('href')
+    // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
+    // This will force an update as desired, but this time our scroll state will be attached
+    window.location.hash = href
 }
 
 
@@ -170,11 +173,12 @@ export function link(node) {
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
-    node.addEventListener('click', track)
+    // Add custom click handler 
+    node.addEventListener('click', scrollstateHistoryHandler)
 }
 </script>
 
-<svelte:component this="{component}" params="{componentParams}" />
+<svelte:component this="{component}" params="{componentParams}"/>
 
 <script>
 import {createEventDispatcher} from 'svelte'
@@ -307,19 +311,15 @@ const dispatchNextTick = (name, detail) => {
     }, 0)
 }
 
-let newscrollpos = {};
+let previousScrollState = {}
 
-window.addEventListener('popstate', function(event) {
-    console.log("location: " + document.location, "state: ", event.state);
+window.addEventListener('popstate', (event) => {
     if (event.state) {
-            //window.scrollTo(event.scrollX, event.scrollY);
-            newscrollpos = event.state;
-        setTimeout(() => {
-        }, 0)
+        previousScrollState = event.state
     } else {
-        newscrollpos = null;
+        previousScrollState = null
     }
-});
+})
 
 
 // Handle hash change events
@@ -343,25 +343,17 @@ $: {
                 dispatchNextTick('conditionsFailed', detail)
                 break
             }
-            console.log('currentY:', window.scrollY);
+
             component = routesList[i].component
             componentParams = match
-            if (newscrollpos) {
+
+            if (previousScrollState) {
                 setTimeout(() => {
-                    console.log('restoredY:', newscrollpos.scrollY);
-                    window.scrollTo(newscrollpos.scrollX, newscrollpos.scrollY);
+                    window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
                 }, 0)
             } else {
-                window.scrollTo(0, 0);
-            }/*
-            setTimeout(() => {
-                if (newscrollpos) {
-                    console.log('restoredY:', newscrollpos.scrollY);
-                    window.scrollTo(newscrollpos.scrollX, newscrollpos.scrollY);
-                } else {
-                    window.scrollTo(0, 0);
-                }
-            }, 0) */
+                window.scrollTo(0, 0)
+            }
 
             dispatchNextTick('routeLoaded', detail)
         }
