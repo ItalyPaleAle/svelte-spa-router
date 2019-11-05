@@ -137,6 +137,14 @@ export function replace(location) {
     }, 0)
 }
 
+function track(e) {
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, window.location.tag , null);
+    e.preventDefault();
+    const href = e.currentTarget.getAttribute('href');
+    window.location.hash = href;
+}
+
+
 /**
  * Svelte Action that enables a link element (`<a>`) to use our history management.
  *
@@ -157,11 +165,12 @@ export function link(node) {
     // Destination must start with '/'
     const href = node.getAttribute('href')
     if (!href || href.length < 1 || href.charAt(0) != '/') {
-        throw Error('Invalid value for "href" attribute')
+        throw Error('Invalid value for "href" attribute: ' + href)
     }
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
+    node.addEventListener('click', track)
 }
 </script>
 
@@ -298,6 +307,21 @@ const dispatchNextTick = (name, detail) => {
     }, 0)
 }
 
+let newscrollpos = {};
+
+window.addEventListener('popstate', function(event) {
+    console.log("location: " + document.location, "state: ", event.state);
+    if (event.state) {
+            //window.scrollTo(event.scrollX, event.scrollY);
+            newscrollpos = event.state;
+        setTimeout(() => {
+        }, 0)
+    } else {
+        newscrollpos = null;
+    }
+});
+
+
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 $: {
@@ -319,8 +343,25 @@ $: {
                 dispatchNextTick('conditionsFailed', detail)
                 break
             }
+            console.log('currentY:', window.scrollY);
             component = routesList[i].component
             componentParams = match
+            if (newscrollpos) {
+                setTimeout(() => {
+                    console.log('restoredY:', newscrollpos.scrollY);
+                    window.scrollTo(newscrollpos.scrollX, newscrollpos.scrollY);
+                }, 0)
+            } else {
+                window.scrollTo(0, 0);
+            }/*
+            setTimeout(() => {
+                if (newscrollpos) {
+                    console.log('restoredY:', newscrollpos.scrollY);
+                    window.scrollTo(newscrollpos.scrollX, newscrollpos.scrollY);
+                } else {
+                    window.scrollTo(0, 0);
+                }
+            }, 0) */
 
             dispatchNextTick('routeLoaded', detail)
         }
