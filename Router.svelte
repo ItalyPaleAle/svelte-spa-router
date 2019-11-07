@@ -167,7 +167,9 @@ export function link(node) {
 }
 </script>
 
-<svelte:component this="{component}" params="{componentParams}" />
+<div bind:this="{parentDOM}">
+    <svelte:component this="{component}" params="{componentParams}" />
+</div>
 
 <script>
 import {createEventDispatcher, afterUpdate} from 'svelte'
@@ -308,6 +310,10 @@ const dispatchNextTick = (name, detail) => {
 
 // If this is set, then that means we have popped into this var the state of our last scroll position
 let previousScrollState = null
+// Holds a reference to the parent DOM containing our router. This lets us
+// attach our custom onclick handler only to the anchor tags relevant for routing--the
+// ones under the router
+let parentDOM = null
 
 /**
  * The handler attached to an anchor tag responsible for updating the
@@ -338,22 +344,21 @@ if (restoreScrollState) {
         }
     })
 
-    // Update all anchor nodes under the router only after everything has rendered
+    // Update all anchor nodes under the router and perform scroll operations
+    // only after everything has rendered
     afterUpdate(() => {
-        const anchors = document.getElementsByTagName('a')
+        const anchors = parentDOM.getElementsByTagName('a')
         for (let i = 0; i < anchors.length; i++) {
             anchors[i].addEventListener('click', scrollstateHistoryHandler)
         }
 
-        if (restoreScrollState) {
-            // If this exists, then it was a back navigation--restore the scroll position
-            if (previousScrollState) {
-                window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
-            }
-            else {
-                // Otherwise forward navigation--scroll to top
-                window.scrollTo(0, 0)
-            }
+        // If this exists, then this is a back navigation--restore the scroll position
+        if (previousScrollState) {
+            window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
+        }
+        else {
+            // Otherwise this will be a forward navigation--scroll to top
+            window.scrollTo(0, 0)
         }
     })
 }
