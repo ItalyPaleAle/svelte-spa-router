@@ -184,9 +184,7 @@ function scrollstateHistoryHandler(event) {
 }
 </script>
 
-<div bind:this="{parentDOM}">
-    <svelte:component this="{component}" params="{componentParams}" />
-</div>
+<svelte:component this="{component}" params="{componentParams}" />
 
 <script>
 import {createEventDispatcher, afterUpdate} from 'svelte'
@@ -327,10 +325,6 @@ const dispatchNextTick = (name, detail) => {
 
 // If this is set, then that means we have popped into this var the state of our last scroll position
 let previousScrollState = null
-// Holds a reference to the parent DOM containing our router. This lets us
-// attach our custom onclick handler only to the anchor tags relevant for routing--the
-// ones under the router
-let parentDOM = null
 
 if (restoreScrollState) {
     window.addEventListener('popstate', (event) => {
