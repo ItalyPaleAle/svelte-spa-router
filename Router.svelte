@@ -165,7 +165,6 @@ export function link(node) {
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
 }
-
 </script>
 
 <svelte:component this="{component}" params="{componentParams}" />
@@ -345,6 +344,17 @@ if (restoreScrollState) {
         for (let i = 0; i < anchors.length; i++) {
             anchors[i].addEventListener('click', scrollstateHistoryHandler)
         }
+
+        if (restoreScrollState) {
+            // If this exists, then it was a back navigation--restore the scroll position
+            if (previousScrollState) {
+                window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
+            }
+            else {
+                // Otherwise forward navigation--scroll to top
+                window.scrollTo(0, 0)
+            }
+        }
     })
 }
 
@@ -371,19 +381,6 @@ $: {
             }
             component = routesList[i].component
             componentParams = match
-
-            if (restoreScrollState) {
-                if (previousScrollState) {
-                    // Needs to be done on next tick
-                    // TODO: This causes a brief flash if there is a lot of content to scroll
-                    setTimeout(() => {
-                        window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
-                    }, 0)
-                }
-                else {
-                    window.scrollTo(0, 0)
-                }
-            }
 
             dispatchNextTick('routeLoaded', detail)
         }
