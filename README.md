@@ -15,6 +15,8 @@ Main features:
 
 This module is released under MIT license.
 
+> **Note:** there's currently a known issue with Svelte 3.13+ that is breaking `use:link` actions (see #59). A fix is coming shortly; in the meanwhile, if you are encountering issues with the `use:link` action (including the sample code in this repo), please downgrade Svelte to 3.12.1.
+
 ## Hash-based routing
 
 With hash-based routing, navigation is possible thanks to storing the current view in the part of the URL after `#`, called "hash" or "fragment".
