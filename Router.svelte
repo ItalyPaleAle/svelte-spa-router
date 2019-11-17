@@ -204,6 +204,11 @@ import regexparam from 'regexparam'
 export let routes = {}
 
 /**
+ * Optional prefix for the routes in this router. This is useful for example in the case of nested routers.
+ */
+export let prefix = ''
+
+/**
  * Container for a route: path, component
  */
 class RouteItem {
@@ -255,6 +260,12 @@ class RouteItem {
      * @returns {null|Object.<string, string>} List of paramters from the URL if there's a match, or `null` otherwise.
      */
     match(path) {
+        // If there's a prefix, remove it before we run the matching
+        if (prefix && path.startsWith(prefix)) {
+            path = path.substr(prefix.length) || '/'
+        }
+
+        // Check if the pattern matches
         const matches = this._pattern.exec(path)
         if (matches === null) {
             return null

@@ -233,22 +233,30 @@ import Router from 'svelte-spa-router'
 import Hello from './Hello.svelte'
 // Routes for the "outer router"
 const routes = {
+    // We need to define both '/hello' and '/hello/*' in two separate lines to ensure that both '/hello' (with nothing else) and sub-paths are matched
+    '/hello': Hello,
     '/hello/*': Hello,
 }
+
+/*
+Note: If defining routes using a Map object, you could use a custom regular expression instead of having to define the route twice:
+routes.set(/^\/hello(\/(.*))?/, Hello)
+*/
 </script>
 
 <!-- Hello.svelte -->
 <h2>Hello!</h2>
-<Router {routes}/>
+<Router {routes} {prefix} />
 <script>
 import Router from 'svelte-spa-router'
 import FullName from './FullName.svelte'
 import ShortName from './ShortName.svelte'
 // Routes for the "inner router"
-// Note that the path is still the absolute one!
+// Note that we have a "prefix" property for this nested router
+const prefix = '/hello'
 const routes = {
-    '/hello/:first/:last': FullName,
-    '/hello/:first': ShortName
+    '/:first/:last': FullName,
+    '/:first': ShortName
 }
 </script>
 
@@ -277,8 +285,6 @@ This works as you would expect:
 Both routes first load the `Hello` route, as they both match `/hello/*` in the outer router. The inner router then loads the separate components based on the path.
 
 Features like highlighting active links will still work, regardless of where those links are placed in the page (in which component).
-
-However, keep in mind that routes are still defined in absolute terms also in inner routers, and whatever route you define must match the full path. For example, had we defined the inner route as `/:first/:last` without `/hello` as a prefix, we would get unexpected results.
 
 ## Route groups
 

@@ -8,6 +8,7 @@ import Name from './routes/Name.svelte'
 import Wild from './routes/Wild.svelte'
 import Regex from './routes/Regex.svelte'
 import Lucky from './routes/Lucky.svelte'
+import Nested from './routes/Nested.svelte'
 import NotFound from './routes/NotFound.svelte'
 
 // This demonstrates how to pass routes as a POJO (Plain Old JavaScript Object) or a JS Map
@@ -59,6 +60,11 @@ if (!urlParams.has('routemap')) {
                 return true
             }
         ),
+
+        // This component contains a nested router
+        // Note that we must match both '/nested' and '/nested/*' for the nested router to work (or look below at doing this with a Map and a regular expression)
+        '/nested': Nested,
+        '/nested/*': Nested,
     
         // Catch-all, must be last
         '*': NotFound,
@@ -100,6 +106,10 @@ else {
     // Regular expressions
     routes.set(/^\/regex\/(.*)?/i, Regex)
     routes.set(/^\/(pattern|match)(\/[a-z0-9]+)?/i, Regex)
+
+    // This component contains a nested router
+    // Thanks to being able to define routes via regular expressions, this allows us to use a single line rather than 2 ('/nested' and '/nested/*')
+    routes.set(/^\/nested(\/(.*))?/, Nested)
 
     // Catch-all, must be last
     routes.set('*', NotFound)
