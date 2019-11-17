@@ -31,24 +31,29 @@ if (!urlParams.has('routemap')) {
     
         // Wildcard parameter
         '/wild': Wild,
+        // Special route that has custom data that will be passed to the `routeLoaded` event
+        '/wild/data': wrap(Wild, {hello: 'world'}),
         '/wild/*': Wild,
 
         // This route has a pre-condition function that lets people in only 50% of times, and a second pre-condition that is always true
+        // The second argument is a custom data object that will be passed to the `conditionsFailed` event if the pre-conditions fail
         '/lucky': wrap(Lucky,
-            (location, querystring) => {
+            {foo: 'bar'},
+            (detail) => {
                 // If there's a querystring parameter, override the random choice (tests need to be deterministic)
-                if (querystring == 'pass=1') {
+                if (detail.querystring == 'pass=1') {
                     return true
                 }
-                else if (querystring == 'pass=0') {
+                else if (detail.querystring == 'pass=0') {
                     return false
                 }
                 // Random
                 return (Math.random() > 0.5)
             },
-            (location, querystring) => {
+            (detail) => {
                 // This pre-condition is executed only if the first one succeeded
-                console.log('Pre-condition 2 executed', location, querystring)
+                // eslint-disable-next-line no-console
+                console.log('Pre-condition 2 executed', detail.location, detail.querystring, detail.userData)
 
                 // Always succeed
                 return true
@@ -73,14 +78,21 @@ else {
 
     // Wildcard parameter
     routes.set('/wild', Wild)
+    // Special route that has custom data that will be passed to the `routeLoaded` event
+    routes.set('/wild/data', wrap(Wild, {hello: 'world'}))
     routes.set('/wild/*', Wild)
 
     // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
+    // The second argument is a custom data object that will be passed to the `conditionsFailed` event if the pre-conditions fail
     routes.set('/lucky', wrap(Lucky,
-        () => {
+        {foo: 'bar'},
+        (detail) => {
             return (Math.random() > 0.5)
         },
-        () => {
+        (detail) => {
+            // This pre-condition is executed only if the first one succeeded
+            // eslint-disable-next-line no-console
+            console.log('Pre-condition 2 executed', detail.location, detail.querystring, detail.userData)
             return true
         }
     ))

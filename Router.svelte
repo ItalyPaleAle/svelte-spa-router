@@ -4,7 +4,22 @@
 
 import {readable, derived} from 'svelte/store'
 
-export function wrap(route, ...conditions) {
+/**
+ * Wraps a route to add route pre-conditions.
+ * 
+ * @param {SvelteComponent} route - Svelte component for the route
+ * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
+ * @param {...Function} conditions - Route pre-conditions to add, which will be executed in order
+ * @returns {Object} Wrapped route
+ */
+export function wrap(route, userData, ...conditions) {
+    // Check if we don't have userData
+    if (userData && typeof userData == 'function') {
+        conditions = (conditions && conditions.length) ? conditions : []
+        conditions.unshift(userData)
+        userData = undefined
+    }
+
     // Parameter route and each item of conditions must be functions
     if (!route || typeof route != 'function') {
         throw Error('Invalid parameter route')
@@ -18,7 +33,7 @@ export function wrap(route, ...conditions) {
     }
 
     // Returns an object that contains all the functions to execute too
-    const obj = {route}
+    const obj = {route, userData}
     if (conditions && conditions.length) {
         obj.conditions = conditions
     }
@@ -219,10 +234,12 @@ class RouteItem {
         if (typeof component == 'object' && component._sveltesparouter === true) {
             this.component = component.route
             this.conditions = component.conditions || []
+            this.userData = component.userData
         }
         else {
             this.component = component
             this.conditions = []
+            this.userData = undefined
         }
 
         this._pattern = pattern
@@ -257,15 +274,24 @@ class RouteItem {
     }
 
     /**
+     * Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoaded` and `conditionsFailed` events
+     * @typedef {Object} RouteDetail
+     * @property {SvelteComponent} component - Svelte component
+     * @property {string} name - Name of the Svelte component
+     * @property {string} location - Location path
+     * @property {string} querystring - Querystring from the hash
+     * @property {Object} [userData] - Custom data passed by the user
+     */
+
+    /**
      * Executes all conditions (if any) to control whether the route can be shown. Conditions are executed in the order they are defined, and if a condition fails, the following ones aren't executed.
-     *
-     * @param {string} location - Location path
-     * @param {string} querystring - Querystring
+     * 
+     * @param {RouteDetail} detail - Route detail
      * @returns {bool} Returns true if all the conditions succeeded
      */
-    checkConditions(location, querystring) {
+    checkConditions(detail) {
         for (let i = 0; i < this.conditions.length; i++) {
-            if (!this.conditions[i](location, querystring)) {
+            if (!this.conditions[i](detail)) {
                 return false
             }
         }
@@ -308,13 +334,15 @@ $: {
         const match = routesList[i].match($loc.location)
         if (match) {
             const detail = {
-                component: routesList[i].component.name,
+                component: routesList[i].component,
+                name: routesList[i].component.name,
                 location: $loc.location,
-                querystring: $loc.querystring
+                querystring: $loc.querystring,
+                userData: routesList[i].userData
             }
 
             // Check if the route can be loaded - if all conditions succeed
-            if (!routesList[i].checkConditions($loc.location, $loc.querystring)) {
+            if (!routesList[i].checkConditions(detail)) {
                 // Trigger an event to notify the user
                 dispatchNextTick('conditionsFailed', detail)
                 break
