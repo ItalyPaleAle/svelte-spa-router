@@ -15,8 +15,6 @@ Main features:
 
 This module is released under MIT license.
 
-> **Note:** there's currently a known issue with Svelte 3.13+ that is breaking `use:link` actions (see #59). A fix is coming shortly; in the meanwhile, if you are encountering issues with the `use:link` action (including the sample code in this repo), please downgrade Svelte to 3.12.1.
-
 ## Hash-based routing
 
 With hash-based routing, navigation is possible thanks to storing the current view in the part of the URL after `#`, called "hash" or "fragment".
@@ -228,15 +226,17 @@ import active from 'svelte-spa-router/active'
 }
 </style>
 
-<a href="/hello/user" use:link use:active={'/hello/*', 'active'}>Say hi!</a>
-<a href="/hello/user" use:link use:active>Say hi again!</a>
+<a href="/hello/user" use:link use:active={{path: '/hello/*', className: 'active'}}>Say hi!</a>
+<a href="/hello/user" use:link use:active={'/hello/*'}>Say hi with a default className!</a>
+<a href="/hello/user" use:link use:active>Say hi with all default options!</a>
 ````
 
-The `active` action accepts 2 arguments:
+The `active` action accepts a dictionary `options` as argument:
 
-- The first is the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to.
-When the first argument is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
-- The second is the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
+- `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
+- `options.className`: the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
+
+As a shorthand, instead of passing a dictionary as `options`, you can pass a single string that will be interpreted as the path.
 
 ### Define routes with custom regular expressions
 
