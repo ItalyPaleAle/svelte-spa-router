@@ -7,6 +7,7 @@
   "scripts": {
     "build-example": "(cd example && npx rollup -c)",
     "start-example": "npx serve -n -l 5000 example/dist",
+    "start:dev": "sirv example/dist --dev",
     "eslint": "npx eslint -c .eslintrc.js --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch",
@@ -42,6 +43,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-svelte": "^5.1.1",
     "serve": "^11.2.0",
+    "sirv-cli": "^0.4.5",
     "svelte": "^3.14.1"
   },
   "peerDependencies": {
