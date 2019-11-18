@@ -6,7 +6,7 @@ import {readable, derived} from 'svelte/store'
 
 /**
  * Wraps a route to add route pre-conditions.
- * 
+ *
  * @param {SvelteComponent} route - Svelte component for the route
  * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
  * @param {...Function} conditions - Route pre-conditions to add, which will be executed in order
@@ -176,7 +176,7 @@ export function link(node) {
     }
 
     // Add # to every href attribute
-    node.setAttribute('href', '#' + href)
+    node.setAttribute('href', window.location.pathname + '#' + href);
 }
 </script>
 
@@ -224,7 +224,7 @@ class RouteItem {
         }
 
         // Path must be a regular or expression, or a string starting with '/' or '*'
-        if (!path || 
+        if (!path ||
             (typeof path == 'string' && (path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*'))) ||
             (typeof path == 'object' && !(path instanceof RegExp))
         ) {
@@ -296,7 +296,7 @@ class RouteItem {
 
     /**
      * Executes all conditions (if any) to control whether the route can be shown. Conditions are executed in the order they are defined, and if a condition fails, the following ones aren't executed.
-     * 
+     *
      * @param {RouteDetail} detail - Route detail
      * @returns {bool} Returns true if all the conditions succeeded
      */
