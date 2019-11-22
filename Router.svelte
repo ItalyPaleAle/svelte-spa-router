@@ -4,7 +4,22 @@
 
 import {readable, derived} from 'svelte/store'
 
-export function wrap(route, ...conditions) {
+/**
+ * Wraps a route to add route pre-conditions.
+ * 
+ * @param {SvelteComponent} route - Svelte component for the route
+ * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
+ * @param {...Function} conditions - Route pre-conditions to add, which will be executed in order
+ * @returns {Object} Wrapped route
+ */
+export function wrap(route, userData, ...conditions) {
+    // Check if we don't have userData
+    if (userData && typeof userData == 'function') {
+        conditions = (conditions && conditions.length) ? conditions : []
+        conditions.unshift(userData)
+        userData = undefined
+    }
+
     // Parameter route and each item of conditions must be functions
     if (!route || typeof route != 'function') {
         throw Error('Invalid parameter route')
@@ -18,7 +33,7 @@ export function wrap(route, ...conditions) {
     }
 
     // Returns an object that contains all the functions to execute too
-    const obj = {route}
+    const obj = {route, userData}
     if (conditions && conditions.length) {
         obj.conditions = conditions
     }
@@ -208,10 +223,9 @@ import regexparam from 'regexparam'
 export let routes = {}
 
 /**
- * If set to true, the router will restore scroll positions on back navigation
- * and scroll to top on forward navigation.
+ * Optional prefix for the routes in this router. This is useful for example in the case of nested routers.
  */
-export let restoreScrollState = false
+export let prefix = ''
 
 /**
  * Container for a route: path, component
@@ -244,10 +258,12 @@ class RouteItem {
         if (typeof component == 'object' && component._sveltesparouter === true) {
             this.component = component.route
             this.conditions = component.conditions || []
+            this.userData = component.userData
         }
         else {
             this.component = component
             this.conditions = []
+            this.userData = undefined
         }
 
         this._pattern = pattern
@@ -263,6 +279,12 @@ class RouteItem {
      * @returns {null|Object.<string, string>} List of paramters from the URL if there's a match, or `null` otherwise.
      */
     match(path) {
+        // If there's a prefix, remove it before we run the matching
+        if (prefix && path.startsWith(prefix)) {
+            path = path.substr(prefix.length) || '/'
+        }
+
+        // Check if the pattern matches
         const matches = this._pattern.exec(path)
         if (matches === null) {
             return null
@@ -282,15 +304,24 @@ class RouteItem {
     }
 
     /**
+     * Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoaded` and `conditionsFailed` events
+     * @typedef {Object} RouteDetail
+     * @property {SvelteComponent} component - Svelte component
+     * @property {string} name - Name of the Svelte component
+     * @property {string} location - Location path
+     * @property {string} querystring - Querystring from the hash
+     * @property {Object} [userData] - Custom data passed by the user
+     */
+
+    /**
      * Executes all conditions (if any) to control whether the route can be shown. Conditions are executed in the order they are defined, and if a condition fails, the following ones aren't executed.
-     *
-     * @param {string} location - Location path
-     * @param {string} querystring - Querystring
+     * 
+     * @param {RouteDetail} detail - Route detail
      * @returns {bool} Returns true if all the conditions succeeded
      */
-    checkConditions(location, querystring) {
+    checkConditions(detail) {
         for (let i = 0; i < this.conditions.length; i++) {
-            if (!this.conditions[i](location, querystring)) {
+            if (!this.conditions[i](detail)) {
                 return false
             }
         }
@@ -322,6 +353,12 @@ const dispatchNextTick = (name, detail) => {
         dispatch(name, detail)
     }, 0)
 }
+
+/**
+ * If set to true, the router will restore scroll positions on back navigation
+ * and scroll to top on forward navigation.
+ */
+export let restoreScrollState = false
 
 // If this is set, then that means we have popped into this var the state of our last scroll position
 let previousScrollState = null
@@ -361,13 +398,15 @@ $: {
         const match = routesList[i].match($loc.location)
         if (match) {
             const detail = {
-                component: routesList[i].component.name,
+                component: routesList[i].component,
+                name: routesList[i].component.name,
                 location: $loc.location,
-                querystring: $loc.querystring
+                querystring: $loc.querystring,
+                userData: routesList[i].userData
             }
 
             // Check if the route can be loaded - if all conditions succeed
-            if (!routesList[i].checkConditions($loc.location, $loc.querystring)) {
+            if (!routesList[i].checkConditions(detail)) {
                 // Trigger an event to notify the user
                 dispatchNextTick('conditionsFailed', detail)
                 break

@@ -269,11 +269,11 @@ describe('<Router> component', function() {
         browser
             .url('http://localhost:5000')
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoaded - {"component":"Home","location":"/","querystring":""}')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Home","location":"/","querystring":""}')
 
         browser.url('http://localhost:5000/#/hello/svelte')
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoaded - {"component":"Home","location":"/","querystring":""}\nrouteLoaded - {"component":"Name","location":"/hello/svelte","querystring":""}')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Home","location":"/","querystring":""}\nrouteLoaded - {"name":"Name","location":"/hello/svelte","querystring":""}')
 
         browser.end()
     })
@@ -301,12 +301,12 @@ describe('<Router> component', function() {
         browser
             .url('http://localhost:5000/#/lucky?pass=1')
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoaded - {"component":"Lucky","location":"/lucky","querystring":"pass=1"}')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}')
 
         // Condition always fails
         browser.url('http://localhost:5000/#/lucky?pass=0')
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoaded - {"component":"Lucky","location":"/lucky","querystring":"pass=1"}\nconditionsFailed - {"component":"Lucky","location":"/lucky","querystring":"pass=0"}\nrouteLoaded - {"component":"Wild","location":"/wild/conditions-failed","querystring":""}')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}\nconditionsFailed - {"name":"Lucky","location":"/lucky","querystring":"pass=0","userData":{"foo":"bar"}}\nrouteLoaded - {"name":"Wild","location":"/wild/conditions-failed","querystring":""}')
 
         browser.end()
     })

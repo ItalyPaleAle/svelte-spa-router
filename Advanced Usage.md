@@ -21,11 +21,15 @@ The event listener receives an `event` object that contains the following `detai
 ````js
 event.detail = {
     // The name of the Svelte component that was loaded
-    component: 'Book',
+    name: 'Book',
+    // The actual Svelte component that was loaded (a function)
+    component: function() {...},
     // The current path, equivalent to the value of the $location readable store
     location: '/path',
     // The "querystring" from the page's hash, equivalent to the value of the $querystring readable store
-    querystring: 'foo=bar'
+    querystring: 'foo=bar',
+    // User data passed with the wrap function; can be any kind of object/dictionary
+    customData: {...}
 }
 ````
 
@@ -37,12 +41,16 @@ For example:
 <script>
 function routeLoaded(event) {
     console.log('routeLoaded event')
-    console.log('Component', event.detail.component)
+    console.log('Component', event.detail.component) // This is a Svelte component, so a function
+    console.log('Name', event.detail.name)
     console.log('Location', event.detail.location)
     console.log('Querystring', event.detail.querystring)
+    console.log('User data', event.detail.userData)
 }
 </script>
 ````
+
+For help with the `wrap` function, check the [route pre-conditions](#route-pre-conditions) section.
 
 ## Querystring parsing
 
@@ -95,16 +103,21 @@ You can define pre-conditions on routes, also known as "route guards". You can d
 
 Pre-conditions are defined in the routes object, using the `wrap` method exported by the router rather than the Svelte component directly.
 
-The pre-condition functions receive two arguments:
+The pre-condition functions receive a dictionary `detail` with the same structure as the `routeLoaded` event:
 
-- `location`: the current path (just like the `$location` readable store)
-- `querystring`: the current "querystring" parameters from the page's hash (just like the `$querystring` readable store)
+- `detail.component`: the Svelte component that is being evaluated (this is a JavaScript function)
+- `detail.name`: name of the Svelte component (a string)
+- `detail.location`: the current path (just like the `$location` readable store)
+- `detail.querystring`: the current "querystring" parameters from the page's hash (just like the `$querystring` readable store)
+- `detail.userData`: custom user data passed with the `wrap` function (see below)
 
 The pre-condition functions must return a boolean indicating wether the condition succeeded (true) or failed (false).
 
 You can define any number of pre-conditions for each route, and they're executed in order. If all pre-conditions succeed (returning true), the route is loaded.
 
 If one condition fails, the router stops executing pre-conditions and does not load any route.
+
+The `wrap` method can also be used to add a dictionary with custom user data, that will be passed to all pre-condition functions, and to the `routeLoaded` and `conditionsFailed` events. This is useful to pass custom callbacks (as properties inside the dictionary) that can be used by the `routeLoaded` and `conditionsFailed` event listeners to take specific actions.
 
 Example:
 
@@ -116,6 +129,7 @@ import Router from 'svelte-spa-router'
 import {wrap} from 'svelte-spa-router'
 
 import Lucky from './Lucky.svelte'
+import Hello from './Hello.svelte'
 
 // Route definition object
 const routes = {
@@ -124,37 +138,41 @@ const routes = {
         // The Svelte component used by the route
         Lucky,
 
+        // Custom data: any JavaScript object
+        // This is optional and can be omitted
+        {foo: 'bar'},
+
         // First pre-condition function
-        (location, querystring) => {
+        (detail) => {
             // Pre-condition succeeds only 50% of times
             return (Math.random() > 0.5)
         },
 
         // Second pre-condition function
-        (location, querystring) => {
+        (detail) => {
             // This pre-condition is executed only if the first one succeeded
-            console.log('Pre-condition 2 executed', location, querystring)
+            console.log('Pre-condition 2 executed', detail.location, detail.querystring)
 
             // Always succeed
             return true
         }
+    ),
+
+    // This route doesn't have pre-conditions, but we're wrapping it to add custom data
+    '/hello': wrap(
+        // The Svelte component used by the route
+        Hello,
+
+        // Custom data object
+        {hello: 'world', myFunc: () => {
+            console.log('do something!')
+        }}
     )
 }
 </script>
 ````
 
-In case a condition fails, the router emits the `conditionsFailed` event, with the following detail object:
-
-````js
-event.detail = {
-    // The name of the Svelte component that matched the path (but wasn't loaded)
-    component: 'Lucky',
-    // The current path, equivalent to the value of the $location readable store
-    location: '/lucky',
-    // The "querystring" from the page's hash, equivalent to the value of the $querystring readable store
-    querystring: 'foo=bar'
-}
-````
+In case a condition fails, the router emits the `conditionsFailed` event, with the same `detail` dictionary.
 
 You can listen to the `conditionsFailed` and perform actions in case no route wasn't loaded because of a failed pre-condition:
 
@@ -167,7 +185,7 @@ function conditionsFailed(event) {
     console.error('conditionsFailed event', event.detail)
 
     // Perform any action, for example replacing the current route
-    if (event.detail.component == 'Lucky') {
+    if (event.detail.name == 'Lucky') {
         replace('/hello/world')
     }
 }
@@ -215,22 +233,30 @@ import Router from 'svelte-spa-router'
 import Hello from './Hello.svelte'
 // Routes for the "outer router"
 const routes = {
+    // We need to define both '/hello' and '/hello/*' in two separate lines to ensure that both '/hello' (with nothing else) and sub-paths are matched
+    '/hello': Hello,
     '/hello/*': Hello,
 }
+
+/*
+Note: If defining routes using a Map object, you could use a custom regular expression instead of having to define the route twice:
+routes.set(/^\/hello(\/(.*))?/, Hello)
+*/
 </script>
 
 <!-- Hello.svelte -->
 <h2>Hello!</h2>
-<Router {routes}/>
+<Router {routes} {prefix} />
 <script>
 import Router from 'svelte-spa-router'
 import FullName from './FullName.svelte'
 import ShortName from './ShortName.svelte'
 // Routes for the "inner router"
-// Note that the path is still the absolute one!
+// Note that we have a "prefix" property for this nested router
+const prefix = '/hello'
 const routes = {
-    '/hello/:first/:last': FullName,
-    '/hello/:first': ShortName
+    '/:first/:last': FullName,
+    '/:first': ShortName
 }
 </script>
 
@@ -259,8 +285,6 @@ This works as you would expect:
 Both routes first load the `Hello` route, as they both match `/hello/*` in the outer router. The inner router then loads the separate components based on the path.
 
 Features like highlighting active links will still work, regardless of where those links are placed in the page (in which component).
-
-However, keep in mind that routes are still defined in absolute terms also in inner routers, and whatever route you define must match the full path. For example, had we defined the inner route as `/:first/:last` without `/hello` as a prefix, we would get unexpected results.
 
 ## Route groups
 

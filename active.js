@@ -28,38 +28,55 @@ loc.subscribe((value) => {
 })
 
 /**
+ * @typedef {Object} ActiveOptions
+ * @property {string} [path] - Path expression that makes the link active when matched (must start with '/' or '*'); default is the link's href
+ * @property {string} [className] - CSS class to apply to the element when active; default value is "active"
+ */
+
+/**
  * Svelte Action for automatically adding the "active" class to elements (links, or any other DOM element) when the current location matches a certain path.
  * 
  * @param {HTMLElement} node - The target node (automatically set by Svelte)
- * @param {string} [path] - Path expression that makes the link active when matched (must start with '/' or '*'); default is the link's href
- * @param {string} [className] - CSS class to apply to the element when active; default value is "active"
+ * @param {ActiveOptions|string} [opts] - Can be an object of type ActiveOptions, or a string representing ActiveOptions.path.
  */
-export default function active(node, path, className) {
+export default function active(node, opts) {
+    // Check options
+    if (opts && typeof opts == 'string') {
+        // Interpret strings as opts.path
+        opts = {
+            path: opts
+        }
+    }
+    else {
+        // Ensure opts is a dictionary
+        opts = opts || {}
+    }
+
     // Path defaults to link target
-    if (!path && node.hasAttribute('href')) {
-        path = node.getAttribute('href')
-        if (path && path.length > 1 && path.charAt(0) == '#') {
-            path = path.substring(1)
+    if (!opts.path && node.hasAttribute('href')) {
+        opts.path = node.getAttribute('href')
+        if (opts.path && opts.path.length > 1 && opts.path.charAt(0) == '#') {
+            opts.path = opts.path.substring(1)
         }
     }
 
     // Default class name
-    if (!className) {
-        className = 'active'
+    if (!opts.className) {
+        opts.className = 'active'
     }
 
     // Path must start with '/' or '*'
-    if (!path || path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*')) {
+    if (!opts.path || opts.path.length < 1 || (opts.path.charAt(0) != '/' && opts.path.charAt(0) != '*')) {
         throw Error('Invalid value for "path" argument')
     }
 
     // Get the regular expression
-    const {pattern} = regexparam(path)
+    const {pattern} = regexparam(opts.path)
 
     // Add the node to the list
     const el = {
         node,
-        className,
+        className: opts.className,
         pattern
     }
     nodes.push(el)

@@ -1,6 +1,6 @@
 # svelte-spa-router
 
-[![Build Status](https://dev.azure.com/italypaleale/italypaleale/_apis/build/status/ItalyPaleAle.svelte-spa-router?branchName=master)](https://dev.azure.com/italypaleale/italypaleale/_build/latest?definitionId=16&branchName=master) 
+[![Build Status](https://github.com/ItalyPaleAle/svelte-spa-router/workflows/Continuous%20Integration%20tests/badge.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/actions) 
 [![npm](https://img.shields.io/npm/v/svelte-spa-router.svg)](https://www.npmjs.com/package/svelte-spa-router)
 [![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/blob/master/LICENSE.md)
 [![dependencies Status](https://david-dm.org/ItalyPaleAle/svelte-spa-router/status.svg)](https://david-dm.org/ItalyPaleAle/svelte-spa-router)
@@ -226,15 +226,17 @@ import active from 'svelte-spa-router/active'
 }
 </style>
 
-<a href="/hello/user" use:link use:active={'/hello/*', 'active'}>Say hi!</a>
-<a href="/hello/user" use:link use:active>Say hi again!</a>
+<a href="/hello/user" use:link use:active={{path: '/hello/*', className: 'active'}}>Say hi!</a>
+<a href="/hello/user" use:link use:active={'/hello/*'}>Say hi with a default className!</a>
+<a href="/hello/user" use:link use:active>Say hi with all default options!</a>
 ````
 
-The `active` action accepts 2 arguments:
+The `active` action accepts a dictionary `options` as argument:
 
-- The first is the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to.
-When the first argument is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
-- The second is the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
+- `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
+- `options.className`: the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
+
+As a shorthand, instead of passing a dictionary as `options`, you can pass a single string that will be interpreted as the path.
 
 ### Define routes with custom regular expressions
 
