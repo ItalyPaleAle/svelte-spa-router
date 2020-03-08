@@ -233,10 +233,10 @@ import active from 'svelte-spa-router/active'
 
 The `active` action accepts a dictionary `options` as argument:
 
-- `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
+- `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or falsey, it defaults to the path specified in the link's `href` attribute. This parameter can also be a regular expression that will mark the link as active when it matches: for example, setting to the regular expression `/^\/*\/hi$/` will make the link active when it starts with `/` and ends with `/hi`, regardless of what's in between.
 - `options.className`: the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
 
-As a shorthand, instead of passing a dictionary as `options`, you can pass a single string that will be interpreted as the path.
+As a shorthand, instead of passing a dictionary as `options`, you can pass a single string or regular expression that will be interpreted as `options.path`.
 
 ### Define routes with custom regular expressions
 
