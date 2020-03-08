@@ -180,7 +180,11 @@ export function link(node) {
 }
 </script>
 
-<svelte:component this="{component}" params="{componentParams}" />
+{#if componentParams}
+  <svelte:component this="{component}" params="{componentParams}" />
+{:else}
+  <svelte:component this="{component}" />
+{/if}
 
 <script>
 import {createEventDispatcher} from 'svelte'
@@ -322,7 +326,7 @@ for (const [path, route] of routesIterable) {
 
 // Props for the component to render
 let component = null
-let componentParams = {}
+let componentParams = null
 
 // Event dispatcher from Svelte
 const dispatch = createEventDispatcher()
@@ -359,7 +363,14 @@ $: {
                 break
             }
             component = routesList[i].component
-            componentParams = match
+            // Set componentParams onloy if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
+            // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
+            if (match && typeof match == 'object' && Object.keys(match).length) {
+                componentParams = match
+            }
+            else {
+                componentParams = null
+            }
 
             dispatchNextTick('routeLoaded', detail)
         }
