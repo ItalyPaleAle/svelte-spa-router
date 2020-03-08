@@ -29,7 +29,7 @@ loc.subscribe((value) => {
 
 /**
  * @typedef {Object} ActiveOptions
- * @property {string} [path] - Path expression that makes the link active when matched (must start with '/' or '*'); default is the link's href
+ * @property {string|RegExp} [path] - Path expression that makes the link active when matched (must start with '/' or '*'); default is the link's href
  * @property {string} [className] - CSS class to apply to the element when active; default value is "active"
  */
 
@@ -37,12 +37,12 @@ loc.subscribe((value) => {
  * Svelte Action for automatically adding the "active" class to elements (links, or any other DOM element) when the current location matches a certain path.
  * 
  * @param {HTMLElement} node - The target node (automatically set by Svelte)
- * @param {ActiveOptions|string} [opts] - Can be an object of type ActiveOptions, or a string representing ActiveOptions.path.
+ * @param {ActiveOptions|string|RegExp} [opts] - Can be an object of type ActiveOptions, or a string (or regular expressions) representing ActiveOptions.path.
  */
 export default function active(node, opts) {
     // Check options
-    if (opts && typeof opts == 'string') {
-        // Interpret strings as opts.path
+    if (opts && (typeof opts == 'string' || (typeof opts == 'object' && opts instanceof RegExp))) {
+        // Interpret strings and regular expressions as opts.path
         opts = {
             path: opts
         }
@@ -65,13 +65,17 @@ export default function active(node, opts) {
         opts.className = 'active'
     }
 
-    // Path must start with '/' or '*'
-    if (!opts.path || opts.path.length < 1 || (opts.path.charAt(0) != '/' && opts.path.charAt(0) != '*')) {
+    // If path is a string, it must start with '/' or '*'
+    if (!opts.path || 
+        typeof opts.path == 'string' && (opts.path.length < 1 || (opts.path.charAt(0) != '/' && opts.path.charAt(0) != '*'))
+    ) {
         throw Error('Invalid value for "path" argument')
     }
 
-    // Get the regular expression
-    const {pattern} = regexparam(opts.path)
+    // If path is not a regular expression already, make it
+    const {pattern} = typeof opts.path == 'string' ?
+        regexparam(opts.path) :
+        {pattern: opts.path}
 
     // Add the node to the list
     const el = {

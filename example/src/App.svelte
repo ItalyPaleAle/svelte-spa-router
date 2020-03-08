@@ -40,6 +40,9 @@
 {/each}
 </ul>
 
+<!-- Test use:active with a regular expression -->
+<p><a href="#/" use:active={/\/*\/hi/}>This link</a> is active when you're matching <code>/*/hi</code></p>
+
 <!-- Used for testing -->
 <pre id="logbox">{logbox}</pre>
 
