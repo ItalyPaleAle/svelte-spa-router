@@ -315,13 +315,19 @@ class RouteItem {
     }
 }
 
-// We need an iterable: if it's not a Map, use Object.entries
-const routesIterable = (routes instanceof Map) ? routes : Object.entries(routes)
-
 // Set up all routes
 const routesList = []
-for (const [path, route] of routesIterable) {
-    routesList.push(new RouteItem(path, route))
+if (routes instanceof Map) {
+    // If it's a map, iterate on it right away
+    routes.forEach((route, path) => {
+        routesList.push(new RouteItem(path, route))
+    })
+}
+else {
+    // We have an object, so iterate on its own properties
+    Object.keys(routes).forEach((path) => {
+        routesList.push(new RouteItem(path, routes[path]))
+    })
 }
 
 // Props for the component to render
