@@ -6,7 +6,7 @@ import {readable, derived} from 'svelte/store'
 
 /**
  * Wraps a route to add route pre-conditions.
- * 
+ *
  * @param {SvelteComponent} route - Svelte component for the route
  * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
  * @param {...Function} conditions - Route pre-conditions to add, which will be executed in order
@@ -106,6 +106,17 @@ export const querystring = derived(
     ($loc) => $loc.querystring
 )
 
+
+/**
+ * Writable store that returns if the browser back button was clicked
+ */
+let isBrowserBack = false
+
+/**
+ * Readable store that returns true if borwser back button was clicked
+ */
+//export const isBrowserBack = derived(_isBrowserBack, ($value) => $value)
+
 /**
  * Navigates to a new page programmatically.
  *
@@ -113,12 +124,18 @@ export const querystring = derived(
  */
 export function push(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
+        isBrowserBack = false
         throw Error('Invalid parameter location')
     }
 
     // Execute this code when the current call stack is complete
     setTimeout(() => {
-        window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
+        const newHash = (location.charAt(0) == '#' ? '' : '#') + location
+        if (window.location.hash !== newHash) {
+            isBrowserBack = false
+
+            window.location.hash = newHash
+        }
     }, 0)
 }
 
@@ -128,6 +145,7 @@ export function push(location) {
 export function pop() {
     // Execute this code when the current call stack is complete
     setTimeout(() => {
+        isBrowserBack = false
         window.history.back()
     }, 0)
 }
@@ -139,11 +157,14 @@ export function pop() {
  */
 export function replace(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
+        isBrowserBack = false
         throw Error('Invalid parameter location')
     }
 
     // Execute this code when the current call stack is complete
     setTimeout(() => {
+        isBrowserBack = false
+
         const dest = (location.charAt(0) == '#' ? '' : '#') + location
         history.replaceState(undefined, undefined, dest)
 
@@ -177,6 +198,12 @@ export function link(node) {
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
+
+    // use onclick to push the route, so we can check if browser back button is clicked
+    node.onclick = () => {
+        push(node.getAttribute('href'))
+        return false
+    }
 }
 </script>
 
@@ -228,7 +255,7 @@ class RouteItem {
         }
 
         // Path must be a regular or expression, or a string starting with '/' or '*'
-        if (!path || 
+        if (!path ||
             (typeof path == 'string' && (path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*'))) ||
             (typeof path == 'object' && !(path instanceof RegExp))
         ) {
@@ -300,7 +327,7 @@ class RouteItem {
 
     /**
      * Executes all conditions (if any) to control whether the route can be shown. Conditions are executed in the order they are defined, and if a condition fails, the following ones aren't executed.
-     * 
+     *
      * @param {RouteDetail} detail - Route detail
      * @returns {bool} Returns true if all the conditions succeeded
      */
@@ -342,6 +369,7 @@ const dispatchNextTick = (name, detail) => {
     // Execute this code when the current call stack is complete
     setTimeout(() => {
         dispatch(name, detail)
+        isBrowserBack = true
     }, 0)
 }
 
@@ -356,6 +384,7 @@ $: {
         if (match) {
             const detail = {
                 component: routesList[i].component,
+                isBrowserBack,
                 name: routesList[i].component.name,
                 location: $loc.location,
                 querystring: $loc.querystring,
