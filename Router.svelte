@@ -110,6 +110,7 @@ export const querystring = derived(
  * Navigates to a new page programmatically.
  *
  * @param {string} location - Path to navigate to (must start with `/` or '#/')
+ * @return {Promise} Promise that resolves after the page navigation has completed
  */
 export function push(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
@@ -117,25 +118,28 @@ export function push(location) {
     }
 
     // Execute this code when the current call stack is complete
-    setTimeout(() => {
+    return nextTickPromise(() => {
         window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
-    }, 0)
+    })
 }
 
 /**
  * Navigates back in history (equivalent to pressing the browser's back button).
+ * 
+ * @return {Promise} Promise that resolves after the page navigation has completed
  */
 export function pop() {
     // Execute this code when the current call stack is complete
-    setTimeout(() => {
+    return nextTickPromise(() => {
         window.history.back()
-    }, 0)
+    })
 }
 
 /**
  * Replaces the current page but without modifying the history stack.
  *
  * @param {string} location - Path to navigate to (must start with `/` or '#/')
+ * @return {Promise} Promise that resolves after the page navigation has completed
  */
 export function replace(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
@@ -143,7 +147,7 @@ export function replace(location) {
     }
 
     // Execute this code when the current call stack is complete
-    setTimeout(() => {
+    return nextTickPromise(() => {
         const dest = (location.charAt(0) == '#' ? '' : '#') + location
         try {
             window.history.replaceState(undefined, undefined, dest)
@@ -155,7 +159,7 @@ export function replace(location) {
 
         // The method above doesn't trigger the hashchange event, so let's do that manually
         window.dispatchEvent(new Event('hashchange'))
-    }, 0)
+    })
 }
 
 /**
@@ -183,6 +187,20 @@ export function link(node) {
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
+}
+
+/**
+ * Performs a callback in the next tick and returns a Promise that resolves once that's done
+ * 
+ * @param {Function} cb - Callback to invoke
+ * @returns {Promise} Promise that resolves after the callback has been invoked, with the return value of the callback (if any)
+ */
+export function nextTickPromise(cb) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(cb())
+        }, 0)
+    })
 }
 </script>
 
