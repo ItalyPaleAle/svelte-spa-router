@@ -145,7 +145,13 @@ export function replace(location) {
     // Execute this code when the current call stack is complete
     setTimeout(() => {
         const dest = (location.charAt(0) == '#' ? '' : '#') + location
-        history.replaceState(undefined, undefined, dest)
+        try {
+            window.history.replaceState(undefined, undefined, dest)
+        }
+        catch (e) {
+            // eslint-disable-next-line no-console
+            console.warn('Caught exception while replacing the current page. If you\'re running this in the Svelte REPL, please note that the `replace` method might not work in this environment.')
+        }
 
         // The method above doesn't trigger the hashchange event, so let's do that manually
         window.dispatchEvent(new Event('hashchange'))
