@@ -26,7 +26,7 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} />
+<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} on:routeEvent={routeEvent} />
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
@@ -85,6 +85,13 @@ function routeLoaded(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeLoaded', event.detail)
     logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
+}
+
+// Handles event bubbling up from nested routes
+function routeEvent(event) {
+    // eslint-disable-next-line no-console
+    console.info('Caught event routeEvent', event.detail)
+    logbox += 'routeEvent - ' + JSON.stringify(event.detail) + '\n'
 }
 
 let dynamicLinks = [

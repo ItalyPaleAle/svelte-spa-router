@@ -278,6 +278,16 @@ describe('<Router> component', function() {
         browser.end()
     })
 
+    it('routeEvent event', (browser) => {
+        // Click on the p that triggers a "routeEvent" event
+        browser.url('http://localhost:5000/#/hello/svelte')
+            .waitForElementPresent('#logbox')
+            .click('p#nameparams')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Home","location":"/","querystring":""}\nrouteEvent - {"action":"hi","params":{"first":"svelte","last":null}}')
+
+        browser.end()
+    })
+
     it('route conditions', (browser) => {
         // Condition always passes
         browser
