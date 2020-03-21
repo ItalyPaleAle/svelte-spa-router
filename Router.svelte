@@ -205,9 +205,9 @@ export function nextTickPromise(cb) {
 </script>
 
 {#if componentParams}
-  <svelte:component this="{component}" params="{componentParams}" />
+  <svelte:component this="{component.component}" params="{componentParams}" />
 {:else}
-  <svelte:component this="{component}" />
+  <svelte:component this="{component.component}" />
 {/if}
 
 <script>
