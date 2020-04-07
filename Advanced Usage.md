@@ -4,6 +4,7 @@ svelte-spa-router is simple by design. A minimal router is easy to learn and imp
 
 Thanks to the many features of Svelte 3 or other components in the ecosystem, svelte-spa-router can be used to get many more "advanced" features. This document explains how to achieve certain results with svelte-spa-router beyond what's offered by the component itself.
 
+- [routeEvent event](#routeevent-event)
 - [routeLoaded event](#routeloaded-event)
 - [Querystring parsing](#querystring-parsing)
 - [Route pre-conditions](#route-pre-conditions) ("Route guards")
@@ -11,6 +12,38 @@ Thanks to the many features of Svelte 3 or other components in the ecosystem, sv
 - [Nested routers](#nested-routers)
 - [Route groups](#route-groups)
 - [Async route loading](#async-route-loading)
+
+## `routeEvent` event
+
+The custom `routeEvent` event can be used to bubble events from a component displayed by the router, to the router's parent component.
+
+For example, assume that your Svelte component `App` contains the router's component `Router`. Inside the router, the current view is displaying the `Foo` component. If `Foo` emitted an event, `Router` would receive it and would ignore it by default
+
+Using the custom event **`routeEvent`**, instead, allows your components within the router (such as `Foo`) to bubble an event to the `Router` component's parent.
+
+Example for `App.svelte`:
+
+```svelte
+<Router {routes} on:routeEvent={routeEvent} />
+<script>
+import Router from 'svelte-spa-router'
+import Foo from './Foo.svelte'
+const routes = {'*': Foo}
+function routeEvent(event) {
+    // Do something
+}
+</script>
+```
+
+Example for `Foo.svelte`:
+
+```svelte
+<button on:click={() => dispatch('routeEvent', {foo: 'bar'})}>Hello</button>
+<script>
+import {createEventDispatcher} from 'svelte'
+const dispatch = createEventDispatcher()
+</script>
+```
 
 ## `routeLoaded` event
 

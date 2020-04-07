@@ -110,6 +110,7 @@ export const querystring = derived(
  * Navigates to a new page programmatically.
  *
  * @param {string} location - Path to navigate to (must start with `/` or '#/')
+ * @return {Promise} Promise that resolves after the page navigation has completed
  */
 export function push(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
@@ -117,27 +118,30 @@ export function push(location) {
     }
 
     // Execute this code when the current call stack is complete
-    setTimeout(() => {
+    return nextTickPromise(() => {
         // TODO: this will include scroll state in history even when restoreScrollState is false
-        history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
+        history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)      
         window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
-    }, 0)
+    })
 }
 
 /**
  * Navigates back in history (equivalent to pressing the browser's back button).
+ * 
+ * @return {Promise} Promise that resolves after the page navigation has completed
  */
 export function pop() {
     // Execute this code when the current call stack is complete
-    setTimeout(() => {
+    return nextTickPromise(() => {
         window.history.back()
-    }, 0)
+    })
 }
 
 /**
  * Replaces the current page but without modifying the history stack.
  *
  * @param {string} location - Path to navigate to (must start with `/` or '#/')
+ * @return {Promise} Promise that resolves after the page navigation has completed
  */
 export function replace(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
@@ -145,13 +149,19 @@ export function replace(location) {
     }
 
     // Execute this code when the current call stack is complete
-    setTimeout(() => {
+    return nextTickPromise(() => {
         const dest = (location.charAt(0) == '#' ? '' : '#') + location
-        history.replaceState(undefined, undefined, dest)
+        try {
+            window.history.replaceState(undefined, undefined, dest)
+        }
+        catch (e) {
+            // eslint-disable-next-line no-console
+            console.warn('Caught exception while replacing the current page. If you\'re running this in the Svelte REPL, please note that the `replace` method might not work in this environment.')
+        }
 
         // The method above doesn't trigger the hashchange event, so let's do that manually
         window.dispatchEvent(new Event('hashchange'))
-    }, 0)
+    })
 }
 
 /**
@@ -197,9 +207,27 @@ function scrollstateHistoryHandler(event) {
     // This will force an update as desired, but this time our scroll state will be attached
     window.location.hash = href
 }
+
+/**
+ * Performs a callback in the next tick and returns a Promise that resolves once that's done
+ * 
+ * @param {Function} cb - Callback to invoke
+ * @returns {Promise} Promise that resolves after the callback has been invoked, with the return value of the callback (if any)
+ */
+export function nextTickPromise(cb) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(cb())
+        }, 0)
+    })
+}
 </script>
 
-<svelte:component this="{component}" params="{componentParams}" />
+{#if componentParams}
+  <svelte:component this="{component}" params="{componentParams}" on:routeEvent />
+{:else}
+  <svelte:component this="{component}" on:routeEvent />
+{/if}
 
 <script>
 import {createEventDispatcher, afterUpdate} from 'svelte'
@@ -330,18 +358,24 @@ class RouteItem {
     }
 }
 
-// We need an iterable: if it's not a Map, use Object.entries
-const routesIterable = (routes instanceof Map) ? routes : Object.entries(routes)
-
 // Set up all routes
 const routesList = []
-for (const [path, route] of routesIterable) {
-    routesList.push(new RouteItem(path, route))
+if (routes instanceof Map) {
+    // If it's a map, iterate on it right away
+    routes.forEach((route, path) => {
+        routesList.push(new RouteItem(path, route))
+    })
+}
+else {
+    // We have an object, so iterate on its own properties
+    Object.keys(routes).forEach((path) => {
+        routesList.push(new RouteItem(path, routes[path]))
+    })
 }
 
 // Props for the component to render
 let component = null
-let componentParams = {}
+let componentParams = null
 
 // Event dispatcher from Svelte
 const dispatch = createEventDispatcher()
@@ -412,7 +446,14 @@ $: {
                 break
             }
             component = routesList[i].component
-            componentParams = match
+            // Set componentParams onloy if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
+            // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
+            if (match && typeof match == 'object' && Object.keys(match).length) {
+                componentParams = match
+            }
+            else {
+                componentParams = null
+            }
 
             dispatchNextTick('routeLoaded', detail)
         }

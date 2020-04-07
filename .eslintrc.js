@@ -175,6 +175,8 @@ module.exports = {
         'operator-linebreak': [
             'error',
             'after'
-        ]
+        ],
+        // Need to disable this because otherwise it causes issues with Svelte files
+        'no-multiple-empty-lines': 0
     }
 }

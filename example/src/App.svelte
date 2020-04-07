@@ -26,7 +26,7 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} />
+<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} on:routeEvent={routeEvent} />
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
@@ -39,6 +39,9 @@
     </li>
 {/each}
 </ul>
+
+<!-- Test use:active with a regular expression -->
+<p><a href="#/" use:active={/\/*\/hi/}>This link</a> is active when you're matching <code>/*/hi</code></p>
 
 <!-- Used for testing -->
 <pre id="logbox">{logbox}</pre>
@@ -82,6 +85,13 @@ function routeLoaded(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeLoaded', event.detail)
     logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
+}
+
+// Handles event bubbling up from nested routes
+function routeEvent(event) {
+    // eslint-disable-next-line no-console
+    console.info('Caught event routeEvent', event.detail)
+    logbox += 'routeEvent - ' + JSON.stringify(event.detail) + '\n'
 }
 
 let dynamicLinks = [

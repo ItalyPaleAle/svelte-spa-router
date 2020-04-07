@@ -146,7 +146,7 @@ These methods can be used inside Svelte markup too, for example:
 <button on:click={() => push('/page')}>Go somewhere</button>
 ````
 
-_Note: The `push`, `pop` and `replace` methods perform navigation actions only in the next iteration ("tick") of the JavaScript event loop. This makes it safe to use them also inside `onMount` callbacks within Svelte components._
+The `push`, `pop` and `replace` methods perform navigation actions only in the next iteration ("tick") of the JavaScript event loop. This makes it safe to use them also inside `onMount` callbacks within Svelte components. The functions return a Promise that resolves with no value once the navigation has been triggered (in the next tick of the event loop); however, please note that this will likely be before the new page has rendered.
 
 ### Parameters from routes
 
@@ -233,10 +233,10 @@ import active from 'svelte-spa-router/active'
 
 The `active` action accepts a dictionary `options` as argument:
 
-- `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or falsey, it defaults to the path specified in the link's `href` attribute.
+- `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or falsey, it defaults to the path specified in the link's `href` attribute. This parameter can also be a regular expression that will mark the link as active when it matches: for example, setting to the regular expression `/^\/*\/hi$/` will make the link active when it starts with `/` and ends with `/hi`, regardless of what's in between.
 - `options.className`: the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
 
-As a shorthand, instead of passing a dictionary as `options`, you can pass a single string that will be interpreted as the path.
+As a shorthand, instead of passing a dictionary as `options`, you can pass a single string or regular expression that will be interpreted as `options.path`.
 
 ### Define routes with custom regular expressions
 
@@ -280,6 +280,7 @@ When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"
 
 Check out the [Advanced Usage](/Advanced%20Usage.md) documentation for using:
 
+- [routeEvent event](/Advanced%20Usage.md#routeevent-event)
 - [routeLoaded event](/Advanced%20Usage.md#routeloaded-event)
 - [Querystring parsing](/Advanced%20Usage.md#querystring-parsing)
 - [Route pre-conditions](/Advanced%20Usage.md#route-pre-conditions) ("Route guards")
