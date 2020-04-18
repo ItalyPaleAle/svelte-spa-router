@@ -325,5 +325,24 @@ describe('<Router> component', function() {
 
         browser.end()
     })
+
+    it('parameter URL-decoding', (browser) => {
+        browser
+            .url('http://localhost:5000/#/hello/Mr%20Smith')
+            .waitForElementVisible('#currentpath')
+            .waitForElementVisible('h2.routetitle')
+        browser.expect.element('#currentpath').text.to.equal('/hello/Mr%20Smith')
+        browser.expect.element('#nameparams').text.to.equal('Your name is: Mr Smith')
+
+        // Invalid URL-encoded characters, should catch the exception
+        browser
+            .url('http://localhost:5000/#/hello/Mr%2%0Smith')
+            .waitForElementVisible('#currentpath')
+            .waitForElementVisible('h2.routetitle')
+        browser.expect.element('#currentpath').text.to.equal('/hello/Mr%2%0Smith')
+        browser.expect.element('#nameparams').text.to.equal('Your name is: null')
+
+        browser.end()
+    })
 })
 

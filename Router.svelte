@@ -307,7 +307,14 @@ class RouteItem {
         const out = {}
         let i = 0
         while (i < this._keys.length) {
-            out[this._keys[i]] = matches[++i] || null
+            // In the match parameters, URL-decode all values
+            try {
+                out[this._keys[i]] = decodeURIComponent(matches[i + 1] || '') || null
+            }
+            catch (e) {
+                out[this._keys[i]] = null
+            }
+            i++
         }
         return out
     }
@@ -376,7 +383,7 @@ $: {
     component = null
     let i = 0
     while (!component && i < routesList.length) {
-        const match = routesList[i].match($loc.location)
+        let match = routesList[i].match($loc.location)
         if (match) {
             const detail = {
                 component: routesList[i].component,

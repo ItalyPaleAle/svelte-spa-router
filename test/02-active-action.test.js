@@ -47,7 +47,6 @@ describe('use:active action', function() {
     })
 
     it('active dynamic links', (browser) => {
-
         // Check if elements are still tagged active after one is removed
         browser
             .url('http://localhost:5000/#/')
