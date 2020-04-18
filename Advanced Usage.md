@@ -173,6 +173,7 @@ const routes = {
 
         // Custom data: any JavaScript object
         // This is optional and can be omitted
+        // It can be useful to understand the component who caused the pre-condition failure
         {foo: 'bar'},
 
         // First pre-condition function
@@ -218,7 +219,7 @@ function conditionsFailed(event) {
     console.error('conditionsFailed event', event.detail)
 
     // Perform any action, for example replacing the current route
-    if (event.detail.name == 'Lucky') {
+    if (event.detail.userData.foo == 'bar') {
         replace('/hello/world')
     }
 }
@@ -229,6 +230,8 @@ function routeLoaded(event) {
 }
 </script>
 ````
+
+> **Note:** When using minifiers such as terser, the name of Svelte components might be altered by the minifier. As such, it is recommended to use customer user data to identify the component who caused the pre-condition failure, rather than relying on the `detail.name` property. The latter, might contain the minified name of the class.
 
 ## Route transitions
 
