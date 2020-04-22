@@ -119,7 +119,7 @@ export function push(location) {
 
     // Execute this code when the current call stack is complete
     return nextTickPromise(() => {
-        // TODO: this will include scroll state in history even when restoreScrollState is false
+        // Note: this will include scroll state in history even when restoreScrollState is false
         history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)      
         window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
     })
@@ -256,6 +256,12 @@ export let routes = {}
 export let prefix = ''
 
 /**
+ * If set to true, the router will restore scroll positions on back navigation
+ * and scroll to top on forward navigation.
+ */
+export let restoreScrollState = false
+
+/**
  * Container for a route: path, component
  */
 class RouteItem {
@@ -388,14 +394,11 @@ const dispatchNextTick = (name, detail) => {
     }, 0)
 }
 
-/**
- * If set to true, the router will restore scroll positions on back navigation
- * and scroll to top on forward navigation.
- */
-export let restoreScrollState = false
-
 // If this is set, then that means we have popped into this var the state of our last scroll position
 let previousScrollState = null
+
+// Update history.scrollRestoration depending on restoreScrollState
+$: history.scrollRestoration = restoreScrollState ? 'manual' : 'auto'
 
 if (restoreScrollState) {
     window.addEventListener('popstate', (event) => {
@@ -411,12 +414,12 @@ if (restoreScrollState) {
     })
 
     afterUpdate(() => {
-        // If this exists, then this is a back navigation--restore the scroll position
+        // If this exists, then this is a back navigation: restore the scroll position
         if (previousScrollState) {
             window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
         }
         else {
-            // Otherwise this is a forward navigation--scroll to top
+            // Otherwise this is a forward navigation: scroll to top
             window.scrollTo(0, 0)
         }
     })
