@@ -280,6 +280,7 @@ When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"
 
 Check out the [Advanced Usage](/Advanced%20Usage.md) documentation for using:
 
+- [Restore scroll position](/Advanced%20Usage.md#restore-scroll-position)
 - [routeEvent event](/Advanced%20Usage.md#routeevent-event)
 - [routeLoaded event](/Advanced%20Usage.md#routeloaded-event)
 - [Querystring parsing](/Advanced%20Usage.md#querystring-parsing)

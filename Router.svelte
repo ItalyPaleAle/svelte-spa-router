@@ -119,6 +119,8 @@ export function push(location) {
 
     // Execute this code when the current call stack is complete
     return nextTickPromise(() => {
+        // Note: this will include scroll state in history even when restoreScrollState is false
+        history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)      
         window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
     })
 }
@@ -182,11 +184,28 @@ export function link(node) {
     // Destination must start with '/'
     const href = node.getAttribute('href')
     if (!href || href.length < 1 || href.charAt(0) != '/') {
-        throw Error('Invalid value for "href" attribute')
+        throw Error('Invalid value for "href" attribute: ' + href)
     }
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
+    node.addEventListener('click', scrollstateHistoryHandler)
+}
+
+/**
+ * The handler attached to an anchor tag responsible for updating the
+ * current history state with the current scroll state
+ *
+ * @param {HTMLElementEventMap} event - an onclick event attached to an anchor tag
+ */
+function scrollstateHistoryHandler(event) {
+    // Prevent default anchor onclick behaviour
+    event.preventDefault()
+    const href = event.currentTarget.getAttribute('href')
+    // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
+    // This will force an update as desired, but this time our scroll state will be attached
+    window.location.hash = href
 }
 
 /**
@@ -211,7 +230,7 @@ export function nextTickPromise(cb) {
 {/if}
 
 <script>
-import {createEventDispatcher} from 'svelte'
+import {createEventDispatcher, afterUpdate} from 'svelte'
 import regexparam from 'regexparam'
 
 /**
@@ -235,6 +254,12 @@ export let routes = {}
  * Optional prefix for the routes in this router. This is useful for example in the case of nested routers.
  */
 export let prefix = ''
+
+/**
+ * If set to true, the router will restore scroll positions on back navigation
+ * and scroll to top on forward navigation.
+ */
+export let restoreScrollState = false
 
 /**
  * Container for a route: path, component
@@ -374,6 +399,37 @@ const dispatchNextTick = (name, detail) => {
     setTimeout(() => {
         dispatch(name, detail)
     }, 0)
+}
+
+// If this is set, then that means we have popped into this var the state of our last scroll position
+let previousScrollState = null
+
+// Update history.scrollRestoration depending on restoreScrollState
+$: history.scrollRestoration = restoreScrollState ? 'manual' : 'auto'
+
+if (restoreScrollState) {
+    window.addEventListener('popstate', (event) => {
+        // If this event was from our history.replaceState, event.state will contain
+        // our scroll history. Otherwise, event.state will be null (like on forward
+        // navigation)
+        if (event.state && event.state.scrollY) {
+            previousScrollState = event.state
+        }
+        else {
+            previousScrollState = null
+        }
+    })
+
+    afterUpdate(() => {
+        // If this exists, then this is a back navigation: restore the scroll position
+        if (previousScrollState) {
+            window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
+        }
+        else {
+            // Otherwise this is a forward navigation: scroll to top
+            window.scrollTo(0, 0)
+        }
+    })
 }
 
 // Handle hash change events
