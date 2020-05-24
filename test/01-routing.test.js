@@ -325,5 +325,22 @@ describe('<Router> component', function() {
 
         browser.end()
     })
+
+    it('use:link vars', (browser) => {
+        // Condition always passes
+        browser
+            .url('http://localhost:5000/#/catalog/3')
+            .waitForElementPresent('#logbox')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Catalog","location":"/catalog/3","querystring":""}')
+        browser.expect.element('#previous').attribute('href').to.endsWith('#/catalog/2')
+        browser.expect.element('#next').attribute('href').to.endsWith('#/catalog/4')
+        browser.click('#next', () => {
+            browser.waitForElementVisible('#logbox')
+                .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Catalog","location":"/catalog/3","querystring":""}\nrouteLoaded - {"name":"Catalog","location":"/catalog/4","querystring":""}')
+            browser.expect.element('#previous').attribute('href').to.endsWith('#/catalog/3')
+            browser.expect.element('#next').attribute('href').to.endsWith('#/catalog/5')
+        })
+        browser.end()
+    })
 })
 

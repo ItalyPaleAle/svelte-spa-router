@@ -173,25 +173,37 @@ export function replace(location) {
  *
  * @param {HTMLElement} node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
  */
-export function link(node) {
+export function link(node, hrefVar) {
     // Only apply to <a> tags
     if (!node || !node.tagName || node.tagName.toLowerCase() != 'a') {
         throw Error('Action "link" can only be used with <a> tags')
     }
 
     // Destination must start with '/'
-    const href = node.getAttribute('href')
+    const href = hrefVar || node.getAttribute('href')
     if (!href || href.length < 1 || href.charAt(0) != '/') {
         throw Error('Invalid value for "href" attribute')
     }
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
+
+    return {
+        update(updated) {
+            const href = updated
+            if (!href || href.length < 1 || href.charAt(0) != '/') {
+                throw Error('Invalid value for "href" attribute')
+            }
+
+            // Add # to every href attribute
+            node.setAttribute('href', '#' + href)
+        },
+    }
 }
 
 /**
  * Performs a callback in the next tick and returns a Promise that resolves once that's done
- * 
+ *
  * @param {Function} cb - Callback to invoke
  * @returns {Promise} Promise that resolves after the callback has been invoked, with the return value of the callback (if any)
  */
