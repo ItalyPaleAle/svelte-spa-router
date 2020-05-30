@@ -124,6 +124,16 @@ import {link} from 'svelte-spa-router'
 <a href="/book/321" use:link>The Little Prince</a>
 ````
 
+You can also use the `use:link={variable}` action to have your link set to a variable and updated reactively (this will always take precedence over `href` attributes, if present):
+
+````svelte
+<script>
+import {link} from 'svelte-spa-router'
+let myLink = "/book/456"
+</script>
+<a use:link={myLink}>The Biggest Princess</a>
+````
+
 You can navigate between pages programmatically too:
 
 ````js

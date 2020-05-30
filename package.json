@@ -1,6 +1,6 @@
 {
   "name": "svelte-spa-router",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Router for SPAs using Svelte 3",
   "main": "Router.svelte",
   "svelte": "Router.svelte",
@@ -24,6 +24,7 @@
   ],
   "author": "Alessandro Segala (@ItalyPaleAle)",
   "license": "MIT",
+  "funding": "https://github.com/sponsors/ItalyPaleAle",
   "bugs": {
     "url": "https://github.com/ItalyPaleAle/svelte-spa-router/issues"
   },
@@ -33,16 +34,16 @@
   },
   "devDependencies": {
     "chromedriver": "^80.0.1",
-    "eslint": "^6.8.0",
-    "eslint-plugin-html": "^6.0.0",
+    "eslint": "^7.1.0",
+    "eslint-plugin-html": "^6.0.2",
     "eslint-plugin-svelte3": "^2.7.3",
-    "nightwatch": "^1.3.4",
-    "rollup": "^2.0.2",
+    "nightwatch": "^1.3.6",
+    "rollup": "^2.11.2",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-svelte": "^5.1.1",
-    "serve": "^11.3.0",
-    "svelte": "^3.19.2"
+    "rollup-plugin-svelte": "^5.2.2",
+    "serve": "^11.3.1",
+    "svelte": "^3.23.0"
   },
   "peerDependencies": {
     "svelte": "^3.5.0"

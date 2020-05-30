@@ -242,7 +242,7 @@ function routeLoaded(event) {
 </script>
 ````
 
-> **Note:** When using minifiers such as terser, the name of Svelte components might be altered by the minifier. As such, it is recommended to use customer user data to identify the component who caused the pre-condition failure, rather than relying on the `detail.name` property. The latter, might contain the minified name of the class.
+> **Note:** When using minifiers such as terser, the name of Svelte components might be altered by the minifier. As such, it is recommended to use custom user data to identify the component who caused the pre-condition failure, rather than relying on the `detail.name` property. The latter, might contain the minified name of the class.
 
 ## Route transitions
 

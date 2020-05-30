@@ -1,7 +1,4 @@
 <script context="module">
-// Something's wrong with eslint on this file
-/* eslint-disable no-multiple-empty-lines */
-
 import {readable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 
@@ -77,9 +74,11 @@ function getLocation() {
  * Readable store that returns the current full location (incl. querystring)
  */
 export const loc = readable(
-    getLocation(),
+    null,
     // eslint-disable-next-line prefer-arrow-callback
     function start(set) {
+        set(getLocation())
+
         const update = () => {
             set(getLocation())
         }
@@ -175,20 +174,31 @@ export function replace(location) {
  * ````
  *
  * @param {HTMLElement} node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
+ * @param {string} hrefVar - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively.
  */
-export function link(node) {
+export function link(node, hrefVar) {
     // Only apply to <a> tags
     if (!node || !node.tagName || node.tagName.toLowerCase() != 'a') {
         throw Error('Action "link" can only be used with <a> tags')
     }
 
+    updateLink(node, hrefVar || node.getAttribute('href'))
+
+    return {
+        update(updated) {
+            updateLink(node, updated)
+        }
+    }
+}
+
+// Internal function used by the link function
+function updateLink(node, href) {
     // Destination must start with '/'
-    const href = node.getAttribute('href')
     if (!href || href.length < 1 || href.charAt(0) != '/') {
         throw Error('Invalid value for "href" attribute: ' + href)
     }
 
-    // Add # to every href attribute
+    // Add # to the href attribute
     node.setAttribute('href', '#' + href)
     node.addEventListener('click', scrollstateHistoryHandler)
 }

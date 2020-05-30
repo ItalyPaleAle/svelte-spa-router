@@ -3,6 +3,7 @@
 import {wrap} from '../../Router.svelte'
 
 // Components
+import Catalog from './routes/Catalog.svelte'
 import Home from './routes/Home.svelte'
 import Name from './routes/Name.svelte'
 import Wild from './routes/Wild.svelte'
@@ -23,13 +24,16 @@ if (!urlParams.has('routemap')) {
     routes = {
         // Exact path
         '/': Home,
-    
+
         // Allow children to also signal link activation
         '/brand': Home,
-        
+
         // Using named parameters, with last being optional
         '/hello/:first/:last?': Name,
-    
+
+        // Using named parameters, with last being optional
+        '/catalog/:id?': Catalog,
+
         // Wildcard parameter
         '/wild': Wild,
         // Special route that has custom data that will be passed to the `routeLoaded` event
@@ -65,7 +69,7 @@ if (!urlParams.has('routemap')) {
         // Note that we must match both '/nested' and '/nested/*' for the nested router to work (or look below at doing this with a Map and a regular expression)
         '/nested': Nested,
         '/nested/*': Nested,
-    
+
         // Catch-all, must be last
         '*': NotFound,
     }

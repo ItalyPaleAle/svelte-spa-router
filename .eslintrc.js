@@ -21,8 +21,8 @@ module.exports = {
     ],
     settings: {
         'svelte3/ignore-styles': () => true,
-        'html': {
-            'indent': 0,
+        html: {
+            indent: 0,
             'report-bad-indent': 'warn',
             'html-extensions': [
                 '.html'
@@ -30,7 +30,7 @@ module.exports = {
         }
     },
     rules: {
-        'indent': [
+        indent: [
             'error',
             4,
             {
@@ -44,11 +44,11 @@ module.exports = {
             'error',
             'unix'
         ],
-        'quotes': [
+        quotes: [
             'error',
             'single'
         ],
-        'semi': [
+        semi: [
             'error',
             'never'
         ],
@@ -117,7 +117,7 @@ module.exports = {
                 arraysInArrays: true
             }
         ],
-        'curly': [
+        curly: [
             'error'
         ],
         'space-infix-ops': [
@@ -166,17 +166,12 @@ module.exports = {
             'error',
             'always'
         ],
-        'no-multiple-empty-lines': [
-            'error',
-            {
-                max: 1
-            }
-        ],
         'operator-linebreak': [
             'error',
             'after'
         ],
         // Need to disable this because otherwise it causes issues with Svelte files
+        // See https://github.com/sveltejs/eslint-plugin-svelte3/issues/41
         'no-multiple-empty-lines': 0
     }
 }
