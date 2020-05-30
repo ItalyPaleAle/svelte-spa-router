@@ -77,9 +77,11 @@ function getLocation() {
  * Readable store that returns the current full location (incl. querystring)
  */
 export const loc = readable(
-    getLocation(),
+    null,
     // eslint-disable-next-line prefer-arrow-callback
     function start(set) {
+        set(getLocation())
+
         const update = () => {
             set(getLocation())
         }
