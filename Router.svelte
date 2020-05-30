@@ -180,26 +180,24 @@ export function link(node, hrefVar) {
         throw Error('Action "link" can only be used with <a> tags')
     }
 
+    updateLink(node, hrefVar || node.getAttribute('href'))
+
+    return {
+        update(updated) {
+            updateLink(updated)
+        }
+    }
+}
+
+// Internal function used by the link function
+function updateLink(node, href) {
     // Destination must start with '/'
-    const href = hrefVar || node.getAttribute('href')
     if (!href || href.length < 1 || href.charAt(0) != '/') {
         throw Error('Invalid value for "href" attribute')
     }
 
-    // Add # to every href attribute
+    // Add # to the href attribute
     node.setAttribute('href', '#' + href)
-
-    return {
-        update(updated) {
-            const href = updated
-            if (!href || href.length < 1 || href.charAt(0) != '/') {
-                throw Error('Invalid value for "href" attribute')
-            }
-
-            // Add # to every href attribute
-            node.setAttribute('href', '#' + href)
-        },
-    }
 }
 
 /**
