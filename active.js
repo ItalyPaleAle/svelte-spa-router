@@ -9,13 +9,16 @@ let location
 
 // Function that updates all nodes marking the active ones
 function checkActive(el) {
-    // Remove the active class from all elements
-    el.node.classList.remove(el.className)
+    // Repeat this for each class
+    (el.className || '').split(' ').forEach((cls) => {
+        // Remove the active class firsts
+        el.node.classList.remove(cls)
 
-    // If the pattern matches, then set the active class
-    if (el.pattern.test(location)) {
-        el.node.classList.add(el.className)
-    }
+        // If the pattern matches, then set the active class
+        if (el.pattern.test(location)) {
+            el.node.classList.add(cls)
+        }
+    })
 }
 
 // Listen to changes in the location

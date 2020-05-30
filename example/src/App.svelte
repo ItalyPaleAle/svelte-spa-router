@@ -4,7 +4,7 @@
 <ul class="navigation-links">
     <li><a href="/" use:link use:active>Home</a></li>
     <li><a href="/brand" use:link><b>Brand</b></a></li>
-    <li><a href="/hello/svelte" use:link use:active={{path: '/hello/*', className: 'active'}}>Say hi!</a></li>
+    <li><a href="/hello/svelte" use:link use:active={{path: '/hello/*', className: 'active another-class'}}>Say hi!</a></li>
     <li><a href="/does/not/exist" use:link>Not found</a></li>
 </ul>
 
