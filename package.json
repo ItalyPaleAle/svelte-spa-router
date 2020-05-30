@@ -1,6 +1,6 @@
 {
   "name": "svelte-spa-router",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Router for SPAs using Svelte 3",
   "main": "Router.svelte",
   "svelte": "Router.svelte",
