@@ -24,6 +24,7 @@
   ],
   "author": "Alessandro Segala (@ItalyPaleAle)",
   "license": "MIT",
+  "funding": "https://github.com/sponsors/ItalyPaleAle",
   "bugs": {
     "url": "https://github.com/ItalyPaleAle/svelte-spa-router/issues"
   },
