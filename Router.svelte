@@ -172,6 +172,7 @@ export function replace(location) {
  * ````
  *
  * @param {HTMLElement} node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
+ * @param {string} hrefVar - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively.
  */
 export function link(node, hrefVar) {
     // Only apply to <a> tags

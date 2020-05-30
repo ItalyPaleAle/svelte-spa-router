@@ -124,7 +124,7 @@ import {link} from 'svelte-spa-router'
 <a href="/book/321" use:link>The Little Prince</a>
 ````
 
-If you have a link that is set to a varible, you can also use the `use:link={variable}` action:
+You can also use the `use:link={variable}` action to have your link set to a variable and updated reactively (this will always take precedence over `href` attributes, if present):
 
 ````svelte
 <script>
