@@ -3,6 +3,7 @@
 /* eslint-disable no-multiple-empty-lines */
 
 import {readable, derived} from 'svelte/store'
+import {tick} from 'svelte'
 
 /**
  * Wraps a route to add route pre-conditions.
@@ -118,7 +119,7 @@ export function push(location) {
     }
 
     // Execute this code when the current call stack is complete
-    return nextTickPromise(() => {
+    return tick().then(() => {
         window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
     })
 }
@@ -130,7 +131,7 @@ export function push(location) {
  */
 export function pop() {
     // Execute this code when the current call stack is complete
-    return nextTickPromise(() => {
+    return tick().then(() => {
         window.history.back()
     })
 }
@@ -147,7 +148,7 @@ export function replace(location) {
     }
 
     // Execute this code when the current call stack is complete
-    return nextTickPromise(() => {
+    return tick().then(() => {
         const dest = (location.charAt(0) == '#' ? '' : '#') + location
         try {
             window.history.replaceState(undefined, undefined, dest)
@@ -187,20 +188,6 @@ export function link(node) {
 
     // Add # to every href attribute
     node.setAttribute('href', '#' + href)
-}
-
-/**
- * Performs a callback in the next tick and returns a Promise that resolves once that's done
- * 
- * @param {Function} cb - Callback to invoke
- * @returns {Promise} Promise that resolves after the callback has been invoked, with the return value of the callback (if any)
- */
-export function nextTickPromise(cb) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(cb())
-        }, 0)
-    })
 }
 </script>
 
@@ -371,9 +358,9 @@ const dispatch = createEventDispatcher()
 // Just like dispatch, but executes on the next iteration of the event loop
 const dispatchNextTick = (name, detail) => {
     // Execute this code when the current call stack is complete
-    setTimeout(() => {
+    tick().then(() => {
         dispatch(name, detail)
-    }, 0)
+    })
 }
 
 // Handle hash change events
