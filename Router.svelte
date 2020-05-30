@@ -1,7 +1,4 @@
 <script context="module">
-// Something's wrong with eslint on this file
-/* eslint-disable no-multiple-empty-lines */
-
 import {readable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 
