@@ -199,6 +199,19 @@ function updateLink(node, href) {
     // Add # to the href attribute
     node.setAttribute('href', '#' + href)
 }
+
+/**
+ * Performs a callback in the next tick and returns a Promise that resolves once that's done
+ *
+ * @param {Function} cb - Callback to invoke
+ * @returns {Promise} Promise that resolves after the callback has been invoked, with the return value of the callback (if any)
+ * @deprecated Deprecated since version 2.2 and will be removed in version 3. Use `tick` from the Svelte runtime instead (`import {tick} from 'svelte'`).
+ */
+export function nextTickPromise(cb) {
+    // eslint-disable-next-line no-console
+    console.warn('nextTickPromise from \'svelte-spa-router\' is deprecated and will be removed in version 3; use the \'tick\' method from the Svelte runtime instead')
+    return tick().then(cb)
+}
 </script>
 
 {#if componentParams}
