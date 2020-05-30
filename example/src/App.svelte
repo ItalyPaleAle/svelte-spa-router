@@ -26,7 +26,7 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} on:routeEvent={routeEvent} />
+<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} on:routeEvent={routeEvent} {restoreScrollState}  />
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
@@ -93,6 +93,11 @@ function routeEvent(event) {
     console.info('Caught event routeEvent', event.detail)
     logbox += 'routeEvent - ' + JSON.stringify(event.detail) + '\n'
 }
+
+// Enables the restoreScrollState option by checking for the "scroll=1" querystring parameter
+// We're checking this for the tests, but in your code you will likely want to set this value manually
+const urlParams = new URLSearchParams(window.location.search)
+const restoreScrollState = urlParams.has('scroll') && !!urlParams.get('scroll')
 
 let dynamicLinks = [
     {

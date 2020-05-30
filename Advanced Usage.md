@@ -4,6 +4,7 @@ svelte-spa-router is simple by design. A minimal router is easy to learn and imp
 
 Thanks to the many features of Svelte 3 or other components in the ecosystem, svelte-spa-router can be used to get many more "advanced" features. This document explains how to achieve certain results with svelte-spa-router beyond what's offered by the component itself.
 
+- [Restore scroll position](#restore-scroll-position)
 - [routeEvent event](#routeevent-event)
 - [routeLoaded event](#routeloaded-event)
 - [Querystring parsing](#querystring-parsing)
@@ -12,6 +13,16 @@ Thanks to the many features of Svelte 3 or other components in the ecosystem, sv
 - [Nested routers](#nested-routers)
 - [Route groups](#route-groups)
 - [Async route loading](#async-route-loading)
+
+## Restore scroll position
+
+Starting with svelte-spa-router 3.0, there is a new option in the `Router` component to restore the scroll position when the user navigates to the previous page.
+
+To enable that, set the `restoreScrollState` property to `true` in the router (it's disabled by default):
+
+```svelte
+<Router {routes} restoreScrollState={true} />
+```
 
 ## `routeEvent` event
 
