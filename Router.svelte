@@ -184,7 +184,7 @@ export function link(node, hrefVar) {
 
     return {
         update(updated) {
-            updateLink(updated)
+            updateLink(node, updated)
         }
     }
 }
