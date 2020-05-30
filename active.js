@@ -11,6 +11,9 @@ let location
 function checkActive(el) {
     // Repeat this for each class
     (el.className || '').split(' ').forEach((cls) => {
+        if (!cls) {
+            return
+        }
         // Remove the active class firsts
         el.node.classList.remove(cls)
 
