@@ -341,6 +341,7 @@ describe('<Router> component', function() {
             .waitForElementVisible('h2.routetitle')
         browser.expect.element('#currentpath').text.to.equal('/hello/Mr%2%0Smith')
         browser.expect.element('#nameparams').text.to.equal('Your name is: null')
+    })
 
     it('use:link vars', (browser) => {
         // Condition always passes
@@ -359,4 +360,3 @@ describe('<Router> component', function() {
         browser.end()
     })
 })
-
