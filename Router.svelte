@@ -299,7 +299,7 @@ class RouteItem {
      */
     match(path) {
         // If there's a prefix, remove it before we run the matching
-        if (prefix && path.startsWith(prefix)) {
+        if (prefix && path.startsWith(prefix) && path instanceof RegExp) {
             path = path.substr(prefix.length) || '/'
         }
 
