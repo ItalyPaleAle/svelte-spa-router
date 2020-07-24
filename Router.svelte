@@ -360,7 +360,8 @@ if (routes instanceof Map) {
 else {
     // We have an object, so iterate on its own properties
     Object.keys(routes).forEach((path) => {
-        routesList.push(new RouteItem(path, routes[path]))
+        const prefixedPath = prefix + path
+        routesList.push(new RouteItem(prefixedPath, routes[path]))
     })
 }
 
