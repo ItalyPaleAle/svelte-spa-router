@@ -62,7 +62,7 @@ event.detail = {
     // The "querystring" from the page's hash, equivalent to the value of the $querystring readable store
     querystring: 'foo=bar',
     // User data passed with the wrap function; can be any kind of object/dictionary
-    customData: {...}
+    userData: {...}
 }
 ````
 
