@@ -347,13 +347,14 @@ class RouteItem {
     }
 
     /**
-     * Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoaded` and `conditionsFailed` events
+     * Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoading`, `routeLoaded` and `conditionsFailed` events
      * @typedef {Object} RouteDetail
-     * @property {SvelteComponent} component - Svelte component
-     * @property {string} name - Name of the Svelte component
+     * @property {string|Object} route - Route matched as defined in the route definition (could be a string or a reguar expression object)
      * @property {string} location - Location path
      * @property {string} querystring - Querystring from the hash
      * @property {Object} [userData] - Custom data passed by the user
+     * @property {SvelteComponent} [component] - Svelte component (only in `routeLoaded` events)
+     * @property {string} [name] - Name of the Svelte component (only in `routeLoaded` events)
      */
 
     /**
@@ -465,6 +466,10 @@ loc.subscribe((newLoc) => {
             routesList[i].component().then((loaded) => {
                 // If there is a "default" property, which is used by async routes, then pick that
                 component = (loaded && loaded.default) || loaded
+                
+                // Add the component object and name to the detail object
+                detail.component = component
+                detail.name = component.name
 
                 // Set componentParams onloy if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
                 // Of course, this assumes that developers always add a "params" prop when they are expecting parameters

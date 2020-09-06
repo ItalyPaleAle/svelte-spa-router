@@ -26,7 +26,14 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} on:routeLoading={routeLoading} on:routeEvent={routeEvent} {restoreScrollState}  />
+<Router
+  {routes}
+  on:conditionsFailed={conditionsFailed}
+  on:routeLoaded={routeLoaded}
+  on:routeLoading={routeLoading}
+  on:routeEvent={routeEvent}
+  {restoreScrollState}
+/>
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
