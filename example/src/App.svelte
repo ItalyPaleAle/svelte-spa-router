@@ -26,7 +26,7 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} on:routeEvent={routeEvent} {restoreScrollState}  />
+<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} on:routeLoading={routeLoading} on:routeEvent={routeEvent} {restoreScrollState}  />
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
@@ -85,6 +85,14 @@ function routeLoaded(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeLoaded', event.detail)
     logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
+}
+
+// Handles the "routeLoading" event dispatched by the router whie a route is being loaded
+// If the route is dynamically imported, such as with the `import()` syntax, then there might be a delay before the route is loaded
+function routeLoading(event) {
+    // eslint-disable-next-line no-console
+    console.info('Caught event routeLoading', event.detail)
+    logbox += 'routeLoading - ' + JSON.stringify(event.detail) + '\n'
 }
 
 // Handles event bubbling up from nested routes

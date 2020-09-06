@@ -1,6 +1,6 @@
 // Import the "wrap" function
 // Normally, this would be import: `import {wrap} from 'svelte-spa-router'`
-import {wrap} from '../../Router.svelte'
+import {wrap, wrapAsync} from '../../Router.svelte'
 
 // Components
 import Catalog from './routes/Catalog.svelte'
@@ -8,8 +8,6 @@ import Home from './routes/Home.svelte'
 import Name from './routes/Name.svelte'
 import Wild from './routes/Wild.svelte'
 import Regex from './routes/Regex.svelte'
-import Lucky from './routes/Lucky.svelte'
-import Nested from './routes/Nested.svelte'
 import NotFound from './routes/NotFound.svelte'
 
 // This demonstrates how to pass routes as a POJO (Plain Old JavaScript Object) or a JS Map
@@ -42,7 +40,8 @@ if (!urlParams.has('routemap')) {
 
         // This route has a pre-condition function that lets people in only 50% of times, and a second pre-condition that is always true
         // The second argument is a custom data object that will be passed to the `conditionsFailed` event if the pre-conditions fail
-        '/lucky': wrap(Lucky,
+        '/lucky': wrapAsync(
+            () => import('./routes/Lucky.svelte'),
             {foo: 'bar'},
             (detail) => {
                 // If there's a querystring parameter, override the random choice (tests need to be deterministic)
@@ -67,8 +66,8 @@ if (!urlParams.has('routemap')) {
 
         // This component contains a nested router
         // Note that we must match both '/nested' and '/nested/*' for the nested router to work (or look below at doing this with a Map and a regular expression)
-        '/nested': Nested,
-        '/nested/*': Nested,
+        '/nested': wrapAsync(() => import('./routes/Nested.svelte')),
+        '/nested/*': wrapAsync(() => import('./routes/Nested.svelte')),
 
         // Catch-all, must be last
         '*': NotFound,
@@ -94,7 +93,8 @@ else {
 
     // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
     // The second argument is a custom data object that will be passed to the `conditionsFailed` event if the pre-conditions fail
-    routes.set('/lucky', wrap(Lucky,
+    routes.set('/lucky', wrap(
+        import('./routes/Lucky.svelte'),
         {foo: 'bar'},
         (detail) => {
             return (Math.random() > 0.5)
@@ -113,7 +113,7 @@ else {
 
     // This component contains a nested router
     // Thanks to being able to define routes via regular expressions, this allows us to use a single line rather than 2 ('/nested' and '/nested/*')
-    routes.set(/^\/nested(\/(.*))?/, Nested)
+    routes.set(/^\/nested(\/(.*))?/, import('./routes/Nested.svelte'))
 
     // Catch-all, must be last
     routes.set('*', NotFound)

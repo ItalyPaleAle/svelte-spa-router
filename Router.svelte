@@ -11,6 +11,11 @@ import {tick} from 'svelte'
  * @returns {Object} Wrapped route
  */
 export function wrap(route, userData, ...conditions) {
+    // Wrap the route inside a function that returns a Promise
+    return wrapAsync(() => Promise.resolve(route), userData, ...conditions)
+}
+
+export function wrapAsync(route, userData, ...conditions) {
     // Check if we don't have userData
     if (userData && typeof userData == 'function') {
         conditions = (conditions && conditions.length) ? conditions : []
@@ -292,9 +297,9 @@ class RouteItem {
             this.userData = component.userData
         }
         else {
-            this.component = component
+            // Convert the component to a function that returns a Promise, to normalize it
+            this.component = () => Promise.resolve(component)
             this.conditions = []
-            this.userData = undefined
         }
 
         this._pattern = pattern
@@ -391,7 +396,7 @@ let componentParams = null
 const dispatch = createEventDispatcher()
 
 // Just like dispatch, but executes on the next iteration of the event loop
-const dispatchNextTick = (name, detail) => {
+function dispatchNextTick(name, detail) {
     // Execute this code when the current call stack is complete
     tick().then(() => {
         dispatch(name, detail)
@@ -431,19 +436,18 @@ if (restoreScrollState) {
 
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
-$: {
+// Do not use the $: syntax because it gets triggered by too many things
+loc.subscribe((newLoc) => {
     // Find a route matching the location
     component = null
     let i = 0
     while (!component && i < routesList.length) {
-        const match = routesList[i].match($loc.location)
+        const match = routesList[i].match(newLoc.location)
         if (match) {
             const detail = {
-                component: routesList[i].component,
-                name: routesList[i].component.name,
-                path: routesList[i].path,
-                location: $loc.location,
-                querystring: $loc.querystring,
+                route: routesList[i].path,
+                location: newLoc.location,
+                querystring: newLoc.querystring,
                 userData: routesList[i].userData
             }
 
@@ -453,19 +457,29 @@ $: {
                 dispatchNextTick('conditionsFailed', detail)
                 break
             }
-            component = routesList[i].component
-            // Set componentParams onloy if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
-            // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
-            if (match && typeof match == 'object' && Object.keys(match).length) {
-                componentParams = match
-            }
-            else {
-                componentParams = null
-            }
 
-            dispatchNextTick('routeLoaded', detail)
+            // Trigger an event to alert that we're loading the route
+            dispatchNextTick('routeLoading', detail)
+
+            // Invoke the Promise
+            routesList[i].component().then((loaded) => {
+                // If there is a "default" property, which is used by async routes, then pick that
+                component = (loaded && loaded.default) || loaded
+
+                // Set componentParams onloy if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
+                // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
+                if (match && typeof match == 'object' && Object.keys(match).length) {
+                    componentParams = match
+                }
+                else {
+                    componentParams = null
+                }
+
+                dispatchNextTick('routeLoaded', detail)
+            })
+            break
         }
         i++
     }
-}
+})
 </script>
