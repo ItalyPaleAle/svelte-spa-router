@@ -436,11 +436,12 @@ $: {
     component = null
     let i = 0
     while (!component && i < routesList.length) {
-        let match = routesList[i].match($loc.location)
+        const match = routesList[i].match($loc.location)
         if (match) {
             const detail = {
                 component: routesList[i].component,
                 name: routesList[i].component.name,
+                path: routesList[i].path,
                 location: $loc.location,
                 querystring: $loc.querystring,
                 userData: routesList[i].userData
