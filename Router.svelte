@@ -7,15 +7,26 @@ import {tick} from 'svelte'
  * 
  * @param {SvelteComponent} route - Svelte component for the route
  * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
- * @param {...Function} conditions - Route pre-conditions to add, which will be executed in order
+ * @param {...function(RouteDetail): boolean} conditions - Route pre-conditions to add, which will be executed in order
  * @returns {Object} Wrapped route
  */
 export function wrap(route, userData, ...conditions) {
     // Wrap the route inside a function that returns a Promise
-    return wrapAsync(() => Promise.resolve(route), userData, ...conditions)
+    return wrapAsync(() => Promise.resolve(route), null, userData, ...conditions)
 }
 
-export function wrapAsync(route, userData, ...conditions) {
+/**
+ * Wraps a dynamically-imported route.
+ * This makes it possiblle to use dynamically-imported routes (e.g. `wrapAsync(() => import('Foo.svelte'))`) and allows bundlers to enable code-splitting.
+ * The optional argument "loading" is a SvelteComponent that will be displayed while the dynamicallly-imported route is being fetched; if omitted or null, the router will not show any route
+ * 
+ * @param {function(): Promise<SvelteComponent>} asyncRoute - Function that returns a Promise that fullfills with a Svelte component
+ * @param {SvelteComponent} [loadingRoute] - Svelte component to be displayed while the async route is loading (set to a false-y value to not show anything)
+ * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event (can be omitted)
+ * @param {...function(RouteDetail): boolean} [conditions] - Route pre-conditions to add, which will be executed in order
+ * @returns {Object} Wrapped route
+ */
+export function wrapAsync(asyncRoute, loadingRoute, userData, ...conditions) {
     // Check if we don't have userData
     if (userData && typeof userData == 'function') {
         conditions = (conditions && conditions.length) ? conditions : []
@@ -23,9 +34,9 @@ export function wrapAsync(route, userData, ...conditions) {
         userData = undefined
     }
 
-    // Parameter route and each item of conditions must be functions
-    if (!route || typeof route != 'function') {
-        throw Error('Invalid parameter route')
+    // Parameter asyncRoute and each item of conditions must be functions
+    if (!asyncRoute || typeof asyncRoute != 'function') {
+        throw Error('Invalid parameter asyncRoute')
     }
     if (conditions && conditions.length) {
         for (let i = 0; i < conditions.length; i++) {
@@ -35,16 +46,21 @@ export function wrapAsync(route, userData, ...conditions) {
         }
     }
 
+    // Check if we have a loading route
+    if (loadingRoute) {
+        asyncRoute.loading = loadingRoute
+    }
+
     // Returns an object that contains all the functions to execute too
-    const obj = {route, userData}
+    // The _sveltesparouter flag is to confirm the object was created by this router
+    const obj = {
+        route: asyncRoute,
+        userData,
+        _sveltesparouter: true
+    }
     if (conditions && conditions.length) {
         obj.conditions = conditions
     }
-
-    // The _sveltesparouter flag is to confirm the object was created by this router
-    Object.defineProperty(obj, '_sveltesparouter', {
-        value: true
-    })
 
     return obj
 }
@@ -115,7 +131,7 @@ export const querystring = derived(
  * Navigates to a new page programmatically.
  *
  * @param {string} location - Path to navigate to (must start with `/` or '#/')
- * @return {Promise} Promise that resolves after the page navigation has completed
+ * @return {Promise<void>} Promise that resolves after the page navigation has completed
  */
 export function push(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
@@ -133,7 +149,7 @@ export function push(location) {
 /**
  * Navigates back in history (equivalent to pressing the browser's back button).
  * 
- * @return {Promise} Promise that resolves after the page navigation has completed
+ * @return {Promise<void>} Promise that resolves after the page navigation has completed
  */
 export function pop() {
     // Execute this code when the current call stack is complete
@@ -146,7 +162,7 @@ export function pop() {
  * Replaces the current page but without modifying the history stack.
  *
  * @param {string} location - Path to navigate to (must start with `/` or '#/')
- * @return {Promise} Promise that resolves after the page navigation has completed
+ * @return {Promise<void>} Promise that resolves after the page navigation has completed
  */
 export function replace(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
@@ -226,9 +242,16 @@ function scrollstateHistoryHandler(event) {
 </script>
 
 {#if componentParams}
-  <svelte:component this="{component}" params="{componentParams}" on:routeEvent />
+  <svelte:component
+    this="{component}"
+    params="{componentParams}"
+    on:routeEvent
+  />
 {:else}
-  <svelte:component this="{component}" on:routeEvent />
+  <svelte:component
+    this="{component}"
+    on:routeEvent
+  />
 {/if}
 
 <script>
@@ -462,8 +485,21 @@ loc.subscribe((newLoc) => {
             // Trigger an event to alert that we're loading the route
             dispatchNextTick('routeLoading', detail)
 
+            // If there's a component to show while we're loading the route, display it
+            const obj = routesList[i].component
+            if (obj.loading) {
+                component = obj.loading
+
+                // Add the component object and name to the detail object
+                detail.component = component
+                detail.name = component.name
+
+                // Trigger the routeLoaded event for the loading component
+                dispatchNextTick('routeLoaded', detail)
+            }
+
             // Invoke the Promise
-            routesList[i].component().then((loaded) => {
+            obj().then((loaded) => {
                 // If there is a "default" property, which is used by async routes, then pick that
                 component = (loaded && loaded.default) || loaded
                 
@@ -471,7 +507,7 @@ loc.subscribe((newLoc) => {
                 detail.component = component
                 detail.name = component.name
 
-                // Set componentParams onloy if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
+                // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
                 // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
                 if (match && typeof match == 'object' && Object.keys(match).length) {
                     componentParams = match

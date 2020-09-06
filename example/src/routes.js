@@ -41,7 +41,12 @@ if (!urlParams.has('routemap')) {
         // This route has a pre-condition function that lets people in only 50% of times, and a second pre-condition that is always true
         // The second argument is a custom data object that will be passed to the `conditionsFailed` event if the pre-conditions fail
         '/lucky': wrapAsync(
-            () => import('./routes/Lucky.svelte'),
+            () => import('./routes/Lucky.svelte').then((res) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => resolve(res), 5000)
+                })
+            }),
+            Wild,
             {foo: 'bar'},
             (detail) => {
                 // If there's a querystring parameter, override the random choice (tests need to be deterministic)
@@ -93,8 +98,9 @@ else {
 
     // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
     // The second argument is a custom data object that will be passed to the `conditionsFailed` event if the pre-conditions fail
-    routes.set('/lucky', wrap(
-        import('./routes/Lucky.svelte'),
+    routes.set('/lucky', wrapAsync(
+        () => import('./routes/Lucky.svelte'),
+        Wild,
         {foo: 'bar'},
         (detail) => {
             return (Math.random() > 0.5)
@@ -113,7 +119,7 @@ else {
 
     // This component contains a nested router
     // Thanks to being able to define routes via regular expressions, this allows us to use a single line rather than 2 ('/nested' and '/nested/*')
-    routes.set(/^\/nested(\/(.*))?/, import('./routes/Nested.svelte'))
+    routes.set(/^\/nested(\/(.*))?/, wrapAsync(() => import('./routes/Nested.svelte')))
 
     // Catch-all, must be last
     routes.set('*', NotFound)
