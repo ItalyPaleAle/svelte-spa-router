@@ -20,7 +20,6 @@ module.exports = {
         }
     ],
     settings: {
-        'svelte3/ignore-styles': () => true,
         html: {
             indent: 0,
             'report-bad-indent': 'warn',
