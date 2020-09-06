@@ -10,7 +10,8 @@ module.exports = {
 
     webdriver: {
         start_process: true,
-        server_path: 'node_modules/.bin/chromedriver',
+        // Use the platform's ChromeDriver if available
+        server_path: process.env.CHROMEWEBDRIVER || 'node_modules/.bin/chromedriver',
         port: 9515
     },
 
