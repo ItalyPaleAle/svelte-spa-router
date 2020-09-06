@@ -321,7 +321,7 @@ describe('<Router> component', function() {
         // Condition always fails
         browser.url('http://localhost:5000/#/lucky?pass=0')
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Lucky","path":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}\nconditionsFailed - {"name":"Lucky","location":"/lucky","querystring":"pass=0","userData":{"foo":"bar"}}\nrouteLoaded - {"name":"Wild","path":"/wild/*","location":"/wild/conditions-failed","querystring":""}')
+            .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Lucky","path":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}\nconditionsFailed - {"name":"Lucky","path":"/lucky","location":"/lucky","querystring":"pass=0","userData":{"foo":"bar"}}\nrouteLoaded - {"name":"Wild","path":"/wild/*","location":"/wild/conditions-failed","querystring":""}')
 
         browser.end()
     })
@@ -341,6 +341,7 @@ describe('<Router> component', function() {
             .waitForElementVisible('h2.routetitle')
         browser.expect.element('#currentpath').text.to.equal('/hello/Mr%2%0Smith')
         browser.expect.element('#nameparams').text.to.equal('Your name is: null')
+        browser.end()
     })
 
     it('use:link vars', (browser) => {
