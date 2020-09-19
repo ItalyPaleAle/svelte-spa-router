@@ -1,9 +1,11 @@
 <script context="module">
 import {readable, derived} from 'svelte/store'
 import {tick} from 'svelte'
+import {wrap as _wrap} from './wrap'
 
 /**
  * Wraps a route to add route pre-conditions.
+ * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
  * 
  * @param {SvelteComponent} route - Svelte component for the route
  * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
@@ -11,58 +13,14 @@ import {tick} from 'svelte'
  * @returns {Object} Wrapped route
  */
 export function wrap(route, userData, ...conditions) {
-    // Wrap the route inside a function that returns a Promise
-    return wrapAsync(() => Promise.resolve(route), null, userData, ...conditions)
-}
-
-/**
- * Wraps a dynamically-imported route.
- * This makes it possiblle to use dynamically-imported routes (e.g. `wrapAsync(() => import('Foo.svelte'))`) and allows bundlers to enable code-splitting.
- * The optional argument "loading" is a SvelteComponent that will be displayed while the dynamicallly-imported route is being fetched; if omitted or null, the router will not show any route
- * 
- * @param {function(): Promise<SvelteComponent>} asyncRoute - Function that returns a Promise that fullfills with a Svelte component
- * @param {SvelteComponent} [loadingRoute] - Svelte component to be displayed while the async route is loading (set to a false-y value to not show anything)
- * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event (can be omitted)
- * @param {...function(RouteDetail): boolean} [conditions] - Route pre-conditions to add, which will be executed in order
- * @returns {Object} Wrapped route
- */
-export function wrapAsync(asyncRoute, loadingRoute, userData, ...conditions) {
-    // Check if we don't have userData
-    if (userData && typeof userData == 'function') {
-        conditions = (conditions && conditions.length) ? conditions : []
-        conditions.unshift(userData)
-        userData = undefined
-    }
-
-    // Parameter asyncRoute and each item of conditions must be functions
-    if (!asyncRoute || typeof asyncRoute != 'function') {
-        throw Error('Invalid parameter asyncRoute')
-    }
-    if (conditions && conditions.length) {
-        for (let i = 0; i < conditions.length; i++) {
-            if (!conditions[i] || typeof conditions[i] != 'function') {
-                throw Error('Invalid parameter conditions[' + i + ']')
-            }
-        }
-    }
-
-    // Check if we have a loading route
-    if (loadingRoute) {
-        asyncRoute.loading = loadingRoute
-    }
-
-    // Returns an object that contains all the functions to execute too
-    // The _sveltesparouter flag is to confirm the object was created by this router
-    const obj = {
-        route: asyncRoute,
+    // Use the new wrap method and show a deprecation warning
+    // eslint-disable-next-line no-console
+    console.warn('Method wrap is deprecated and will be removed in a future version. Please use svelte-spa-router/wrap instead.')
+    return _wrap({
+        route,
         userData,
-        _sveltesparouter: true
-    }
-    if (conditions && conditions.length) {
-        obj.conditions = conditions
-    }
-
-    return obj
+        conditions
+    })
 }
 
 /**
