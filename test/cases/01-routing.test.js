@@ -5,7 +5,7 @@ const assert = require('assert')
 describe('<Router> component', function() {
     // Increase timeouts
     this.slow(2000)
-    this.timeout(3000)
+    this.timeout(4000)
 
     it('renders on the page', (browser) => {
         browser
