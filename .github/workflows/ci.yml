@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - name: 'Fix permissions'
+        run: |
+          sudo chmod 0777 ${{ github.workspace }}/example/dist
+          sudo chmod 0777 ${{ github.workspace }}/example
       - uses: actions/checkout@v1
       - name: 'Install Node.js'
         uses: actions/setup-node@v1
@@ -35,9 +39,10 @@ jobs:
     services:
       nginx:
         image: 'nginx:1.19'
-        options: '-v ${{ github.workspace }}/example/dist:/usr/share/nginx/html:ro --name nginx'
+        volumes:
+          - '${{ github.workspace }}/example/dist:/usr/share/nginx/html'
       selenium-chrome:
         image: 'selenium/standalone-chrome:85.0'
         ports:
           - '4444:4444'
-        options: '--shm-size=2g --link nginx'
+        options: '--shm-size=2g'
