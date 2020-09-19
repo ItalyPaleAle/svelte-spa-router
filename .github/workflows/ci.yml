@@ -51,7 +51,7 @@ jobs:
         env:
           SELENIUM_HOST: '127.0.0.1'
           SELENIUM_PORT: '4444'
-          LAUNCH_URL: 'http://nginx:80'
+          LAUNCH_URL: 'http://nginx'
       - name: 'Run linter'
         run: |
           npm run lint

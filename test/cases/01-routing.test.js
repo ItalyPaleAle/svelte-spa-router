@@ -176,7 +176,7 @@ describe('<Router> component', function() {
                     .expect.element('#currentpath').text.to.equal('/wild/something')
 
                 browser.url((url) => {
-                    assert.strictEqual(url.value, 'http://localhost:5000/#/wild/something')
+                    assert.strictEqual(url.value, browser.launchUrl + '/#/wild/something')
 
                     browser.end()
                 })
@@ -199,7 +199,7 @@ describe('<Router> component', function() {
                             .expect.element('#currentpath').text.to.equal('/wild/something')
 
                         browser.url((url) => {
-                            assert.strictEqual(url.value, 'http://localhost:5000/#/wild/something')
+                            assert.strictEqual(url.value, browser.launchUrl + '/#/wild/something')
 
                             browser.end()
                         })
@@ -223,7 +223,7 @@ describe('<Router> component', function() {
                             .expect.element('#currentpath').text.to.equal('/wild/replaced')
 
                         browser.url((url) => {
-                            assert.strictEqual(url.value, 'http://localhost:5000/#/wild/replaced')
+                            assert.strictEqual(url.value, browser.launchUrl + '/#/wild/replaced')
 
                             // Pop button
                             browser
@@ -235,7 +235,7 @@ describe('<Router> component', function() {
                                         .expect.element('#currentpath').text.to.equal('/wild/something')
 
                                     browser.url((url) => {
-                                        assert.strictEqual(url.value, 'http://localhost:5000/#/wild/something')
+                                        assert.strictEqual(url.value, browser.launchUrl + '/#/wild/something')
 
                                         // Ugh the callback hell...
                                         browser.end()
