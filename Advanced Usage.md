@@ -149,6 +149,7 @@ Pre-conditions are defined in the routes object, using the `wrap` method exporte
 
 The pre-condition functions receive a dictionary `detail` with the same structure as the `routeLoaded` event:
 
+- `detail.route`: the route that was matched, exactly as defined in the route definition object
 - `detail.component`: the Svelte component that is being evaluated (this is a JavaScript function)
 - `detail.name`: name of the Svelte component (a string)
 - `detail.location`: the current path (just like the `$location` readable store)
@@ -332,6 +333,8 @@ This works as you would expect:
 Both routes first load the `Hello` route, as they both match `/hello/*` in the outer router. The inner router then loads the separate components based on the path.
 
 Features like highlighting active links will still work, regardless of where those links are placed in the page (in which component).
+
+Note that if your parent router uses a route that contains parameters, such as `/user/:id`, then you must define a regular expression for `prefix`. For example: `prefix={/^\/user\/[0-9]+/}`.
 
 ## Route groups
 

@@ -304,8 +304,16 @@ class RouteItem {
      */
     match(path) {
         // If there's a prefix, remove it before we run the matching
-        if (prefix && path.startsWith(prefix)) {
-            path = path.substr(prefix.length) || '/'
+        if (prefix) {
+            if (typeof prefix == 'string' && path.startsWith(prefix)) {
+                path = path.substr(prefix.length) || '/'
+            }
+            else if (prefix instanceof RegExp) {
+                const match = path.match(prefix)
+                if (match && match[0]) {
+                    path = path.substr(match[0].length) || '/'
+                }
+            }
         }
 
         // Check if the pattern matches
