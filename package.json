@@ -5,8 +5,8 @@
   "main": "Router.svelte",
   "svelte": "Router.svelte",
   "scripts": {
-    "build-example": "(cd example && npx rollup -c)",
-    "start-example": "npx serve -n -l 5000 example/dist",
+    "build-test-app": "(cd test/app && npx rollup -c)",
+    "start-test-app": "npx serve -n -l 5000 test/app/dist",
     "eslint": "npx eslint -c .eslintrc.js --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch -e selenium.chrome",
@@ -42,7 +42,6 @@
     "nightwatch": "^1.4.1",
     "rollup": "^2.26.10",
     "rollup-plugin-svelte": "^6.0.0",
-    "serve": "^11.3.2",
     "svelte": "^3.24.1"
   },
   "peerDependencies": {

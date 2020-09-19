@@ -6,7 +6,7 @@
 <script>
 // Import the link action
 // Normally, this would be import: `import {link} from 'svelte-spa-router'`
-import {link} from '../../../Router.svelte'
+import {link} from '../../../../Router.svelte'
 export let params
 let id
 $: if (params) {

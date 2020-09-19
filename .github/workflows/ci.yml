@@ -25,7 +25,7 @@ jobs:
           npm install
       - name: 'Build example project'
         run: |
-          npm run build-example
+          npm run build-test-app
       - name: 'Start test containers'
         run: |
           # We can't use a GitHub Action service because they start before the source is cloned, and that causes issues
@@ -33,7 +33,7 @@ jobs:
           docker run \
             -d \
             --name nginx \
-            -v ${{ github.workspace }}/example/dist:/usr/share/nginx/html:ro \
+            -v ${{ github.workspace }}/test/app/dist:/usr/share/nginx/html:ro \
             nginx:1.19
           # Selenium with Chrome
           docker run \
@@ -52,7 +52,6 @@ jobs:
           SELENIUM_HOST: '127.0.0.1'
           SELENIUM_PORT: '4444'
           LAUNCH_URL: 'http://nginx:80'
-
       - name: 'Run linter'
         run: |
           npm run lint

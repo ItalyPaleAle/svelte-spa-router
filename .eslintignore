@@ -1,5 +1,2 @@
-# Compiled files
-dist
-
-# Vendored dependencies
-vendor
+# Test app
+test/app
