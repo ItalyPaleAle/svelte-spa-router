@@ -10,7 +10,7 @@ require('events').EventEmitter.defaultMaxListeners = 100
 
 module.exports = {
     src_folders: [
-        'test/'
+        'test/cases/'
     ],
 
     output_folder: 'result',
