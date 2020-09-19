@@ -447,6 +447,7 @@ loc.subscribe((newLoc) => {
             const obj = routesList[i].component
             if (obj.loading) {
                 component = obj.loading
+                componentParams = obj.loadingParams
 
                 // Add the component object and name to the detail object
                 detail.component = component

@@ -9,6 +9,7 @@
  * @property {SvelteComponent} [route] - Svelte component to load (this is incompatible with `asyncRoute`)
  * @property {function(): Promise<SvelteComponent>} [asyncRoute] - Function that returns a Promise that fulfills with a Svelte component (e.g. `{asyncRoute: () => import('Foo.svelte')}`)
  * @property {SvelteComponent} [loadingRoute] - Svelte component to be displayed while the async route is loading; when unset or false-y, no route is shown while loading
+ * @property {Object} [loadingParams] - Optional dictionary passed to the `loadingRoute` component as params (for an exported prop called `params`)
  * @property {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event (can be omitted)
  * @property {RoutePrecondition[]} [conditions] - Route pre-conditions to add, which will be executed in order
  */
@@ -53,6 +54,7 @@ export function wrap(args) {
     // Check if we have a loading route
     if (args.loadingRoute) {
         args.asyncRoute.loading = args.loadingRoute
+        args.asyncRoute.loadingParams = args.loadingParams || undefined
     }
 
     // Returns an object that contains all the functions to execute too

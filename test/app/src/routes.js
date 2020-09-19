@@ -18,6 +18,7 @@ const wrappedLuckyRoute = wrap({
         })
     }),
     loadingRoute: Loading,
+    loadingParams: {message: 'Ecco qui'},
     userData: {foo: 'bar'},
     conditions: [
         (detail) => {

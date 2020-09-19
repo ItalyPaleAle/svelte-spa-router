@@ -1,10 +1,10 @@
 <h2 class="routetitle">Loading</h2>
 
 <p id="pleasewait">Please wait…</p>
-{#if props && props.message}
-    <p id="loadingmessage">Message is {props}</p>
+{#if params && params.message}
+    <p id="loadingmessage">Message is {params.message}</p>
 {/if}
 
 <script>
-export let props = null
+export let params = null
 </script>
