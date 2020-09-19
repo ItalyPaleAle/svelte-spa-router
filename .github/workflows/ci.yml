@@ -4,33 +4,40 @@ name: Continuous Integration tests
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v1
-    - name: 'Install Node.js'
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - name: 'Install dependencies from npm'
-      run: |
-        npm install
-    - name: 'Build example project'
-      run: |
-        npm run build-example
-    - name: 'Run tests'
-      run: |
-        ./node_modules/.bin/serve -n -l 5000 example/dist &
-        SERVER_PID=$!
+      - uses: actions/checkout@v1
+      - name: 'Install Node.js'
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: 'Install dependencies from npm'
+        run: |
+          npm install
+      - name: 'Build example project'
+        run: |
+          npm run build-example
+      - name: 'Run tests'
+        run: |
+          npm run test
+        env:
+          SELENIUM_HOST: '127.0.0.1'
+          SELENIUM_PORT: '4444'
+          LAUNCH_URL: 'http://nginx:80'
 
-        echo "Server started with PID ${SERVER_PID}"
-        sleep 5
+      - name: 'Run linter'
+        run: |
+          npm run lint
 
-        npm run test
-
-        kill $SERVER_PID
-    - name: 'Run linter'
-      run: |
-        npm run lint
+    services:
+      nginx:
+        image: 'nginx:1.19'
+        options: '-v ${{ github.workspace }}/example/dist:/usr/share/nginx/html:ro --name nginx'
+      selenium-chrome:
+        image: 'selenium/standalone-chrome:85.0'
+        ports:
+          - '4444:4444'
+        options: '--shm-size=2g --link nginx'

@@ -9,7 +9,7 @@ describe('<Router> component', function() {
 
     it('renders on the page', (browser) => {
         browser
-            .url('http://localhost:5000')
+            .url(browser.launchUrl)
             .expect.element('body').to.be.present.before(1000)
 
         browser
@@ -21,7 +21,7 @@ describe('<Router> component', function() {
 
     it('current path appears', (browser) => {
         browser
-            .url('http://localhost:5000')
+            .url(browser.launchUrl)
             .waitForElementVisible('#currentpath')
             .expect.element('#currentpath').text.to.equal('/')
 
@@ -31,7 +31,7 @@ describe('<Router> component', function() {
     it('selecting route from hash', (browser) => {
         // Main route
         browser
-            .url('http://localhost:5000/#/')
+            .url(browser.launchUrl + '/#/')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Home!')
@@ -40,7 +40,7 @@ describe('<Router> component', function() {
 
         // /wild
         browser
-            .url('http://localhost:5000/#/wild')
+            .url(browser.launchUrl + '/#/wild')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Wild')
             .expect.element('#currentpath').text.to.equal('/wild')
@@ -48,7 +48,7 @@ describe('<Router> component', function() {
 
         // /hello/svelte
         browser
-            .url('http://localhost:5000/#/hello/svelte')
+            .url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
@@ -59,7 +59,7 @@ describe('<Router> component', function() {
 
     it('loading page with hash', (browser) => {
         browser
-            .url('http://localhost:5000/#/hello/svelte')
+            .url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Hi there!')
@@ -72,7 +72,7 @@ describe('<Router> component', function() {
     it('refreshing page', (browser) => {
         // /hello/svelte
         browser
-            .url('http://localhost:5000/#/hello/svelte')
+            .url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
@@ -91,7 +91,7 @@ describe('<Router> component', function() {
 
     it('catch-all route', (browser) => {
         browser
-            .url('http://localhost:5000/#/does/not/exist')
+            .url(browser.launchUrl + '/#/does/not/exist')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'NotFound')
             .expect.element('#currentpath').text.to.equal('/does/not/exist')
@@ -102,7 +102,7 @@ describe('<Router> component', function() {
 
     it('clicking on link', (browser) => {
         browser
-            .url('http://localhost:5000/#/')
+            .url(browser.launchUrl + '/#/')
             .waitForElementVisible('ul.navigation-links')
             .click('.navigation-links a[href="#/hello/svelte"]', () => {
                 browser
@@ -119,7 +119,7 @@ describe('<Router> component', function() {
 
     it('clicking link with children', (browser) => {
         browser
-            .url('http://localhost:5000/#/hello/world')
+            .url(browser.launchUrl + '/#/hello/world')
             .waitForElementVisible('ul.navigation-links')
             .click('.navigation-links li a b', () => {
                 browser
@@ -132,7 +132,7 @@ describe('<Router> component', function() {
 
     it('back and forward buttons', (browser) => {
         browser
-            .url('http://localhost:5000/#/hello/svelte/user')
+            .url(browser.launchUrl + '/#/hello/svelte/user')
             .waitForElementVisible('ul.navigation-links')
             .expect.element('#nameparams').text.to.equal('Your name is: svelte user')
 
@@ -165,7 +165,7 @@ describe('<Router> component', function() {
 
     it('push method', (browser) => {
         browser
-            .url('http://localhost:5000/#/')
+            .url(browser.launchUrl + '/#/')
             .waitForElementVisible('p.navigation-buttons')
             .click('.navigation-buttons button:nth-of-type(1)', () => {
                 browser
@@ -184,7 +184,7 @@ describe('<Router> component', function() {
     it('pop method', (browser) => {
         // Click on link
         browser
-            .url('http://localhost:5000/#/wild/something')
+            .url(browser.launchUrl + '/#/wild/something')
             .waitForElementVisible('ul.navigation-links')
             .click('.navigation-links a[href="#/hello/svelte"]', () => {
                 // Pop button
@@ -208,7 +208,7 @@ describe('<Router> component', function() {
     it('replace method', (browser) => {
         // Click on link
         browser
-            .url('http://localhost:5000/#/wild/something')
+            .url(browser.launchUrl + '/#/wild/something')
             .waitForElementVisible('ul.navigation-links')
             .click('.navigation-links a[href="#/hello/svelte"]', () => {
                 // Replace button
@@ -247,7 +247,7 @@ describe('<Router> component', function() {
     it('querystring from hash', (browser) => {
         // /hello/svelte?search=query&sort=0
         browser
-            .url('http://localhost:5000/#/hello/svelte?search=query&sort=0')
+            .url(browser.launchUrl + '/#/hello/svelte?search=query&sort=0')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
@@ -267,11 +267,11 @@ describe('<Router> component', function() {
 
     it('routeLoaded event', (browser) => {
         browser
-            .url('http://localhost:5000')
+            .url(browser.launchUrl)
             .waitForElementPresent('#logbox')
             .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Home","path":"/","location":"/","querystring":""}')
 
-        browser.url('http://localhost:5000/#/hello/svelte')
+        browser.url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementPresent('#logbox')
             .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Home","path":"/","location":"/","querystring":""}\nrouteLoaded - {"name":"Name","path":"/hello/:first/:last?","location":"/hello/svelte","querystring":""}')
 
@@ -280,7 +280,7 @@ describe('<Router> component', function() {
 
     it('routeEvent event', (browser) => {
         // Click on the p that triggers a "routeEvent" event
-        browser.url('http://localhost:5000/#/hello/svelte')
+        browser.url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementPresent('p#nameparams')
             .waitForElementPresent('#logbox')
             .click('p#nameparams', () => {
@@ -296,13 +296,13 @@ describe('<Router> component', function() {
     it('route conditions', (browser) => {
         // Condition always passes
         browser
-            .url('http://localhost:5000/#/lucky?pass=1')
+            .url(browser.launchUrl + '/#/lucky?pass=1')
             .waitForElementVisible('#lucky')
             .expect.element('#currentpath').text.to.equal('/lucky')
         browser.expect.element('#lucky').text.to.equal('You\'re in!')
 
         // Condition always fails
-        browser.url('http://localhost:5000/#/lucky?pass=0')
+        browser.url(browser.launchUrl + '/#/lucky?pass=0')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Wild')
             .expect.element('#currentpath').text.to.equal('/wild/conditions-failed')
@@ -314,12 +314,12 @@ describe('<Router> component', function() {
     it('conditionsFailed event', (browser) => {
         // Condition always passes
         browser
-            .url('http://localhost:5000/#/lucky?pass=1')
+            .url(browser.launchUrl + '/#/lucky?pass=1')
             .waitForElementPresent('#logbox')
             .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Lucky","path":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}')
 
         // Condition always fails
-        browser.url('http://localhost:5000/#/lucky?pass=0')
+        browser.url(browser.launchUrl + '/#/lucky?pass=0')
             .waitForElementPresent('#logbox')
             .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Lucky","path":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}\nconditionsFailed - {"name":"Lucky","path":"/lucky","location":"/lucky","querystring":"pass=0","userData":{"foo":"bar"}}\nrouteLoaded - {"name":"Wild","path":"/wild/*","location":"/wild/conditions-failed","querystring":""}')
 
@@ -328,7 +328,7 @@ describe('<Router> component', function() {
 
     it('parameter URL-decoding', (browser) => {
         browser
-            .url('http://localhost:5000/#/hello/Mr%20Smith')
+            .url(browser.launchUrl + '/#/hello/Mr%20Smith')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
         browser.expect.element('#currentpath').text.to.equal('/hello/Mr%20Smith')
@@ -336,7 +336,7 @@ describe('<Router> component', function() {
 
         // Invalid URL-encoded characters, should catch the exception
         browser
-            .url('http://localhost:5000/#/hello/Mr%2%0Smith')
+            .url(browser.launchUrl + '/#/hello/Mr%2%0Smith')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
         browser.expect.element('#currentpath').text.to.equal('/hello/Mr%2%0Smith')
@@ -347,7 +347,7 @@ describe('<Router> component', function() {
     it('use:link vars', (browser) => {
         // Condition always passes
         browser
-            .url('http://localhost:5000/#/catalog/3')
+            .url(browser.launchUrl + '/#/catalog/3')
             .waitForElementPresent('#logbox')
             .expect.element('#logbox').text.to.equal('routeLoaded - {"name":"Catalog","path":"/catalog/:id?","location":"/catalog/3","querystring":""}')
         browser.expect.element('#previous').attribute('href').to.endsWith('#/catalog/2')

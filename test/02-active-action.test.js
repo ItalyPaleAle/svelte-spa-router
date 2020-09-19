@@ -9,7 +9,7 @@ describe('use:active action', function() {
 
     it('active link', (browser) => {
         browser
-            .url('http://localhost:5000/#/')
+            .url(browser.launchUrl + '/#/')
             .waitForElementVisible('ul.navigation-links')
             .elements('css selector', 'ul.navigation-links li a', (elements) => {
                 assert(elements)
@@ -28,7 +28,7 @@ describe('use:active action', function() {
 
     it('active link with custom path', (browser) => {
         browser
-            .url('http://localhost:5000/#/hello/world')
+            .url(browser.launchUrl + '/#/hello/world')
             .waitForElementVisible('ul.navigation-links')
             .elements('css selector', 'ul.navigation-links li a', (elements) => {
                 assert(elements)
@@ -49,7 +49,7 @@ describe('use:active action', function() {
     it('active dynamic links', (browser) => {
         // Check if elements are still tagged active after one is removed
         browser
-            .url('http://localhost:5000/#/')
+            .url(browser.launchUrl + '/#/')
             .waitForElementVisible('ul.navigation-dynamic-links')
             // delete second link
             .click('i[id=delete-link-2]')
@@ -64,7 +64,7 @@ describe('use:active action', function() {
 
     it('navigating pages', (browser) => {
         browser
-            .url('http://localhost:5000/#/hello/world')
+            .url(browser.launchUrl + '/#/hello/world')
             .waitForElementVisible('ul.navigation-links')
             // There should be just one element active
             .elements('css selector', 'ul.navigation-links li a.active[href="#/hello/svelte"]', (elements) => {
@@ -72,7 +72,7 @@ describe('use:active action', function() {
                 assert.equal(elements.value.length, 1)
 
                 browser
-                    .url('http://localhost:5000/#/notfound')
+                    .url(browser.launchUrl + '/#/notfound')
                     .waitForElementVisible('ul.navigation-links')
                     // There should be no active links
                     .elements('css selector', 'ul.navigation-links li a.active', (elements) => {

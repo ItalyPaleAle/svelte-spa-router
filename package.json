@@ -9,7 +9,7 @@
     "start-example": "npx serve -n -l 5000 example/dist",
     "eslint": "npx eslint -c .eslintrc.js --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
-    "nightwatch": "npx nightwatch",
+    "nightwatch": "npx nightwatch -e selenium.chrome",
     "test": "npm run nightwatch"
   },
   "repository": {
