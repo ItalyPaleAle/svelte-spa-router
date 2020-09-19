@@ -204,11 +204,13 @@ function scrollstateHistoryHandler(event) {
     this="{component}"
     params="{componentParams}"
     on:routeEvent
+    {...props}
   />
 {:else}
   <svelte:component
     this="{component}"
     on:routeEvent
+    {...props}
   />
 {/if}
 
@@ -243,6 +245,11 @@ export let prefix = ''
  * and scroll to top on forward navigation.
  */
 export let restoreScrollState = false
+
+/**
+ * Optional props that are passed to each route in the component, expanded (with `{...props}`)
+ */
+export let props = {}
 
 /**
  * Container for a route: path, component

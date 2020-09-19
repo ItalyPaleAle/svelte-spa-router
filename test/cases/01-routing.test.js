@@ -367,4 +367,13 @@ describe('<Router> component', function() {
         })
         browser.end()
     })
+
+    it('static props', (browser) => {
+        browser
+            .url(browser.launchUrl + '?props=1')
+            .waitForElementVisible('#staticprop')
+            .expect.element('#staticprop').text.to.equal('foo')
+
+        browser.end()
+    })
 })
