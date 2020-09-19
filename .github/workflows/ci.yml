@@ -9,10 +9,6 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: 'Fix permissions'
-        run: |
-          sudo chmod 0777 ${{ github.workspace }}/example
-          sudo chmod 0777 ${{ github.workspace }}/example/dist
       - uses: actions/checkout@v1
       - name: 'Install Node.js'
         uses: actions/setup-node@v1
@@ -24,14 +20,24 @@ jobs:
       - name: 'Build example project'
         run: |
           npm run build-example
-      - name: 'Fix permissions'
+      - name: 'Start test containers'
         run: |
-          sudo chmod 0777 ${{ github.workspace }}/example/dist
-          sudo chmod 0666 ${{ github.workspace }}/example/dist/*
-
-          ls -al example/dist
-          curl http://localhost:80
-          curl http://localhost:80/index.html
+          # We can't use a GitHub Action service because they start before the source is cloned, and that causes issues
+          # Nginx
+          docker run \
+            -d \
+            --name nginx \
+            -v ${{ github.workspace }}/example/dist:/usr/share/nginx/html:ro \
+            nginx:1.19
+          # Selenium with Chrome
+          docker run \
+            -d \
+            --name selenium-chrome \
+            -p 4444:4444 \
+            --shm-size=2g \
+            selenium/standalone-chrome:85.0
+          # Wait 5 seconds
+          sleep 5
       - name: 'Run tests'
         run: |
           npm run test
@@ -43,16 +49,3 @@ jobs:
       - name: 'Run linter'
         run: |
           npm run lint
-
-    services:
-      nginx:
-        image: 'nginx:1.19'
-        ports:
-            - '80:80'
-        volumes:
-          - '${{ github.workspace }}/example/dist:/usr/share/nginx/html'
-      selenium-chrome:
-        image: 'selenium/standalone-chrome:85.0'
-        ports:
-          - '4444:4444'
-        options: '--shm-size=2g'
