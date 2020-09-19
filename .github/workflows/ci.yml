@@ -40,6 +40,7 @@ jobs:
             -d \
             --name selenium-chrome \
             -p 4444:4444 \
+            --link nginx \
             --shm-size=2g \
             selenium/standalone-chrome:85.0
           # Wait 5 seconds
