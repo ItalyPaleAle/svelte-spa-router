@@ -11,8 +11,8 @@ jobs:
     steps:
       - name: 'Fix permissions'
         run: |
-          sudo chmod 0777 ${{ github.workspace }}/example/dist
           sudo chmod 0777 ${{ github.workspace }}/example
+          sudo chmod 0777 ${{ github.workspace }}/example/dist
       - uses: actions/checkout@v1
       - name: 'Install Node.js'
         uses: actions/setup-node@v1
@@ -24,9 +24,14 @@ jobs:
       - name: 'Build example project'
         run: |
           npm run build-example
+      - name: 'Fix permissions'
+        run: |
+          sudo chmod 0777 ${{ github.workspace }}/example/dist
+          sudo chmod 0666 ${{ github.workspace }}/example/dist/*
 
-          ls example/dist
+          ls -al example/dist
           curl http://localhost:80
+          curl http://localhost:80/index.html
       - name: 'Run tests'
         run: |
           npm run test
