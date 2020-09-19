@@ -301,6 +301,7 @@ describe('<Router> component', function() {
         browser
             .url(browser.launchUrl + '/#/lucky?pass=1')
             .expect.element('#pleasewait').text.to.equal('Please wait…')
+        browser.expect.element('#loadingmessage').text.to.equal('Message is secret')
         browser.waitForElementVisible('#lucky')
             .expect.element('#currentpath').text.to.equal('/lucky')
         browser.expect.element('#lucky').text.to.equal('You\'re in!')
@@ -320,6 +321,7 @@ describe('<Router> component', function() {
         browser
             .url(browser.launchUrl + '/#/lucky?pass=1')
             .expect.element('#pleasewait').text.to.equal('Please wait…')
+        browser.expect.element('#loadingmessage').text.to.equal('Message is secret')
         browser.waitForElementPresent('#lucky')
             .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Loading"}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Loading"}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Lucky"}')
 
