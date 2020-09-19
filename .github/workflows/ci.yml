@@ -1,7 +1,13 @@
 # Runs CI tests: Nightwatch and linting
 name: Continuous Integration tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   test:
