@@ -13,13 +13,13 @@ describe('use:active action', function() {
             .waitForElementVisible('ul.navigation-links')
             .elements('css selector', 'ul.navigation-links li a', (elements) => {
                 assert(elements)
-                assert.equal(elements.value.length, 4)
+                assert.strictEqual(elements.value.length, 4)
 
                 // Check which elements are active
                 browser
                     .elements('css selector', 'ul.navigation-links li a.active[href="#/"]', (elements) => {
                         assert(elements)
-                        assert.equal(elements.value.length, 1)
+                        assert.strictEqual(elements.value.length, 1)
 
                         browser.end()
                     })
@@ -32,14 +32,14 @@ describe('use:active action', function() {
             .waitForElementVisible('ul.navigation-links')
             .elements('css selector', 'ul.navigation-links li a', (elements) => {
                 assert(elements)
-                assert.equal(elements.value.length, 4)
+                assert.strictEqual(elements.value.length, 4)
 
                 // Check which elements are active
                 // The href on the link is different from the path making the link active
                 browser
                     .elements('css selector', 'ul.navigation-links li a.active[href="#/hello/svelte"]', (elements) => {
                         assert(elements)
-                        assert.equal(elements.value.length, 1)
+                        assert.strictEqual(elements.value.length, 1)
 
                         browser.end()
                     })
@@ -69,7 +69,7 @@ describe('use:active action', function() {
             // There should be just one element active
             .elements('css selector', 'ul.navigation-links li a.active[href="#/hello/svelte"]', (elements) => {
                 assert(elements)
-                assert.equal(elements.value.length, 1)
+                assert.strictEqual(elements.value.length, 1)
 
                 browser
                     .url(browser.launchUrl + '/#/notfound')
@@ -77,7 +77,7 @@ describe('use:active action', function() {
                     // There should be no active links
                     .elements('css selector', 'ul.navigation-links li a.active', (elements) => {
                         assert(elements)
-                        assert.equal(elements.value.length, 0)
+                        assert.strictEqual(elements.value.length, 0)
 
                         browser.end()
                     })

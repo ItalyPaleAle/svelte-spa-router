@@ -6,6 +6,7 @@ import {wrap} from '../../../wrap.js'
 import Catalog from './routes/Catalog.svelte'
 import Home from './routes/Home.svelte'
 import Name from './routes/Name.svelte'
+import Loading from './routes/Loading.svelte'
 import Wild from './routes/Wild.svelte'
 import Regex from './routes/Regex.svelte'
 import NotFound from './routes/NotFound.svelte'
@@ -13,10 +14,10 @@ import NotFound from './routes/NotFound.svelte'
 const wrappedLuckyRoute = wrap({
     asyncRoute: () => import('./routes/Lucky.svelte').then((res) => {
         return new Promise((resolve) => {
-            setTimeout(() => resolve(res), 5000)
+            setTimeout(() => resolve(res), 2000)
         })
     }),
-    loadingRoute: Wild,
+    loadingRoute: Loading,
     userData: {foo: 'bar'},
     conditions: [
         (detail) => {
