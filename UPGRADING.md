@@ -19,7 +19,7 @@ If your application was decoding URL parameters before, remove that invocation w
 
 ### New `wrap` method
 
-The `wrap` method exported by `svelte-spa-router` has been deprecated. Even though it remains available and functional (albeit showing a warning), it will be removed in a later version of the router.
+The `wrap` method exported by `svelte-spa-router` has been deprecated. Even though it remains available and functional (albeit showing a warning in the console), it will be removed in a later version of the router.
 
 Please use the new `wrap` method exported by `svelte-spa-router/wrap` instead. This method's signature accepts a single argument which is an object of properties. It adds support for many other features too, such as dynamically-imported routes.
 
@@ -34,7 +34,7 @@ To upgrade, maintaining the same functionality:
 import {wrap} from 'svelte-spa-router'
 
 const routes = {
-    // Method signature: wrap(route, userData, ...conditions)
+    // Method signature: wrap(component, userData, ...conditions)
     '/foo': wrap(
         // Component
         Foo,
@@ -59,7 +59,7 @@ const routes = {
     // Method signature: wrap(options)
     '/foo': wrap({
         // Component
-        route: Foo,
+        component: Foo,
         // Custom data
         customData: {foo: 'bar'},
         // Pre-condition function

@@ -14,15 +14,15 @@ import Regex from './routes/Regex.svelte'
 import NotFound from './routes/NotFound.svelte'
 
 const wrappedLuckyRoute = wrap({
-    // Add an artificial delay so we can experience the route loading
-    asyncRoute: () => import('./routes/Lucky.svelte')
+    // Add an artificial delay so we can experience the component loading
+    asyncComponent: () => import('./routes/Lucky.svelte')
         .then((res) => {
             return new Promise((resolve) => {
                 setTimeout(() => resolve(res), 2000)
             })
         }),
     // Component to show while the module is being downloaded
-    loadingRoute: Loading,
+    loadingComponent: Loading,
     // Props for the loading component
     loadingParams: {message: 'secret'},
     // Set some user data
@@ -87,7 +87,7 @@ if (!urlParams.has('routemap')) {
         '/wild': Wild,
         // Special route that has custom data that will be passed to the `routeLoaded` event
         '/wild/data': wrap({
-            route: Wild,
+            component: Wild,
             userData: {hello: 'world'}
         }),
         '/wild/*': Wild,
@@ -99,10 +99,10 @@ if (!urlParams.has('routemap')) {
         // This component contains a nested router
         // Note that we must match both '/nested' and '/nested/*' for the nested router to work (or look below at doing this with a Map and a regular expression)
         '/nested': wrap({
-            asyncRoute: () => import('./routes/Nested.svelte')
+            asyncComponent: () => import('./routes/Nested.svelte')
         }),
         '/nested/*': wrap({
-            asyncRoute: () => import('./routes/Nested.svelte')
+            asyncComponent: () => import('./routes/Nested.svelte')
         }),
 
         // Catch-all, must be last
@@ -125,7 +125,7 @@ else {
     routes.set('/wild', Wild)
     // Special route that has custom data that will be passed to the `routeLoaded` event
     routes.set('/wild/data', wrap({
-        route: Wild,
+        component: Wild,
         userData: {hello: 'world'}
     }))
     routes.set('/wild/*', Wild)
@@ -141,7 +141,7 @@ else {
     // This component contains a nested router
     // Thanks to being able to define routes via regular expressions, this allows us to use a single line rather than 2 ('/nested' and '/nested/*')
     routes.set(/^\/nested(\/(.*))?/, wrap({
-        asyncRoute: () => import('./routes/Nested.svelte')
+        asyncComponent: () => import('./routes/Nested.svelte')
     }))
 
     // Catch-all, must be last

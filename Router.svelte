@@ -4,20 +4,20 @@ import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
 /**
- * Wraps a route to add route pre-conditions.
+ * Wraps a component to add route pre-conditions.
  * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
  * 
- * @param {SvelteComponent} route - Svelte component for the route
+ * @param {SvelteComponent} component - Svelte component for the route
  * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
  * @param {...function(RouteDetail): boolean} conditions - Route pre-conditions to add, which will be executed in order
- * @returns {WrappedRoute} Wrapped route
+ * @returns {WrappedComponent} Wrapped component
  */
-export function wrap(route, userData, ...conditions) {
+export function wrap(component, userData, ...conditions) {
     // Use the new wrap method and show a deprecation warning
     // eslint-disable-next-line no-console
     console.warn('Method `wrap` from `svelte-spa-router` is deprecated and will be removed in a future version. Please use `svelte-spa-router/wrap` instead. See http://bit.ly/svelte-spa-router-upgrading')
     return _wrap({
-        route,
+        component,
         userData,
         conditions
     })
@@ -247,7 +247,7 @@ export let prefix = ''
 export let restoreScrollState = false
 
 /**
- * Optional props that are passed to each route in the component, expanded (with `{...props}`)
+ * Optional props that are passed to each component in the router, expanded (with `{...props}`)
  */
 export let props = {}
 
@@ -280,7 +280,7 @@ class RouteItem {
 
         // Check if the component is wrapped and we have conditions
         if (typeof component == 'object' && component._sveltesparouter === true) {
-            this.component = component.route
+            this.component = component.component
             this.conditions = component.conditions || []
             this.userData = component.userData
         }
@@ -345,7 +345,7 @@ class RouteItem {
     /**
      * Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoading`, `routeLoaded` and `conditionsFailed` events
      * @typedef {Object} RouteDetail
-     * @property {string|Object} route - Route matched as defined in the route definition (could be a string or a reguar expression object)
+     * @property {string|RegExp} route - Route matched as defined in the route definition (could be a string or a reguar expression object)
      * @property {string} location - Location path
      * @property {string} querystring - Querystring from the hash
      * @property {Object} [userData] - Custom data passed by the user

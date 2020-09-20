@@ -127,26 +127,26 @@ The `routes` prop is the dictionary defined above.
 
 That's it! You already have all that you need for a fully-functional routing experience.
 
-### Dynamically-imported routes and code-splitting
+### Dynamically-imported components and code-splitting
 
-Starting with version 3.0, svelte-spa-router supports dynamically-imported routes (via the `import()` method). The advantage of using dynamic imports is that, if your bundler supports that, you can enable code-splitting and reduce the size of the bundle you send to your users. This has been tested with bundlers including Rollup and Webpack.
+Starting with version 3.0, svelte-spa-router supports dynamically-imported components (via the `import()` construct). The advantage of using dynamic imports is that, if your bundler supports that, you can enable code-splitting and reduce the size of the bundle you send to your users. This has been tested with bundlers including Rollup and Webpack.
 
-To use dynamically-imported routes, you need to leverage the `wrap` method (the same one that enables support for [route pre-conditions](/Advanced%20Usage.md#route-pre-conditions)). First, import the `wrap` method:
+To use dynamically-imported components, you need to leverage the `wrap` method (which can be used for a variety of actions, as per the docs on [route wrapping](/Advanced%20Usage.md#route-wrapping)). First, import the `wrap` method:
 
 ```js
 import {wrap} from 'svelte-spa-router/wrap'
 ```
 
-Then, in your route definition, wrap your routes using the `wrap` method, passing a function that returns the dynamically-imported component to the `asyncRoute` property:
+Then, in your route definition, wrap your routes using the `wrap` method, passing a function that returns the dynamically-imported component to the `asyncComponent` property:
 
 ```js
 wrap({
-    asyncRoute: () => import('./Foo.svelte')
+    asyncComponent: () => import('./Foo.svelte')
 })
 ```
 
-> Note: the value of `asyncRoute` must be the **definition of a function** returning a dynamically-imported component, such as `asyncRoute: () => import('./Foo.svelte')`.  
-> Do **not** use `asyncRoute: import('./Foo.svelte')`, which is a function invocation instead.
+> Note: the value of `asyncComponent` must be the **definition of a function** returning a dynamically-imported component, such as `asyncComponent: () => import('./Foo.svelte')`.  
+> Do **not** use `asyncComponent: import('./Foo.svelte')`, which is a function invocation instead.
 
 For example, to make the Author and Book routes from the first example dynamically-imported, we'd update the code to:
 
@@ -163,12 +163,12 @@ const routes = {
 
     // Wrapping the Author component
     '/author/:first/:last?': wrap({
-        asyncRoute: () => import('./routes/Author.svelte')
+        asyncComponent: () => import('./routes/Author.svelte')
     }),
 
     // Wrapping the Book component
     '/book/*': wrap({
-        asyncRoute: () => import('./routes/Book.svelte')
+        asyncComponent: () => import('./routes/Book.svelte')
     }),
 
     // Catch-all route last
@@ -178,7 +178,7 @@ const routes = {
 
 The `wrap` method accepts an object with multiple properties and enables other features, including: setting a "loading" component that is shown while a dynamically-imported component is being requested, adding custom user data, adding pre-conditions (route guards), etc.
 
-You can learn more about all the features of `wrap` in the documentation for [Route wrapping](/Advanced%20Usage.md#route-wrapping).
+You can learn more about all the features of `wrap` in the documentation for [route wrapping](/Advanced%20Usage.md#route-wrapping).
 
 ### Navigating between pages
 

@@ -37,14 +37,14 @@ import Router from 'svelte-spa-router'
 
 It accepts a single `options` argument that is an object with the following properties:
 
-- `options.route`: Svelte component to use, statically-included in the bundle. This is a Svelte component, such as `route: Foo`, with that previously imported with `import Foo from './Foo.svelte'`.
-- `options.asyncRoute`: Used to dynamically-import route. This must be a function definition that returns a dynamically-imported component, such as: `asyncRoute: () => import('./Foo.svelte')`
-- `options.loadingRoute`: Used together with `asyncRoute`, this is a Svelte component, that must be part of the bundle, which is displayed while `asyncRoute` is being downloaded. If this is empty, then the router will not display any component while the request is in progress.
-- `options.loadingParams`: When using a `loadingRoute`, this is an optional dictionary that will be passed to the component as the `params` prop.
+- `options.component`: Svelte component to use, statically-included in the bundle. This is a Svelte component, such as `component: Foo`, with that previously imported with `import Foo from './Foo.svelte'`.
+- `options.asyncComponent`: Used to dynamically-import components. This must be a function definition that returns a dynamically-imported component, such as: `asyncComponent: () => import('./Foo.svelte')`
+- `options.loadingComponent`: Used together with `asyncComponent`, this is a Svelte component, that must be part of the bundle, which is displayed while `asyncComponent` is being downloaded. If this is empty, then the router will not display any component while the request is in progress.
+- `options.loadingParams`: When using a `loadingComponent`, this is an optional dictionary that will be passed to the component as the `params` prop.
 - `options.userData`: Optional dictionary that will be passed to events such as `routeLoading`, `routeLoaded`, `conditionsFailed`.
 - `options.conditions`: Array of route pre-condition functions to add, which will be executed in order.
 
-One and only one of `options.route` or `options.asyncRoute` must be set; all other properties are optional.
+One and only one of `options.component` or `options.asyncComponent` must be set; all other properties are optional.
 
 You use the `wrap` method in your route definition, such as:
 
@@ -54,7 +54,7 @@ import Books from './Books.svelte'
 // Using a dictionary to define the route object
 const routes = {
     '/books': wrap({
-        route: Books,
+        component: Books,
         userData: {foo: 'bar'}
     })
 }
@@ -62,7 +62,7 @@ const routes = {
 // Using a map
 const routes = new Map()
 routes.set('/books', wrap({
-    route: Books,
+    component: Books,
     userData: {foo: 'bar'}
 }))
 ```
@@ -71,19 +71,19 @@ routes.set('/books', wrap({
 
 As mentioned in the main readme, starting with version 3 the `wrap` method is used with dynamically-imported components. This allows (when the bundler supports that, such as with Rollup or Webpack) code-splitting too, so code for less-common routes can be downloaded on-demand from the server rather than shipped in the app's core bundle.
 
-This is done by setting the `options.asyncRoute` property to a function that returns a dynamically-imported module. For example:
+This is done by setting the `options.asyncComponent` property to a function that returns a dynamically-imported module. For example:
 
 ```js
 const routes = {
     '/book/:id': wrap({
-        asyncRoute: () => import('./Book.svelte')
+        asyncComponent: () => import('./Book.svelte')
     })
 }
 ```
 
-Note that the value of `asyncRoute` must be a function definition, such as `() => import(…)`, and **not** `import(…)` (which is a function invocation). The latter would in fact request the module right away (albeit asynchronously), rather than on-demand when needed.
+Note that the value of `asyncComponent` must be a function definition, such as `() => import(…)`, and **not** `import(…)` (which is a function invocation). The latter would in fact request the module right away (albeit asynchronously), rather than on-demand when needed.
 
-By default, while a module is being downloaded, the router does not display any component. You can however define a component (which must be statically-included in the app's bundle) to be displayed while the router is downloading a module. This is done with the `options.loadingRoute` property. Additionally, with `options.loadingParams` you can define a JavaScript object/dictionary that is passed to the loading placeholder component as the `params` prop.
+By default, while a module is being downloaded, the router does not display any component. You can however define a component (which must be statically-included in the app's bundle) to be displayed while the router is downloading a module. This is done with the `options.loadingComponent` property. Additionally, with `options.loadingParams` you can define a JavaScript object/dictionary that is passed to the loading placeholder component as the `params` prop.
 
 For example, with a `Loading.svelte` component:
 
@@ -112,9 +112,9 @@ const routes = {
     // Wrapping the Book component
     '/book/*': wrap({
         // Dynamically import the Book component
-        asyncRoute: () => import('./Book.svelte'),
+        asyncComponent: () => import('./Book.svelte'),
         // Display the Loading component while the request for the Book component is pending
-        loadingRoute: Loading,
+        loadingComponent: Loading,
         // Value for `params` in the Loading component
         loadingParams: {
             message: 'secret',
@@ -138,12 +138,12 @@ import Books from './Books.svelte'
 const routes = {
     // Using a statically-included component and adding user data
     '/books': wrap({
-        route: Books,
+        component: Books,
         userData: {foo: 'bar'}
     }),
     // Same, but for dynamically-loaded components
     '/authors': wrap({
-        asyncRoute: () => import('./Authors.svelte'),
+        asyncComponent: () => import('./Authors.svelte'),
         userData: {hello: 'world'}
     })
 }
@@ -183,7 +183,7 @@ const routes = {
     // This route has a pre-condition function that lets people in only 50% of times, and a second pre-condition that is always true
     '/lucky': wrap({
         // The Svelte component used by the route
-        route: Lucky,
+        component: Lucky,
 
         // Custom data: any JavaScript object
         // This is optional and can be omitted
@@ -224,7 +224,7 @@ const routes = {
     // This route has an async function as pre-condition
     '/admin': wrap({
         // Use a dynamically-loaded component for this
-        asyncRoute: () => import('./Admin.svelte'),
+        asyncComponent: () => import('./Admin.svelte'),
         // Adding one pre-condition that's an async function
         conditions: [
             async (detail) => {

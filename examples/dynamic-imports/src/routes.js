@@ -18,10 +18,10 @@ export default {
     // This is dynamically imported, so the code is loaded on-demand from the server
     '/hello/:first/:last?': wrap({
         // Note that this is a function that returns the import
-        asyncRoute: () => import('./routes/Name.svelte'),
-        // Show the loading component while the route is being downloaded
-        loadingRoute: Loading,
-        // Pass values for the `params` prop of the loading route
+        asyncComponent: () => import('./routes/Name.svelte'),
+        // Show the loading component while the component is being downloaded
+        loadingComponent: Loading,
+        // Pass values for the `params` prop of the loading component
         loadingParams: {
             message: 'Loading the Name route…'
         }
@@ -34,17 +34,17 @@ export default {
         // Note that this is a function that returns the import
         // We're adding an artificial delay of 5 seconds so you can experience the loading even on localhost
         // Note that normally the modules loaded with `import()` are cached, so the delay exists only on the first request.
-        // In this case, we're adding a delay every time the route is loaded
-        asyncRoute: () => import('./routes/Wild.svelte')
+        // In this case, we're adding a delay every time the component is loaded
+        asyncComponent: () => import('./routes/Wild.svelte')
             .then((component) => {
                 return new Promise((resolve) => {
                     // Wait 5 seconds before returning
                     setTimeout(() => resolve(component), 5000)
                 })
             }),
-        // Show the loading component while the route is being downloaded
-        loadingRoute: Loading,
-        // Pass values for the `params` prop of the loading route
+        // Show the loading component while the component is being downloaded
+        loadingComponent: Loading,
+        // Pass values for the `params` prop of the loading component
         loadingParams: {
             message: 'Loading the Wild route…'
         }
