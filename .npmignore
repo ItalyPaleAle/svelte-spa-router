@@ -1,4 +1,6 @@
 example
+examples
+.devcontainer
 .eslint*
 .vscode
 *.log
