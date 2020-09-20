@@ -1,4 +1,89 @@
+<table>
+  <tr>
+    <td>
+      <a href="https://www.amazon.com/dp/B08D6T6BKS/"><img src="https://static.packt-cdn.com/products/9781839213625/cover/smaller" width="120" /></a>
+    </td>
+    <td>
+      <h3>Svelte 3 Up and Running</h3>
+      <p>Want to learn Svelte 3 and how to build a Single-Page App (SPA) with it (and with this router)? Check out my book <a href="https://www.amazon.com/dp/B08D6T6BKS/">Svelte 3 Up and Running</a> on Amazon.</p>
+    </td>
+</table>
+
 # Upgrading instructions
+
+## Upgrading to 3.x
+
+When upgrading from svelte-spa-router 2.x to 3.x, please note the following breaking changes:
+
+### URL parameters are now automatically decoded
+
+Params that are extracted from the URL are now automatically decoded, as per [this issue](https://github.com/ItalyPaleAle/svelte-spa-router/issues/107).
+
+For example, if you have a route similar to `/book/:name` and your users navigate to `/book/dante%27s%20inferno`:
+
+- ❌ The **old** behavior (svelte-spa-router 2 and older) was to assign `dante%27s%20inferno` to `params.name`
+- ✅ The **new** behavior in svelte-spa-router 3 is to assign `dante's inferno` to `params.name`
+
+This is done by invoking [`decodeURIComponent`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURIComponent).
+
+If your application was decoding URL parameters before, remove that invocation when updating to svelte-spa-router 3.
+
+### New `wrap` method
+
+The `wrap` method exported by `svelte-spa-router` has been deprecated. Even though it remains available and functional (albeit showing a warning in the console), it will be removed in a later version of the router.
+
+Please use the new `wrap` method exported by `svelte-spa-router/wrap` instead. This method's signature accepts a single argument which is an object of properties. It adds support for many other features too, such as dynamically-imported routes.
+
+To learn more about the new `wrap` method and its features, check out the documentation on [Route wrapping](/Advanced%20Usage.md#route-wrapping).
+
+To upgrade, maintaining the same functionality:
+
+❌ Version 2.x:
+
+````js
+// Old import path
+import {wrap} from 'svelte-spa-router'
+
+const routes = {
+    // Method signature: wrap(component, userData, ...conditions)
+    '/foo': wrap(
+        // Component
+        Foo,
+        // Custom data
+        {foo: 'bar'},
+        // Pre-condition function
+        (detail) => {
+            // ...
+        },
+        // ...more pre-condition functions
+    )
+}
+````
+
+✅ Version 3.x:
+
+````js
+// New import path
+import {wrap} from 'svelte-spa-router/wrap'
+
+const routes = {
+    // Method signature: wrap(options)
+    '/foo': wrap({
+        // Component
+        component: Foo,
+        // Custom data
+        customData: {foo: 'bar'},
+        // Pre-condition function
+        conditions: [
+            (detail) => {
+                // ...
+            },
+             // ...more pre-condition functions
+        ]
+        // See the documentation for the other possible properties for wrap
+    })
+}
+````
 
 ## Upgrading to 2.x
 

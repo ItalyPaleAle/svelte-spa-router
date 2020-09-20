@@ -1,3 +1,14 @@
+<table>
+  <tr>
+    <td>
+      <a href="https://www.amazon.com/dp/B08D6T6BKS/"><img src="https://static.packt-cdn.com/products/9781839213625/cover/smaller" width="120" /></a>
+    </td>
+    <td>
+      <h3>Svelte 3 Up and Running</h3>
+      <p>Want to learn Svelte 3 and how to build a Single-Page App (SPA) with it (and with this router)? Check out my book <a href="https://www.amazon.com/dp/B08D6T6BKS/">Svelte 3 Up and Running</a> on Amazon.</p>
+    </td>
+</table>
+
 # svelte-spa-router
 
 [![Build Status](https://github.com/ItalyPaleAle/svelte-spa-router/workflows/Continuous%20Integration%20tests/badge.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/actions) 
@@ -27,29 +38,49 @@ Hash-based routing is simpler, works well even without a server, and it's genera
 
 ## Sample code
 
-Check out the code in the [example](/example) folder for some usage example. It's a full Svelte app, showcasing all the features of the router.
+Check out the code in the [examples](/examples) folder for some usage examples.
 
-To run the sample, clone the repository, install the dependencies, then build the sample:
+To run the samples, clone the repository, install the dependencies, then build each sample using Rollup:
 
 ````sh
 git clone https://github.com/ItalyPaleAle/svelte-spa-router
 cd svelte-spa-router
 npm install
-npm run build-example
-npm run start-example
+
+# Navigate to a sample
+cd examples/…
+# For example
+cd examples/basic-routing
+
+# Build and run (in the folder of a sample)
+npx rollup -c
+npx serve -n -l 5000 dist
 ````
+
+The sample will be running at http://localhost:5000
 
 ## Using svelte-spa-router
 
 You can include the router in any project using Svelte 3.
 
-## Install from NPM
+### Install from NPM
 
 To add svelte-spa-router to your project:
 
 ````sh
 npm install svelte-spa-router
 ````
+
+### Supported browsers
+
+svelte-spa-router aims to support modern browsers, including recent versions of:
+
+- Chrome
+- Edge ("traditional" and Chromium-based)
+- Firefox
+- Safari
+
+Support for Internet Explorer is not a goal for this project. Some users have reportedly been able to use svelte-spa-router with IE11 after transpilation (e.g. with Babel), but this is not guaranteed.
 
 ### Define your routes
 
@@ -107,6 +138,59 @@ The `routes` prop is the dictionary defined above.
 
 That's it! You already have all that you need for a fully-functional routing experience.
 
+### Dynamically-imported components and code-splitting
+
+Starting with version 3.0, svelte-spa-router supports dynamically-imported components (via the `import()` construct). The advantage of using dynamic imports is that, if your bundler supports that, you can enable code-splitting and reduce the size of the bundle you send to your users. This has been tested with bundlers including Rollup and Webpack.
+
+To use dynamically-imported components, you need to leverage the `wrap` method (which can be used for a variety of actions, as per the docs on [route wrapping](/Advanced%20Usage.md#route-wrapping)). First, import the `wrap` method:
+
+```js
+import {wrap} from 'svelte-spa-router/wrap'
+```
+
+Then, in your route definition, wrap your routes using the `wrap` method, passing a function that returns the dynamically-imported component to the `asyncComponent` property:
+
+```js
+wrap({
+    asyncComponent: () => import('./Foo.svelte')
+})
+```
+
+> Note: the value of `asyncComponent` must be the **definition of a function** returning a dynamically-imported component, such as `asyncComponent: () => import('./Foo.svelte')`.  
+> Do **not** use `asyncComponent: import('./Foo.svelte')`, which is a function invocation instead.
+
+For example, to make the Author and Book routes from the first example dynamically-imported, we'd update the code to:
+
+````js
+// Import the wrap method
+import {wrap} from 'svelte-spa-router/wrap'
+
+// Note that Author and Book are not imported here anymore, so they can be imported at runtime
+import Home from './routes/Home.svelte'
+import NotFound from './routes/NotFound.svelte'
+
+const routes = {
+    '/': Home,
+
+    // Wrapping the Author component
+    '/author/:first/:last?': wrap({
+        asyncComponent: () => import('./routes/Author.svelte')
+    }),
+
+    // Wrapping the Book component
+    '/book/*': wrap({
+        asyncComponent: () => import('./routes/Book.svelte')
+    }),
+
+    // Catch-all route last
+    '*': NotFound,
+}
+````
+
+The `wrap` method accepts an object with multiple properties and enables other features, including: setting a "loading" component that is shown while a dynamically-imported component is being requested, adding pre-conditions (route guards), passing static props, and adding custom user data.
+
+You can learn more about all the features of `wrap` in the documentation for [route wrapping](/Advanced%20Usage.md#route-wrapping).
+
 ### Navigating between pages
 
 You can navigate between pages with normal anchor (`<a>`) tags. For example:
@@ -156,7 +240,9 @@ These methods can be used inside Svelte markup too, for example:
 <button on:click={() => push('/page')}>Go somewhere</button>
 ````
 
-The `push`, `pop` and `replace` methods perform navigation actions only in the next iteration ("tick") of the JavaScript event loop. This makes it safe to use them also inside `onMount` callbacks within Svelte components. The functions return a Promise that resolves with no value once the navigation has been triggered (in the next tick of the event loop); however, please note that this will likely be before the new page has rendered.
+The `push`, `pop` and `replace` methods perform navigation actions only in the next iteration ("tick") of the JavaScript event loop. This makes it safe to use them also inside `onMount` callbacks within Svelte components.
+
+These functions return a Promise that resolves with no value once the navigation has been triggered (in the next tick of the event loop); however, please note that this will likely be before the new page has rendered.
 
 ### Parameters from routes
 
@@ -290,11 +376,16 @@ When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"
 
 Check out the [Advanced Usage](/Advanced%20Usage.md) documentation for using:
 
-- [routeEvent event](/Advanced%20Usage.md#routeevent-event)
-- [routeLoaded event](/Advanced%20Usage.md#routeloaded-event)
+- [Route wrapping](/Advanced%20Usage.md#route-wrapping), including:
+  - [Dynamically-imported routes and placeholders](/Advanced%20Usage.md#async-routes-and-loading-placeholders)
+  - [Route pre-conditions](/Advanced%20Usage.md#route-pre-conditions) ("route guards")
+  - [Adding user data to routes](/Advanced%20Usage.md#user-data)
+  - [Static props](/Advanced%20Usage.md#static-props)
+- [`routeEvent` event](/Advanced%20Usage.md#routeevent-event)
+- [`routeLoading` and `routeLoaded` events](/Advanced%20Usage.md#routeloading-and-routeloaded-events)
 - [Querystring parsing](/Advanced%20Usage.md#querystring-parsing)
-- [Route pre-conditions](/Advanced%20Usage.md#route-pre-conditions) ("Route guards")
+- [Static props](/Advanced%20Usage.md#static-props)
 - [Route transitions](/Advanced%20Usage.md#route-transitions)
 - [Nested routers](/Advanced%20Usage.md#nested-routers)
 - [Route groups](/Advanced%20Usage.md#route-groups)
-- [Async route loading](/Advanced%20Usage.md#async-route-loading)
+- [Restore scroll position](/Advanced%20Usage.md#restore-scroll-position)

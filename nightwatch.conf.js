@@ -1,18 +1,19 @@
+// Selenium configuration
+const seleniumHost = process.env.SELENIUM_HOST || '127.0.0.1'
+const seleniumPort = parseInt(process.env.SELENIUM_PORT || '4444', 10)
+
+// Launch URL - where the server is
+const launchUrl = process.env.LAUNCH_URL || 'http://localhost:5000'
+
 // Increase max listeners to avoid a warning
 require('events').EventEmitter.defaultMaxListeners = 100
 
 module.exports = {
     src_folders: [
-        'test/'
+        'test/cases/'
     ],
 
     output_folder: 'result',
-
-    webdriver: {
-        start_process: true,
-        server_path: 'node_modules/.bin/chromedriver',
-        port: 9515
-    },
 
     test_runner: {
         type: 'mocha',
@@ -24,6 +25,17 @@ module.exports = {
 
     test_settings: {
         default: {
+            launch_url: launchUrl
+        },
+        'selenium.chrome': {
+            selenium: {
+                start_process: false,
+                host: seleniumHost,
+                port: seleniumPort
+            },
+            webdriver: {
+                start_process: false
+            },
             desiredCapabilities: {
                 browserName: 'chrome',
                 chromeOptions: {
@@ -32,7 +44,8 @@ module.exports = {
                         '--no-sandbox',
                         '--disable-gpu'
                     ]
-                }
+                },
+                acceptSslCerts: true
             }
         }
     }

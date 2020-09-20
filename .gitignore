@@ -1,5 +1,12 @@
-# Example
-example/dist/bundle*
+# Test app
+test/app/dist/bundle*
+test/app/dist/*.js
+test/app/dist/*.js.map
+
+# Example apps
+examples/*/dist/bundle*
+examples/*/dist/*.js
+examples/*/dist/*.js.map
 
 # This is a module published on NPM, so we can ignore package-lock.json
 package-lock.json

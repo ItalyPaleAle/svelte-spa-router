@@ -1,5 +1,7 @@
-# Compiled files
-dist
+# Compiled
+test/app/dist
+examples/*/dist
 
-# Vendored dependencies
-vendor
+# Files that use dynamic imports
+test/app/src/routes.js
+examples/dynamic-imports/src/routes.js

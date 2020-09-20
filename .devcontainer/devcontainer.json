@@ -1,0 +1,34 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.140.1/containers/javascript-node
+{
+    "name": "svelte-spa-router",
+    
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "development",
+    "workspaceFolder": "/workspace",
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": { 
+		"terminal.integrated.shell.linux": "/usr/bin/zsh"
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+        "bierner.markdown-preview-github-styles",
+        "davidanson.vscode-markdownlint",
+        "dbaeumer.vscode-eslint",
+        "eg2.vscode-npm-script",
+        "svelte.svelte-vscode",
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+        5000
+    ],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "npm install",
+
+	// Connect as a non-root user
+	"remoteUser": "node"
+}

@@ -7,7 +7,7 @@ describe('<Router> component with routes in a Map', function() {
 
     it('renders on the page', (browser) => {
         browser
-            .url('http://localhost:5000/?routemap=1')
+            .url(browser.launchUrl + '/?routemap=1')
             .expect.element('body').to.be.present.before(1000)
 
         browser
@@ -19,7 +19,7 @@ describe('<Router> component with routes in a Map', function() {
 
     it('current path appears', (browser) => {
         browser
-            .url('http://localhost:5000/?routemap=1')
+            .url(browser.launchUrl + '/?routemap=1')
             .waitForElementVisible('#currentpath')
             .expect.element('#currentpath').text.to.equal('/')
 
@@ -29,7 +29,7 @@ describe('<Router> component with routes in a Map', function() {
     it('route defined as string', (browser) => {
         // Main route
         browser
-            .url('http://localhost:5000/?routemap=1#/')
+            .url(browser.launchUrl + '/?routemap=1#/')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Home!')
@@ -38,7 +38,7 @@ describe('<Router> component with routes in a Map', function() {
 
         // /hello/svelte
         browser
-            .url('http://localhost:5000/?routemap=1#/hello/svelte')
+            .url(browser.launchUrl + '/?routemap=1#/hello/svelte')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
@@ -50,7 +50,7 @@ describe('<Router> component with routes in a Map', function() {
     it('route defined as RegExp', (browser) => {
         // /^\/regex\/(.*)?/i
         browser
-            .url('http://localhost:5000/?routemap=1#/REGEX/1')
+            .url(browser.launchUrl + '/?routemap=1#/REGEX/1')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Regex route')
@@ -60,7 +60,7 @@ describe('<Router> component with routes in a Map', function() {
 
         // /^\/(pattern|match)(\/[a-z0-9]+)?/i
         browser
-            .url('http://localhost:5000/?routemap=1#/Match/hello/world')
+            .url(browser.launchUrl + '/?routemap=1#/Match/hello/world')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Regex route')
             .expect.element('#currentpath').text.to.equal('/Match/hello/world')
@@ -70,7 +70,7 @@ describe('<Router> component with routes in a Map', function() {
 
         // Should not match
         browser
-            .url('http://localhost:5000/?routemap=1#/REGEX')
+            .url(browser.launchUrl + '/?routemap=1#/REGEX')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'NotFound')
             .expect.element('#currentpath').text.to.equal('/REGEX')
@@ -83,7 +83,7 @@ describe('<Router> component with routes in a Map', function() {
         // /^\/(pattern|match)(\/[a-z0-9]+)?/i with querystring
         // Should only match ?hello=world and not ?routemap=1
         browser
-            .url('http://localhost:5000/?routemap=1#/Match/hola?hello=world')
+            .url(browser.launchUrl + '/?routemap=1#/Match/hola?hello=world')
             .waitForElementVisible('h2.routetitle')
             .assert.containsText('h2.routetitle', 'Regex route')
             .expect.element('#currentpath').text.to.equal('/Match/hola')

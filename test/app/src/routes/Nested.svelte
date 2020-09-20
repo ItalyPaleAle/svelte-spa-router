@@ -5,8 +5,8 @@
 
 <script>
 // Import the router component
-// Normally, this would be import: `import Router from 'svelte-spa-router'`
-import Router from '../../../Router.svelte'
+// Normally, this would be: `import Router from 'svelte-spa-router'`
+import Router from '../../../../Router.svelte'
 
 // Routes
 import Wild from './Wild.svelte'

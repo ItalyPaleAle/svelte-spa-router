@@ -26,7 +26,14 @@
 </p>
 
 <!-- Show the router -->
-<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} on:routeEvent={routeEvent} />
+<Router
+  {routes}
+  on:conditionsFailed={conditionsFailed}
+  on:routeLoaded={routeLoaded}
+  on:routeLoading={routeLoading}
+  on:routeEvent={routeEvent}
+  {restoreScrollState}
+/>
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
@@ -55,14 +62,15 @@
 
 <script>
 // Import the router component
-// Normally, this would be import: `import Router from 'svelte-spa-router'`
-import Router from '../../Router.svelte'
-// Import the "link" action and the methods to control history programmatically from the same module, as well as the location store
-import {link, push, pop, replace, location, querystring} from '../../Router.svelte'
+// Normally, this would be: `import Router from 'svelte-spa-router'`
+import Router from '../../../Router.svelte'
+// Import the "link" action, the methods to control history programmatically from the same module, and the location store
+// Normally, this would be: `import {link, push, pop, replace, location, querystring} from 'svelte-spa-router/active'`
+import {link, push, pop, replace, location, querystring} from '../../../Router.svelte'
 
 // Import the "active" action
-// Normally, this would be import: `import active from 'svelte-spa-router/active'`
-import active from '../../active'
+// Normally, this would be: `import active from 'svelte-spa-router/active'`
+import active from '../../../active'
 
 // Import the list of routes
 import routes from './routes'
@@ -87,6 +95,14 @@ function routeLoaded(event) {
     logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
 }
 
+// Handles the "routeLoading" event dispatched by the router whie a route is being loaded
+// If the route is dynamically imported, such as with the `import()` syntax, then there might be a delay before the route is loaded
+function routeLoading(event) {
+    // eslint-disable-next-line no-console
+    console.info('Caught event routeLoading', event.detail)
+    logbox += 'routeLoading - ' + JSON.stringify(event.detail) + '\n'
+}
+
 // Handles event bubbling up from nested routes
 function routeEvent(event) {
     // eslint-disable-next-line no-console
@@ -94,6 +110,12 @@ function routeEvent(event) {
     logbox += 'routeEvent - ' + JSON.stringify(event.detail) + '\n'
 }
 
+// Enables the restoreScrollState option by checking for the "scroll=1" querystring parameter
+// We're checking this for the tests, but in your code you will likely want to set this value manually
+const urlParams = new URLSearchParams(window.location.search)
+const restoreScrollState = !!urlParams.has('scroll')
+
+// List of dynamic links
 let dynamicLinks = [
     {
         id: 1,

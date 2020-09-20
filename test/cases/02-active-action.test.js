@@ -9,17 +9,17 @@ describe('use:active action', function() {
 
     it('active link', (browser) => {
         browser
-            .url('http://localhost:5000/#/')
+            .url(browser.launchUrl + '/#/')
             .waitForElementVisible('ul.navigation-links')
             .elements('css selector', 'ul.navigation-links li a', (elements) => {
                 assert(elements)
-                assert.equal(elements.value.length, 4)
+                assert.strictEqual(elements.value.length, 4)
 
                 // Check which elements are active
                 browser
                     .elements('css selector', 'ul.navigation-links li a.active[href="#/"]', (elements) => {
                         assert(elements)
-                        assert.equal(elements.value.length, 1)
+                        assert.strictEqual(elements.value.length, 1)
 
                         browser.end()
                     })
@@ -28,18 +28,18 @@ describe('use:active action', function() {
 
     it('active link with custom path', (browser) => {
         browser
-            .url('http://localhost:5000/#/hello/world')
+            .url(browser.launchUrl + '/#/hello/world')
             .waitForElementVisible('ul.navigation-links')
             .elements('css selector', 'ul.navigation-links li a', (elements) => {
                 assert(elements)
-                assert.equal(elements.value.length, 4)
+                assert.strictEqual(elements.value.length, 4)
 
                 // Check which elements are active
                 // The href on the link is different from the path making the link active
                 browser
                     .elements('css selector', 'ul.navigation-links li a.active[href="#/hello/svelte"]', (elements) => {
                         assert(elements)
-                        assert.equal(elements.value.length, 1)
+                        assert.strictEqual(elements.value.length, 1)
 
                         browser.end()
                     })
@@ -47,10 +47,9 @@ describe('use:active action', function() {
     })
 
     it('active dynamic links', (browser) => {
-
         // Check if elements are still tagged active after one is removed
         browser
-            .url('http://localhost:5000/#/')
+            .url(browser.launchUrl + '/#/')
             .waitForElementVisible('ul.navigation-dynamic-links')
             // delete second link
             .click('i[id=delete-link-2]')
@@ -65,20 +64,20 @@ describe('use:active action', function() {
 
     it('navigating pages', (browser) => {
         browser
-            .url('http://localhost:5000/#/hello/world')
+            .url(browser.launchUrl + '/#/hello/world')
             .waitForElementVisible('ul.navigation-links')
             // There should be just one element active
             .elements('css selector', 'ul.navigation-links li a.active[href="#/hello/svelte"]', (elements) => {
                 assert(elements)
-                assert.equal(elements.value.length, 1)
+                assert.strictEqual(elements.value.length, 1)
 
                 browser
-                    .url('http://localhost:5000/#/notfound')
+                    .url(browser.launchUrl + '/#/notfound')
                     .waitForElementVisible('ul.navigation-links')
                     // There should be no active links
                     .elements('css selector', 'ul.navigation-links li a.active', (elements) => {
                         assert(elements)
-                        assert.equal(elements.value.length, 0)
+                        assert.strictEqual(elements.value.length, 0)
 
                         browser.end()
                     })

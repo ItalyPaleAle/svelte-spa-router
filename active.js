@@ -44,6 +44,7 @@ loc.subscribe((value) => {
  * 
  * @param {HTMLElement} node - The target node (automatically set by Svelte)
  * @param {ActiveOptions|string|RegExp} [opts] - Can be an object of type ActiveOptions, or a string (or regular expressions) representing ActiveOptions.path.
+ * @returns {{destroy: function(): void}} Destroy function
  */
 export default function active(node, opts) {
     // Check options

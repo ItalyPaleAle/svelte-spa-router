@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  development:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Update this to wherever you want VS Code to mount the folder of your project
+      - ..:/workspace:cached
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity 
+    # Use a non-root user for all processes.
+    user: node
+    environment:
+      - 'SELENIUM_HOST=selenium-chrome'
+      - 'SELENIUM_PORT=4444'
+      - 'LAUNCH_URL=http://nginx'
+  nginx:
+    image: nginx:1.19
+    container_name: nginx
+    volumes:
+      - ../test/app/dist:/usr/share/nginx/html:ro
+    ports:
+        - 8080:80
+  selenium-chrome:
+    image: selenium/standalone-chrome:85.0
+    container_name: selenium-chrome
+    shm_size: '2gb'
