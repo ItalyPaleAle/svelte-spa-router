@@ -10,7 +10,7 @@ import {wrap as _wrap} from './wrap'
  * @param {SvelteComponent} route - Svelte component for the route
  * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
  * @param {...function(RouteDetail): boolean} conditions - Route pre-conditions to add, which will be executed in order
- * @returns {Object} Wrapped route
+ * @returns {WrappedRoute} Wrapped route
  */
 export function wrap(route, userData, ...conditions) {
     // Use the new wrap method and show a deprecation warning

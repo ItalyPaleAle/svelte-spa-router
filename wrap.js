@@ -1,4 +1,8 @@
 /**
+ * @typedef {Object} WrappedRoute
+ */
+
+/**
  * @callback RoutePrecondition
  * @param {RouteDetail} detail - Route detail object
  * @returns {boolean} If the callback returns a false-y value, it's interpreted as the precondition failed, so it aborts loading the route (and won't process other pre-condition callbacks)
@@ -21,7 +25,7 @@
  * 3. Adding custom userData, which is passed to route events (e.g. route loaded events) or to route pre-conditions (e.g. `{userData: {foo: 'bar}}`)
  * 
  * @param {WrapOptions} args - Arguments object
- * @returns {Object} Wrapped route
+ * @returns {WrappedRoute} Wrapped route
  */
 export function wrap(args) {
     if (!args) {
