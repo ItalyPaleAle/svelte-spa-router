@@ -15,7 +15,7 @@ import {wrap as _wrap} from './wrap'
 export function wrap(route, userData, ...conditions) {
     // Use the new wrap method and show a deprecation warning
     // eslint-disable-next-line no-console
-    console.warn('Method wrap is deprecated and will be removed in a future version. Please use svelte-spa-router/wrap instead.')
+    console.warn('Method `wrap` from `svelte-spa-router` is deprecated and will be removed in a future version. Please use `svelte-spa-router/wrap` instead. See https://bit.ly/2ZQpype')
     return _wrap({
         route,
         userData,
