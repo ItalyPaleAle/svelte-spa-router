@@ -1,5 +1,7 @@
-# Test app
-test/app
-
 # Compiled
+test/app/dist
 examples/*/dist
+
+# Files that use dynamic imports
+test/app/src/routes.js
+examples/dynamic-imports/src/routes.js

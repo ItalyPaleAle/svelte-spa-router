@@ -1,5 +1,7 @@
+/* eslint-disable */
+
 // Import the "wrap" function
-// Normally, this would be import: `import {wrap} from 'svelte-spa-router/wrap'`
+// Normally, this would be: `import {wrap} from 'svelte-spa-router/wrap'`
 import {wrap} from '../../../wrap.js'
 
 // Components

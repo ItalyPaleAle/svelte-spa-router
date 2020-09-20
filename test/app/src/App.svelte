@@ -74,13 +74,14 @@
 
 <script>
 // Import the router component
-// Normally, this would be import: `import Router from 'svelte-spa-router'`
+// Normally, this would be: `import Router from 'svelte-spa-router'`
 import Router from '../../../Router.svelte'
-// Import the "link" action and the methods to control history programmatically from the same module, as well as the location store
+// Import the "link" action, the methods to control history programmatically from the same module, and the location store
+// Normally, this would be: `import {link, push, pop, replace, location, querystring} from 'svelte-spa-router/active'`
 import {link, push, pop, replace, location, querystring} from '../../../Router.svelte'
 
 // Import the "active" action
-// Normally, this would be import: `import active from 'svelte-spa-router/active'`
+// Normally, this would be: `import active from 'svelte-spa-router/active'`
 import active from '../../../active'
 
 // Import the list of routes
