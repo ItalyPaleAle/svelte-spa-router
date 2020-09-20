@@ -32,12 +32,22 @@ const wrappedLuckyRoute = wrap({
             // Random
             return (Math.random() > 0.5)
         },
-        (detail) => {
+        // This is an async condition
+        async (detail) => {
             // This pre-condition is executed only if the first one succeeded
             // eslint-disable-next-line no-console
             console.log('Pre-condition 2 executed', detail.location, detail.querystring, detail.userData)
 
-            // Always succeed
+            // eslint-disable-next-line no-console
+            console.log('Pre-condition 2 started waiting')
+
+            // Pause this
+            await new Promise((resolve) => setTimeout(resolve, 100))
+
+            // eslint-disable-next-line no-console
+            console.log('Pre-condition 2 done waiting')
+
+            // Always succeed (after the delay)
             return true
         }
     ]

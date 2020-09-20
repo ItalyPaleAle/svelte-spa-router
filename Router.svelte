@@ -91,17 +91,17 @@ export const querystring = derived(
  * @param {string} location - Path to navigate to (must start with `/` or '#/')
  * @return {Promise<void>} Promise that resolves after the page navigation has completed
  */
-export function push(location) {
+export async function push(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
         throw Error('Invalid parameter location')
     }
 
     // Execute this code when the current call stack is complete
-    return tick().then(() => {
-        // Note: this will include scroll state in history even when restoreScrollState is false
-        history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)      
-        window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
-    })
+    await tick()
+
+    // Note: this will include scroll state in history even when restoreScrollState is false
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)      
+    window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
 }
 
 /**
@@ -109,11 +109,11 @@ export function push(location) {
  * 
  * @return {Promise<void>} Promise that resolves after the page navigation has completed
  */
-export function pop() {
+export async function pop() {
     // Execute this code when the current call stack is complete
-    return tick().then(() => {
-        window.history.back()
-    })
+    await tick()
+
+    window.history.back()
 }
 
 /**
@@ -122,25 +122,25 @@ export function pop() {
  * @param {string} location - Path to navigate to (must start with `/` or '#/')
  * @return {Promise<void>} Promise that resolves after the page navigation has completed
  */
-export function replace(location) {
+export async function replace(location) {
     if (!location || location.length < 1 || (location.charAt(0) != '/' && location.indexOf('#/') !== 0)) {
         throw Error('Invalid parameter location')
     }
 
     // Execute this code when the current call stack is complete
-    return tick().then(() => {
-        const dest = (location.charAt(0) == '#' ? '' : '#') + location
-        try {
-            window.history.replaceState(undefined, undefined, dest)
-        }
-        catch (e) {
-            // eslint-disable-next-line no-console
-            console.warn('Caught exception while replacing the current page. If you\'re running this in the Svelte REPL, please note that the `replace` method might not work in this environment.')
-        }
+    await tick()
 
-        // The method above doesn't trigger the hashchange event, so let's do that manually
-        window.dispatchEvent(new Event('hashchange'))
-    })
+    const dest = (location.charAt(0) == '#' ? '' : '#') + location
+    try {
+        window.history.replaceState(undefined, undefined, dest)
+    }
+    catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn('Caught exception while replacing the current page. If you\'re running this in the Svelte REPL, please note that the `replace` method might not work in this environment.')
+    }
+
+    // The method above doesn't trigger the hashchange event, so let's do that manually
+    window.dispatchEvent(new Event('hashchange'))
 }
 
 /**
@@ -359,9 +359,9 @@ class RouteItem {
      * @param {RouteDetail} detail - Route detail
      * @returns {bool} Returns true if all the conditions succeeded
      */
-    checkConditions(detail) {
+    async checkConditions(detail) {
         for (let i = 0; i < this.conditions.length; i++) {
-            if (!this.conditions[i](detail)) {
+            if (!(await this.conditions[i](detail))) {
                 return false
             }
         }
@@ -393,11 +393,10 @@ let componentParams = null
 const dispatch = createEventDispatcher()
 
 // Just like dispatch, but executes on the next iteration of the event loop
-function dispatchNextTick(name, detail) {
+async function dispatchNextTick(name, detail) {
     // Execute this code when the current call stack is complete
-    tick().then(() => {
-        dispatch(name, detail)
-    })
+    await tick()
+    dispatch(name, detail)
 }
 
 // If this is set, then that means we have popped into this var the state of our last scroll position
@@ -434,7 +433,7 @@ if (restoreScrollState) {
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
-loc.subscribe((newLoc) => {
+loc.subscribe(async (newLoc) => {
     // Find a route matching the location
     component = null
     let i = 0
@@ -449,7 +448,7 @@ loc.subscribe((newLoc) => {
             }
 
             // Check if the route can be loaded - if all conditions succeed
-            if (!routesList[i].checkConditions(detail)) {
+            if (!(await routesList[i].checkConditions(detail))) {
                 // Trigger an event to notify the user
                 dispatchNextTick('conditionsFailed', detail)
                 break
@@ -473,25 +472,24 @@ loc.subscribe((newLoc) => {
             }
 
             // Invoke the Promise
-            obj().then((loaded) => {
-                // If there is a "default" property, which is used by async routes, then pick that
-                component = (loaded && loaded.default) || loaded
-                
-                // Add the component object and name to the detail object
-                detail.component = component
-                detail.name = component.name
+            const loaded = await obj()
+            // If there is a "default" property, which is used by async routes, then pick that
+            component = (loaded && loaded.default) || loaded
+            
+            // Add the component object and name to the detail object
+            detail.component = component
+            detail.name = component.name
 
-                // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
-                // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
-                if (match && typeof match == 'object' && Object.keys(match).length) {
-                    componentParams = match
-                }
-                else {
-                    componentParams = null
-                }
+            // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
+            // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
+            if (match && typeof match == 'object' && Object.keys(match).length) {
+                componentParams = match
+            }
+            else {
+                componentParams = null
+            }
 
-                dispatchNextTick('routeLoaded', detail)
-            })
+            dispatchNextTick('routeLoaded', detail)
             break
         }
         i++
