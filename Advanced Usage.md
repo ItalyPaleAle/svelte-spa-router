@@ -5,9 +5,9 @@ svelte-spa-router is simple by design. A minimal router is easy to learn and imp
 Thanks to the many features of Svelte 3 or other components in the ecosystem, svelte-spa-router can be used to get many more "advanced" features. This document explains how to achieve certain results with svelte-spa-router beyond what's offered by the component itself.
 
 - [Route wrapping](#route-wrapping), including:
-  - Dynamically-imported routes and components shown while requesting them
-  - Route pre-conditions ("route guards")
-  - Adding user data to routes
+  - [Dynamically-imported routes and placeholders](#async-routes-and-loading-placeholders)
+  - [Route pre-conditions](#route-pre-conditions) ("route guards")
+  - [Adding user data to routes](#user-data)
 - [`routeEvent` event](#routeevent-event)
 - [`routeLoading` and `routeLoaded` events](#routeloading-and-routeloaded-events)
 - [Querystring parsing](#querystring-parsing)

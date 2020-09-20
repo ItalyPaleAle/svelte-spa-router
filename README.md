@@ -27,17 +27,24 @@ Hash-based routing is simpler, works well even without a server, and it's genera
 
 ## Sample code
 
-Check out the code in the [example](/example) folder for some usage example. It's a full Svelte app, showcasing all the features of the router.
+Check out the code in the [examples](/examples) folder for some usage examples.
 
-To run the sample, clone the repository, install the dependencies, then build the sample:
+To run the samples, clone the repository, install the dependencies, then build each sample using Rollup:
 
 ````sh
 git clone https://github.com/ItalyPaleAle/svelte-spa-router
 cd svelte-spa-router
 npm install
-npm run build-example
-npm run start-example
+
+# Navigate to a sample
+cd examples/…
+
+# Build and run (in the folder of a sample)
+npx rollup -c
+npx serve -n -l 5000 dist
 ````
+
+The sample will be running at http://localhost:5000
 
 ## Using svelte-spa-router
 
@@ -357,9 +364,9 @@ When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"
 Check out the [Advanced Usage](/Advanced%20Usage.md) documentation for using:
 
 - [Route wrapping](/Advanced%20Usage.md#route-wrapping), including:
-  - Dynamically-imported routes and components shown while requesting them
-  - Route pre-conditions ("route guards")
-  - Adding user data to routes
+  - [Dynamically-imported routes and placeholders](/Advanced%20Usage.md#async-routes-and-loading-placeholders)
+  - [Route pre-conditions](/Advanced%20Usage.md#route-pre-conditions) ("route guards")
+  - [Adding user data to routes](/Advanced%20Usage.md#user-data)
 - [`routeEvent` event](/Advanced%20Usage.md#routeevent-event)
 - [`routeLoading` and `routeLoaded` events](/Advanced%20Usage.md#routeloading-and-routeloaded-events)
 - [Querystring parsing](/Advanced%20Usage.md#querystring-parsing)
