@@ -1,2 +1,5 @@
 # Test app
 test/app
+
+# Compiled
+examples/*/dist

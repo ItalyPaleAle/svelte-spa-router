@@ -38,6 +38,8 @@ npm install
 
 # Navigate to a sample
 cd examples/…
+# For example
+cd examples/basic-routing
 
 # Build and run (in the folder of a sample)
 npx rollup -c
