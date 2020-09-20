@@ -176,7 +176,7 @@ const routes = {
 }
 ````
 
-The `wrap` method accepts an object with multiple properties and enables other features, including: setting a "loading" component that is shown while a dynamically-imported component is being requested, adding custom user data, adding pre-conditions (route guards), etc.
+The `wrap` method accepts an object with multiple properties and enables other features, including: setting a "loading" component that is shown while a dynamically-imported component is being requested, adding pre-conditions (route guards), passing static props, and adding custom user data.
 
 You can learn more about all the features of `wrap` in the documentation for [route wrapping](/Advanced%20Usage.md#route-wrapping).
 
@@ -369,6 +369,7 @@ Check out the [Advanced Usage](/Advanced%20Usage.md) documentation for using:
   - [Dynamically-imported routes and placeholders](/Advanced%20Usage.md#async-routes-and-loading-placeholders)
   - [Route pre-conditions](/Advanced%20Usage.md#route-pre-conditions) ("route guards")
   - [Adding user data to routes](/Advanced%20Usage.md#user-data)
+  - [Static props](/Advanced%20Usage.md#static-props)
 - [`routeEvent` event](/Advanced%20Usage.md#routeevent-event)
 - [`routeLoading` and `routeLoaded` events](/Advanced%20Usage.md#routeloading-and-routeloaded-events)
 - [Querystring parsing](/Advanced%20Usage.md#querystring-parsing)

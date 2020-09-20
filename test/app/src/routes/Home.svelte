@@ -9,12 +9,3 @@
     <li>Manually change the URL's fragment/hash</li>
     <li>Try refreshing the page</li>
 </ul>
-
-{#if staticProp}
-  <p>We have a static prop: <b id="staticprop">{staticProp}</b></p>
-{/if}
-
-<script>
-// Static props if they're set
-export let staticProp = null
-</script>

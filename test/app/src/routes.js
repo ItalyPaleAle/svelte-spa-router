@@ -10,6 +10,7 @@ import Home from './routes/Home.svelte'
 import Name from './routes/Name.svelte'
 import Loading from './routes/Loading.svelte'
 import Wild from './routes/Wild.svelte'
+import Foo from './routes/Foo.svelte'
 import Regex from './routes/Regex.svelte'
 import NotFound from './routes/NotFound.svelte'
 
@@ -96,6 +97,12 @@ if (!urlParams.has('routemap')) {
         // The second argument is a custom data object that will be passed to the `conditionsFailed` event if the pre-conditions fail
         '/lucky': wrappedLuckyRoute,
 
+        // This route has a static prop that is passed to it
+        '/foo': wrap({
+            component: Foo,
+            props: {staticProp: 'this is static'}
+        }),
+
         // This component contains a nested router
         // Note that we must match both '/nested' and '/nested/*' for the nested router to work (or look below at doing this with a Map and a regular expression)
         '/nested': wrap({
@@ -133,6 +140,12 @@ else {
     // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
     // The second argument is a custom data object that will be passed to the `conditionsFailed` event if the pre-conditions fail
     routes.set('/lucky', wrappedLuckyRoute)
+
+    // This route has a static prop that is passed to it
+    routes.set('/foo', wrap({
+        component: Foo,
+        props: {staticProp: 'this is static'}
+    }))
 
     // Regular expressions
     routes.set(/^\/regex\/(.*)?/i, Regex)

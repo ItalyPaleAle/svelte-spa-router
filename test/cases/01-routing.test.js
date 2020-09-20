@@ -370,9 +370,9 @@ describe('<Router> component', function() {
 
     it('static props', (browser) => {
         browser
-            .url(browser.launchUrl + '?props=1')
+            .url(browser.launchUrl + '/#/foo')
             .waitForElementVisible('#staticprop')
-            .expect.element('#staticprop').text.to.equal('foo')
+            .expect.element('#staticprop').text.to.equal('this is static')
 
         browser.end()
     })

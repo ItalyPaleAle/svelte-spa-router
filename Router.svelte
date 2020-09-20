@@ -247,11 +247,6 @@ export let prefix = ''
 export let restoreScrollState = false
 
 /**
- * Optional props that are passed to each component in the router, expanded (with `{...props}`)
- */
-export let props = {}
-
-/**
  * Container for a route: path, component
  */
 class RouteItem {
@@ -259,7 +254,7 @@ class RouteItem {
      * Initializes the object and creates a regular expression from the path, using regexparam.
      *
      * @param {string} path - Path to the route (must start with '/' or '*')
-     * @param {SvelteComponent} component - Svelte component for the route
+     * @param {SvelteComponent|WrappedComponent} component - Svelte component for the route, optionally wrapped
      */
     constructor(path, component) {
         if (!component || (typeof component != 'function' && (typeof component != 'object' || component._sveltesparouter !== true))) {
@@ -283,11 +278,13 @@ class RouteItem {
             this.component = component.component
             this.conditions = component.conditions || []
             this.userData = component.userData
+            this.props = component.props || {}
         }
         else {
             // Convert the component to a function that returns a Promise, to normalize it
             this.component = () => Promise.resolve(component)
             this.conditions = []
+            this.props = {}
         }
 
         this._pattern = pattern
@@ -388,6 +385,7 @@ else {
 // Props for the component to render
 let component = null
 let componentParams = null
+let props = {}
 
 // Event dispatcher from Svelte
 const dispatch = createEventDispatcher()
@@ -467,6 +465,7 @@ loc.subscribe(async (newLoc) => {
             if (obj.loading) {
                 component = obj.loading
                 componentParams = obj.loadingParams
+                props = {}
 
                 // Trigger the routeLoaded event for the loading component
                 // Create a copy of detail so we don't modify the object for the dynamic route (and the dynamic route doesn't modify our object too)
@@ -503,6 +502,9 @@ loc.subscribe(async (newLoc) => {
             else {
                 componentParams = null
             }
+
+            // Set static props, if any
+            props = routesList[i].props
 
             dispatchNextTick('routeLoaded', detail)
             break

@@ -8,10 +8,10 @@ Thanks to the many features of Svelte 3 or other components in the ecosystem, sv
   - [Dynamically-imported routes and placeholders](#async-routes-and-loading-placeholders)
   - [Route pre-conditions](#route-pre-conditions) ("route guards")
   - [Adding user data to routes](#user-data)
+  - [Static props](#static-props)
 - [`routeEvent` event](#routeevent-event)
 - [`routeLoading` and `routeLoaded` events](#routeloading-and-routeloaded-events)
 - [Querystring parsing](#querystring-parsing)
-- [Static props](#static-props)
 - [Route transitions](#route-transitions)
 - [Nested routers](#nested-routers)
 - [Route groups](#route-groups)
@@ -26,6 +26,7 @@ The `wrap` method allows a few more interesting features, however:
 - In addition to dynamically-importing components, you can define a component to be shown while a dynamically-imported one is being requested
 - You can add pre-conditions to routes (sometimes called "route guards")
 - You can add custom user data that is then used with the [`routeLoading` and `routeLoaded` events](#routeloading-and-routeloaded-events)
+- You can set static props, which are passed to the component as mounted by the router
 
 ### The `wrap` method
 
@@ -42,7 +43,8 @@ It accepts a single `options` argument that is an object with the following prop
 - `options.loadingComponent`: Used together with `asyncComponent`, this is a Svelte component, that must be part of the bundle, which is displayed while `asyncComponent` is being downloaded. If this is empty, then the router will not display any component while the request is in progress.
 - `options.loadingParams`: When using a `loadingComponent`, this is an optional dictionary that will be passed to the component as the `params` prop.
 - `options.userData`: Optional dictionary that will be passed to events such as `routeLoading`, `routeLoaded`, `conditionsFailed`.
-- `options.conditions`: Array of route pre-condition functions to add, which will be executed in order.
+- `options.conditions`: Optional array of route pre-condition functions to add, which will be executed in order.
+- `options.props`: Optional dictionary of props that are passed to the component when mounted. The props are expanded with the spread operator (`{...props}`), so the key of each element becomes the name of the prop.
 
 One and only one of `options.component` or `options.asyncComponent` must be set; all other properties are optional.
 
@@ -269,6 +271,43 @@ function routeLoaded(event) {
 </script>
 ````
 
+### Static props
+
+In certain cases, you might need to pass static props to a component within the router.
+
+For example, assume this component `Foo.svelte`:
+
+```svelte
+<p>The secret number is {num}</p>
+<script>
+// Prop
+export let num
+</script>
+```
+
+If `Foo` is a route in your application, you can pass a series of props to it through the router, using `wrap`:
+
+```svelte
+<Router {routes} {props} />
+<script>
+// Import the router and routes
+import Router from 'svelte-spa-router'
+import {wrap} from 'svelte-spa-router/wrap'
+import Foo from './Foo.svelte'
+
+// Route definition object
+const routes = {
+    '/': wrap({
+        component: Foo,
+        // Static props
+        props: {
+            num: 42
+        }
+    })
+}
+</script>
+```
+
 ## `routeEvent` event
 
 The custom `routeEvent` event can be used to bubble events from a component displayed by the router, to the router's parent component.
@@ -426,41 +465,6 @@ With the same URL as before, the result would be:
 ````
 
 qs supports advanced things such as arrays, nested objects, etc. Check out their [README](https://github.com/ljharb/qs) for more information.
-
-## Static props
-
-In certain cases, you might need to pass static props to a component within the router.
-
-For example, assume this component `Foo.svelte`:
-
-```svelte
-<p>The secret number is {num}</p>
-<script>
-// Prop
-export let num
-</script>
-```
-
-If `Foo` is a route in your application, you can pass a series of props to it through the router, with:
-
-```svelte
-<Router {routes} {props} />
-<script>
-// Import the router and routes
-import Router from 'svelte-spa-router'
-import Foo from './Foo.svelte'
-
-// Route definition object
-const routes = {
-    '/': Foo
-}
-
-// Static props
-const props = {
-    num: 42
-}
-</script>
-```
 
 ## Route transitions
 

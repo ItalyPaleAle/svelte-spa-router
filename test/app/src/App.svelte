@@ -26,26 +26,14 @@
 </p>
 
 <!-- Show the router -->
-{#if staticProps}
-  <Router
-    {routes}
-    on:conditionsFailed={conditionsFailed}
-    on:routeLoaded={routeLoaded}
-    on:routeLoading={routeLoading}
-    on:routeEvent={routeEvent}
-    {restoreScrollState}
-    props={staticProps}
-  />
-{:else}
-  <Router
-    {routes}
-    on:conditionsFailed={conditionsFailed}
-    on:routeLoaded={routeLoaded}
-    on:routeLoading={routeLoading}
-    on:routeEvent={routeEvent}
-    {restoreScrollState}
-  />
-{/if}
+<Router
+  {routes}
+  on:conditionsFailed={conditionsFailed}
+  on:routeLoaded={routeLoaded}
+  on:routeLoading={routeLoading}
+  on:routeEvent={routeEvent}
+  {restoreScrollState}
+/>
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
@@ -126,10 +114,6 @@ function routeEvent(event) {
 // We're checking this for the tests, but in your code you will likely want to set this value manually
 const urlParams = new URLSearchParams(window.location.search)
 const restoreScrollState = !!urlParams.has('scroll')
-
-// Check if we need to set static props, which are enabled by setting the "props=1" querystring parameter
-// We're checking this for the tests, but in your code you will likely want to set this value manually
-const staticProps = urlParams.has('props') ? {staticProp: 'foo'} : null
 
 // List of dynamic links
 let dynamicLinks = [

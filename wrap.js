@@ -1,5 +1,10 @@
 /**
  * @typedef {Object} WrappedComponent
+ * @property {SvelteComponent} component - Component to load (this is always asynchronous)
+ * @property {RoutePrecondition[]} [conditions] - Route pre-conditions to validate
+ * @property {Object} [props] - Optional dictionary of static props
+ * @property {Object} [userData] - Optional user data dictionary
+ * @property {bool} _sveltesparouter - Internal flag; always set to true
  */
 
 /**
@@ -15,6 +20,7 @@
  * @property {SvelteComponent} [loadingComponent] - Svelte component to be displayed while the async route is loading (as a placeholder); when unset or false-y, no component is shown while component
  * @property {Object} [loadingParams] - Optional dictionary passed to the `loadingComponent` component as params (for an exported prop called `params`)
  * @property {Object} [userData] - Optional object that will be passed to events such as `routeLoading`, `routeLoaded`, `conditionsFailed`
+ * @property {Object} [props] - Optional key-value dictionary of static props that will be passed to the component. The props are expanded with {...props}, so the key in the dictionary becomes the name of the prop.
  * @property {RoutePrecondition[]|RoutePrecondition} [conditions] - Route pre-conditions to add, which will be executed in order
  */
 
@@ -22,7 +28,8 @@
  * Wraps a component to enable multiple capabilities:
  * 1. Using dynamically-imported component, with (e.g. `{asyncComponent: () => import('Foo.svelte')}`), which also allows bundlers to do code-splitting.
  * 2. Adding route pre-conditions (e.g. `{conditions: [...]}`)
- * 3. Adding custom userData, which is passed to route events (e.g. route loaded events) or to route pre-conditions (e.g. `{userData: {foo: 'bar}}`)
+ * 3. Adding static props that are passed to the component
+ * 4. Adding custom userData, which is passed to route events (e.g. route loaded events) or to route pre-conditions (e.g. `{userData: {foo: 'bar}}`)
  * 
  * @param {WrapOptions} args - Arguments object
  * @returns {WrappedComponent} Wrapped component
@@ -71,6 +78,7 @@ export function wrap(args) {
         component: args.asyncComponent,
         userData: args.userData,
         conditions: (args.conditions && args.conditions.length) ? args.conditions : undefined,
+        props: (args.props && Object.keys(args.props).length) ? args.props : {},
         _sveltesparouter: true
     }
 
