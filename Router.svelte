@@ -430,10 +430,15 @@ if (restoreScrollState) {
     })
 }
 
+// Always have the latest value of loc
+let lastLoc = null
+
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
 loc.subscribe(async (newLoc) => {
+    lastLoc = newLoc
+
     // Find a route matching the location
     component = null
     let i = 0
@@ -463,16 +468,26 @@ loc.subscribe(async (newLoc) => {
                 component = obj.loading
                 componentParams = obj.loadingParams
 
-                // Add the component object and name to the detail object
-                detail.component = component
-                detail.name = component.name
-
                 // Trigger the routeLoaded event for the loading component
-                dispatchNextTick('routeLoaded', detail)
+                // Create a copy of detail so we don't modify the object for the dynamic route (and the dynamic route doesn't modify our object too)
+                dispatchNextTick('routeLoaded', {
+                    route: routesList[i].path,
+                    location: newLoc.location,
+                    querystring: newLoc.querystring,
+                    userData: routesList[i].userData,
+                    component: component,
+                    name: component.name
+                })
             }
 
             // Invoke the Promise
             const loaded = await obj()
+
+            // Now that we're here, check if we still want this component, as the user might have navigated to another page in the meanwhile
+            if (newLoc != lastLoc) {
+                break
+            }
+
             // If there is a "default" property, which is used by async routes, then pick that
             component = (loaded && loaded.default) || loaded
             

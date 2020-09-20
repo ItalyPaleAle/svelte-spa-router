@@ -14,14 +14,20 @@ import Regex from './routes/Regex.svelte'
 import NotFound from './routes/NotFound.svelte'
 
 const wrappedLuckyRoute = wrap({
-    asyncRoute: () => import('./routes/Lucky.svelte').then((res) => {
-        return new Promise((resolve) => {
-            setTimeout(() => resolve(res), 2000)
-        })
-    }),
+    // Add an artificial delay so we can experience the route loading
+    asyncRoute: () => import('./routes/Lucky.svelte')
+        .then((res) => {
+            return new Promise((resolve) => {
+                setTimeout(() => resolve(res), 2000)
+            })
+        }),
+    // Component to show while the module is being downloaded
     loadingRoute: Loading,
+    // Props for the loading component
     loadingParams: {message: 'secret'},
+    // Set some user data
     userData: {foo: 'bar'},
+    // Route pre-conditions, which are executed in order
     conditions: [
         (detail) => {
             // If there's a querystring parameter, override the random choice (tests need to be deterministic)
