@@ -465,9 +465,10 @@
                 dispatchNextTick('conditionsFailed', detail)
                 return
             }
-    
+            
             // Trigger an event to alert that we're loading the route
-            dispatchNextTick('routeLoading', detail)
+            // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
+            dispatchNextTick('routeLoading', Object.assign({}, detail))
     
             // If there's a component to show while we're loading the route, display it
             const obj = routesList[i].component
@@ -480,14 +481,10 @@
     
                     // Trigger the routeLoaded event for the loading component
                     // Create a copy of detail so we don't modify the object for the dynamic route (and the dynamic route doesn't modify our object too)
-                    dispatchNextTick('routeLoaded', {
-                        route: routesList[i].path,
-                        location: newLoc.location,
-                        querystring: newLoc.querystring,
-                        userData: routesList[i].userData,
+                    dispatchNextTick('routeLoaded', Object.assign({}, detail, {
                         component: component,
                         name: component.name
-                    })
+                    }))
                 }
                 else {
                     component = null
@@ -507,10 +504,6 @@
                 componentObj = obj
             }
     
-            // Add the component object and name to the detail object
-            detail.component = component
-            detail.name = component.name
-    
             // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
             // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
             if (match && typeof match == 'object' && Object.keys(match).length) {
@@ -524,7 +517,11 @@
             props = routesList[i].props
     
             // Dispatch the routeLoaded event then exit
-            dispatchNextTick('routeLoaded', detail)
+            // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
+            dispatchNextTick('routeLoaded', Object.assign({}, detail, {
+                component: component,
+                name: component.name
+            }))
             return
         }
     
