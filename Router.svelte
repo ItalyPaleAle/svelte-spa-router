@@ -476,6 +476,7 @@
             if (componentObj != obj) {
                 if (obj.loading) {
                     component = obj.loading
+                    componentObj = obj
                     componentParams = obj.loadingParams
                     props = {}
     
@@ -488,6 +489,7 @@
                 }
                 else {
                     component = null
+                    componentObj = null
                 }
     
                 // Invoke the Promise
