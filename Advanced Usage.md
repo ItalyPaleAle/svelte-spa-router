@@ -33,7 +33,7 @@ The `wrap` method allows a few more interesting features, however:
 The `wrap(options)` method is imported from `svelte-spa-router/wrap`:
 
 ```js
-import Router from 'svelte-spa-router'
+import { wrap } from 'svelte-spa-router/wrap'
 ```
 
 It accepts a single `options` argument that is an object with the following properties:
