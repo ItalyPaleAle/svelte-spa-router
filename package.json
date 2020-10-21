@@ -4,6 +4,7 @@
   "description": "Router for SPAs using Svelte 3",
   "main": "Router.svelte",
   "svelte": "Router.svelte",
+  "types": "Router.d.ts",
   "scripts": {
     "build-test-app": "(cd test/app && npx rollup -c)",
     "start-test-app": "npx serve -n -l 5000 test/app/dist",
@@ -44,8 +45,5 @@
     "rollup-plugin-svelte": "^6.0.1",
     "serve": "^11.3.2",
     "svelte": "^3.25.1"
-  },
-  "peerDependencies": {
-    "svelte": "^3.5.0"
   }
 }

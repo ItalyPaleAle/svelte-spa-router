@@ -1,5 +1,5 @@
 /**
- * @typedef {Object} WrappedComponent
+ * @typedef {Object} WrappedComponent Object returned by the `wrap` method
  * @property {SvelteComponent} component - Component to load (this is always asynchronous)
  * @property {RoutePrecondition[]} [conditions] - Route pre-conditions to validate
  * @property {Object} [props] - Optional dictionary of static props
@@ -8,19 +8,24 @@
  */
 
 /**
- * @callback RoutePrecondition
- * @param {RouteDetail} detail - Route detail object
- * @returns {boolean} If the callback returns a false-y value, it's interpreted as the precondition failed, so it aborts loading the component (and won't process other pre-condition callbacks)
+ * @callback AsyncSvelteComponent
+ * @returns {Promise<SvelteComponent>} Returns a Promise that resolves with a Svelte component
  */
 
 /**
- * @typedef {Object} WrapOptions
+ * @callback RoutePrecondition
+ * @param {RouteDetail} detail - Route detail object
+ * @returns {boolean|Promise<boolean>} If the callback returns a false-y value, it's interpreted as the precondition failed, so it aborts loading the component (and won't process other pre-condition callbacks)
+ */
+
+/**
+ * @typedef {Object} WrapOptions Options object for the call to `wrap`
  * @property {SvelteComponent} [component] - Svelte component to load (this is incompatible with `asyncComponent`)
- * @property {function(): Promise<SvelteComponent>} [asyncComponent] - Function that returns a Promise that fulfills with a Svelte component (e.g. `{asyncComponent: () => import('Foo.svelte')}`)
+ * @property {AsyncSvelteComponent} [asyncComponent] - Function that returns a Promise that fulfills with a Svelte component (e.g. `{asyncComponent: () => import('Foo.svelte')}`)
  * @property {SvelteComponent} [loadingComponent] - Svelte component to be displayed while the async route is loading (as a placeholder); when unset or false-y, no component is shown while component
- * @property {Object} [loadingParams] - Optional dictionary passed to the `loadingComponent` component as params (for an exported prop called `params`)
- * @property {Object} [userData] - Optional object that will be passed to events such as `routeLoading`, `routeLoaded`, `conditionsFailed`
- * @property {Object} [props] - Optional key-value dictionary of static props that will be passed to the component. The props are expanded with {...props}, so the key in the dictionary becomes the name of the prop.
+ * @property {object} [loadingParams] - Optional dictionary passed to the `loadingComponent` component as params (for an exported prop called `params`)
+ * @property {object} [userData] - Optional object that will be passed to events such as `routeLoading`, `routeLoaded`, `conditionsFailed`
+ * @property {object} [props] - Optional key-value dictionary of static props that will be passed to the component. The props are expanded with {...props}, so the key in the dictionary becomes the name of the prop.
  * @property {RoutePrecondition[]|RoutePrecondition} [conditions] - Route pre-conditions to add, which will be executed in order
  */
 
