@@ -8,7 +8,7 @@ import {wrap as _wrap} from './wrap'
  * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
  * 
  * @param {SvelteComponent} component - Svelte component for the route
- * @param {Object} [userData] - Optional object that will be passed to each `conditionsFailed` event
+ * @param {object} [userData] - Optional object that will be passed to each `conditionsFailed` event
  * @param {...function(RouteDetail): boolean} conditions - Route pre-conditions to add, which will be executed in order
  * @returns {WrappedComponent} Wrapped component
  */
@@ -345,7 +345,7 @@ class RouteItem {
      * @property {string|RegExp} route - Route matched as defined in the route definition (could be a string or a reguar expression object)
      * @property {string} location - Location path
      * @property {string} querystring - Querystring from the hash
-     * @property {Object} [userData] - Custom data passed by the user
+     * @property {object} [userData] - Custom data passed by the user
      * @property {SvelteComponent} [component] - Svelte component (only in `routeLoaded` events)
      * @property {string} [name] - Name of the Svelte component (only in `routeLoaded` events)
      */
