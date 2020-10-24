@@ -4,13 +4,13 @@ import {AsyncSvelteComponent, RoutePrecondition, WrappedComponent} from './Route
 /** Options object for the call to `wrap` */
 interface WrapOptions {
     /** Svelte component to load (this is incompatible with `asyncComponent`) */ 
-    component?: SvelteComponent
+    component?: typeof SvelteComponent
 
     /** Function that returns a Promise that fulfills with a Svelte component (e.g. `{asyncComponent: () => import('Foo.svelte')}`)  */
     asyncComponent?: AsyncSvelteComponent
 
     /** Svelte component to be displayed while the async route is loading (as a placeholder); when unset or false-y, no component is shown while component */
-    loadingComponent?: SvelteComponent
+    loadingComponent?: typeof SvelteComponent
 
     /** Optional dictionary passed to the `loadingComponent` component as params (for an exported prop called `params`) */
     loadingParams?: object
