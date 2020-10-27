@@ -64,35 +64,35 @@ function parsePath(path) {
     if (typeof path == 'string') {
         return regexparam(path)
     }
-    else if (path instanceof RegExp) {
-        const keys = []
+    // Else path is a RegExp
 
-        // Named parameters are represented with capture groups (`?<parameter_name>`).
-        // We need to extract the inside as key, and add an almost-wildcard
-        //  expression `([^\\/]+?)` that will match like a string path param.
-        let newPath = path.toString()
-            .replace(/[?]<.*>/g, (match) => {
-                // Since match is of form `?<parameter_name>`, we extract `parameter_name` as key
-                keys.push(match.slice(2, -1))
-                // We add the almost-wildcard pattern (same used by the `regexparam` library)
-                return `${match}([^\\/]+?)`
-            })
+    const keys = []
 
-        // Since this is a RegExp converted to string, it includes the `/` delimiters,
-        //  but to create a new RegExp from that string, we need to remove those (else it
-        //  adds extra `/` around the pattern)
-        newPath = newPath.slice(1, -1)
+    // Named parameters in a RegExp path are represented with capture groups (`?<parameter_name>`).
+    // We need to extract the inside as key, and add an almost-wildcard
+    //  expression `([^\\/]+?)` that will match like a string path param.
+    let newPath = path.toString()
+        .replace(/[?]<.*>/g, (match) => {
+            // Since match is of form `?<parameter_name>`, we extract `parameter_name` as key
+            keys.push(match.slice(2, -1))
+            // We add the almost-wildcard pattern (same used by the `regexparam` library)
+            return `${match}([^\\/]+?)`
+        })
 
-        // If the original path regex had a flag, it now end with the `/` delimiter, which
-        //  also needs to be removed.
-        if (newPath.endsWith('/')) {
-            newPath = newPath.slice(0, -1)
-        }
-        
-        return {
-            pattern: new RegExp(newPath),
-            keys
-        }
+    // Since this is a RegExp converted to string, it includes the `/` delimiters,
+    //  but to create a new RegExp from that string, we need to remove those (else it
+    //  adds extra `/` around the pattern)
+    newPath = newPath.slice(1, -1)
+
+    // If the original path regex had a flag, it now end with the `/` delimiter, which
+    //  also needs to be removed.
+    if (newPath.endsWith('/')) {
+        newPath = newPath.slice(0, -1)
+    }
+    
+    return {
+        pattern: new RegExp(newPath),
+        keys
     }
 }
 
@@ -316,6 +316,7 @@ class RouteItem {
             throw Error('Invalid value for "path" argument')
         }
 
+        // At this point path is valid and either a string of RegExp, so we can extract the pattern and path params
         const {pattern, keys} = parsePath(path)
 
         this.path = path // TODO remove unused
