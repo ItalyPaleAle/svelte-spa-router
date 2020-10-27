@@ -269,9 +269,25 @@ class RouteItem {
             throw Error('Invalid value for "path" argument')
         }
 
-        const {pattern, keys} = regexparam(path)
+        let pattern = new RegExp(), keys = []
 
-        this.path = path
+        if (typeof path == 'string') {
+            const parsedPath = regexparam(path)
+            pattern = parsedPath.pattern
+            keys = parsedPath.keys
+        }
+        else if (path instanceof RegExp) {
+            const newPath = path.toString()
+                .replace(/[?]<.*>/g, (match) => {
+                    keys.push(match.replace('?<', '').replace('>', ''))
+                    return `${match}([^\\/]+?)`
+                })
+                .replace(/^\//, '')
+                .replace(/\/[^\/]*?$/, '')
+            pattern = new RegExp(newPath)
+        }
+
+        this.path = path // TODO remove unused
 
         // Check if the component is wrapped and we have conditions
         if (typeof component == 'object' && component._sveltesparouter === true) {
