@@ -10,6 +10,7 @@ examples/*/dist/*.js.map
 
 # This is a module published on NPM, so we can ignore package-lock.json
 package-lock.json
+yarn.lock
 
 # Created by https://www.gitignore.io/api/node,macos,linux,windows,visualstudiocode
 
