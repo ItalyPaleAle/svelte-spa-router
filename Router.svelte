@@ -50,6 +50,55 @@ function getLocation() {
 }
 
 /**
+ * Transforms the path into a RegExp pattern and
+ *  extracts the named params (keys)
+ * 
+ * @param {string | RegExp} path - Path from route config
+ * @property {RegExp} pattern - Resulting regex pattern
+ * @property {string[]} keys - Named params of the path
+ * 
+ * @returns {{pattern: RegExp, keys: string[]}}
+ * @private
+ */
+function parsePath(path) {
+    let pattern = new RegExp(), keys = []
+
+    if (typeof path == 'string') {
+        return regexparam(path)
+    }
+    else if (path instanceof RegExp) {
+        // Named parameters are represented with capture groups (`?<parameter_name>`).
+        // We need to extract the inside as key, and add an almost-wildcard
+        //  expression `([^\\/]+?)` that will match like a string path param.
+        let newPath = path.toString()
+            .replace(/[?]<.*>/g, (match) => {
+                // Since match is of form `?<parameter_name>`, we extract `parameter_name` as key
+                keys.push(match.slice(2, -1))
+                // We add the almost-wildcard pattern (same used by the `regexparam` library)
+                return `${match}([^\\/]+?)`
+            })
+
+        // Since this is a RegExp converted to string, it includes the `/` delimiters,
+        //  butto create a new RegExp from that string, we need to remove those (else it
+        //  adds extra `/` around the pattern)
+        newPath = newPath.slice(1, -1)
+
+        // If the original path regex had a flag, it now end with the `/` delimiter, which
+        //  also needs to be removed.
+        if (newPath.endsWith('/')) {
+            newPath = newPath.slice(0, -1)
+        }
+        
+        pattern = new RegExp(newPath)
+    }
+
+    return {
+        pattern,
+        keys
+    }
+}
+
+/**
  * Readable store that returns the current full location (incl. querystring)
  */
 export const loc = readable(
@@ -269,23 +318,7 @@ class RouteItem {
             throw Error('Invalid value for "path" argument')
         }
 
-        let pattern = new RegExp(), keys = []
-
-        if (typeof path == 'string') {
-            const parsedPath = regexparam(path)
-            pattern = parsedPath.pattern
-            keys = parsedPath.keys
-        }
-        else if (path instanceof RegExp) {
-            const newPath = path.toString()
-                .replace(/[?]<.*>/g, (match) => {
-                    keys.push(match.replace('?<', '').replace('>', ''))
-                    return `${match}([^\\/]+?)`
-                })
-                .replace(/^\//, '')
-                .replace(/\/[^\/]*?$/, '')
-            pattern = new RegExp(newPath)
-        }
+        const {pattern, keys} = parsePath(path)
 
         this.path = path // TODO remove unused
 
