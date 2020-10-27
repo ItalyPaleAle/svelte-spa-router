@@ -61,12 +61,12 @@ function getLocation() {
  * @private
  */
 function parsePath(path) {
-    let pattern = new RegExp(), keys = []
-
     if (typeof path == 'string') {
         return regexparam(path)
     }
     else if (path instanceof RegExp) {
+        const keys = []
+
         // Named parameters are represented with capture groups (`?<parameter_name>`).
         // We need to extract the inside as key, and add an almost-wildcard
         //  expression `([^\\/]+?)` that will match like a string path param.
@@ -89,12 +89,10 @@ function parsePath(path) {
             newPath = newPath.slice(0, -1)
         }
         
-        pattern = new RegExp(newPath)
-    }
-
-    return {
-        pattern,
-        keys
+        return {
+            pattern: new RegExp(newPath),
+            keys
+        }
     }
 }
 
