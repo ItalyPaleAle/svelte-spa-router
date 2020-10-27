@@ -79,7 +79,7 @@ function parsePath(path) {
             })
 
         // Since this is a RegExp converted to string, it includes the `/` delimiters,
-        //  butto create a new RegExp from that string, we need to remove those (else it
+        //  but to create a new RegExp from that string, we need to remove those (else it
         //  adds extra `/` around the pattern)
         newPath = newPath.slice(1, -1)
 
