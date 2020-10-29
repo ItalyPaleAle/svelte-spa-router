@@ -588,3 +588,5 @@ To enable that, set the `restoreScrollState` property to `true` in the router (i
 ```svelte
 <Router {routes} restoreScrollState={true} />
 ```
+
+**Important:** In order for the scroll position to be restored, you need to trigger a page navigation using either the `use:link` action or the `push` method. Navigating using links starting with `#` (such as `<a href="#/books">`) will not allow restoring the scroll position.
