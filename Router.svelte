@@ -319,7 +319,7 @@ class RouteItem {
         // At this point path is valid and either a string of RegExp, so we can extract the pattern and path params
         const {pattern, keys} = parsePath(path)
 
-        this.path = path // TODO remove unused
+        this.path = path
 
         // Check if the component is wrapped and we have conditions
         if (typeof component == 'object' && component._sveltesparouter === true) {
