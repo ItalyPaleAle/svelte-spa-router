@@ -5,7 +5,7 @@ import {Readable} from 'svelte/store'
 
 /** Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoading` and `conditionsFailed` events */
 export interface RouteDetail {
-    /** Route matched as defined in the route definition (could be a string or a reguar expression object) */
+    /** Route matched as defined in the route definition (could be a string or a regular expression object) */
     route: string | RegExp
 
     /** Location path */
@@ -118,11 +118,6 @@ export function replace(location: string): Promise<void>
  */
 export function link(node: HTMLElement, hrefVar?: string): {update: (hrefVar?: string) => void}
 
-/**
- * @typedef {Object} Location
- * @property {string} location - Location (page/view), for example `/book`
- * @property {string} [querystring] - Querystring from the hash, as a string not parsed
- */
 /** Full location from the hash: page and querystring */
 interface Location {
     /** Location (page/view), for example `/book` */
