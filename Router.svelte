@@ -357,11 +357,26 @@ class RouteItem {
      * @returns {bool} Returns true if all the conditions succeeded
      */
     async checkConditions(detail) {
+        // Context is used by pre-conditions functions to pass data to the component
+        this.context = {}
+
+        // Passed to condition functions as their `this`
+        const that = {
+            setContext: (key, val) => {
+                this.context[key] = val
+            },
+            getContext: (key) => this.context[key]
+        }
+
+        // Test all conditions
         for (let i = 0; i < this.conditions.length; i++) {
-            if (!(await this.conditions[i](detail))) {
+            if (!(await this.conditions[i].call(that, detail))) {
                 return false
             }
         }
+
+        // Add the context to the detail object
+        detail.context = this.context
 
         return true
     }
@@ -443,7 +458,7 @@ loc.subscribe(async (newLoc) => {
     // Find a route matching the location
     let i = 0
     while (i < routesList.length) {
-        const match = routesList[i].match(newLoc.location)
+        let match = routesList[i].match(newLoc.location)
         if (!match) {
             i++
             continue
@@ -453,7 +468,7 @@ loc.subscribe(async (newLoc) => {
             route: routesList[i].path,
             location: newLoc.location,
             querystring: newLoc.querystring,
-            userData: routesList[i].userData
+            userData: routesList[i].userData,
         }
 
         // Check if the route can be loaded - if all conditions succeed
@@ -504,6 +519,11 @@ loc.subscribe(async (newLoc) => {
             // If there is a "default" property, which is used by async routes, then pick that
             component = (loaded && loaded.default) || loaded
             componentObj = obj
+        }
+
+        // For each value in the context, set the corresponding param
+        if (routesList[i].context && Object.keys(routesList[i].context).length > 0) {
+            match = Object.assign({}, match, routesList[i].context)
         }
 
         // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
