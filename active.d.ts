@@ -14,7 +14,7 @@ interface ActiveOptions {
  * @param opts - Can be an object of type `ActiveOptions`, or a string (or regular expressions) representing `ActiveOptions.path`.
  * @returns Destroy function
  */
-export declare function active(
+export default function active(
     node: HTMLElement,
     opt?: ActiveOptions | string | RegExp
 ): {destroy: () => void}
