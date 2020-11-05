@@ -329,7 +329,7 @@ import active from 'svelte-spa-router/active'
 
 The `active` action accepts a dictionary `options` as argument:
 
-- `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or falsey, it defaults to the path specified in the link's `href` attribute. This parameter can also be a regular expression that will mark the link as active when it matches: for example, setting to the regular expression `/^\/*\/hi$/` will make the link active when it starts with `/` and ends with `/hi`, regardless of what's in between.
+- `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or false-y, it defaults to the path specified in the link's `href` attribute. This parameter can also be a regular expression that will mark the link as active when it matches: for example, setting to the regular expression `/^\/*\/hi$/` will make the link active when it starts with `/` and ends with `/hi`, regardless of what's in between.
 - `options.className`: the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
 
 As a shorthand, instead of passing a dictionary as `options`, you can pass a single string or regular expression that will be interpreted as `options.path`.
@@ -358,7 +358,7 @@ routes.set(/^\/buongiorno(\/([a-z]+))/i, Name)
 routes.set('*', NotFound)
 ````
 
-When you define routes as regular expressions, the params prop is populated with an array with the result of the matches from the regular expression.
+When you define routes as regular expressions, the `params` prop is populated with an array with the result of the matches from the regular expression.
 
 For example, with this `Name.svelte` route:
 
@@ -370,7 +370,18 @@ export let params = {}
 </script>
 ````
 
-When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"]`. This is consistent with the results of [`RegExp.prototype.exec()`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec).
+When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"]`.
+
+This is consistent with the results of [`RegExp.prototype.exec()`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec).
+
+> When defining a route using a regular expression, you can optionally use [named capturing groups](https://2ality.com/2017/05/regexp-named-capture-groups.html). When using those, in addition to finding your matches in the `params` prop, you can find the matches for named capturing groups in `params.group`.  
+> For example, consider the route:
+>
+> ```js
+> routes.set(/^\/book\/(?<title>[a-z]+)$/, Book)
+> ```
+> 
+> When visiting `/#/book/mytitle`, the `params` prop will be an array with `["/book/mytitle", "mytitle"]`, and `params.groups` will be a dictionary with `{"title": "mytitle"}`.
 
 ## Advanced usage
 
