@@ -116,7 +116,7 @@ export function replace(location: string): Promise<void>
  * @param node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
  * @param hrefVar - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively.
  */
-export function link(node: HTMLElement, hrefVar?: string): {update: (hrefVar?: string) => void}
+export function link(node: HTMLElement, arg?: {href?: string, disabled?: boolean}): {update: (arg?: {href?: string, disabled?: boolean}) => void}
 
 /** Full location from the hash: page and querystring */
 interface Location {

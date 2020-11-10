@@ -155,31 +155,70 @@ export async function replace(location) {
  * @param {HTMLElement} node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
  * @param {string} hrefVar - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively.
  */
-export function link(node, hrefVar) {
+export function link(node, arg) {
+    function parseLinkArgs(arg) {
+        if (typeof arg === 'string') {
+            return {href: arg, disabled: false}
+        }
+        else {
+            return arg || {}
+        }
+    }
+
+    const {
+        href = node.getAttribute('href'),
+        disabled = false,
+    } = parseLinkArgs(arg)
+    let lastUsedHref
+    let isAttached
+
     // Only apply to <a> tags
-    if (!node || !node.tagName || node.tagName.toLowerCase() != 'a') {
+    if (
+        (!node && !disabled) ||
+      !node.tagName ||
+      node.tagName.toLowerCase() != 'a'
+    ) {
         throw Error('Action "link" can only be used with <a> tags')
     }
 
-    updateLink(node, hrefVar || node.getAttribute('href'))
-
-    return {
-        update(updated) {
-            updateLink(node, updated)
-        }
-    }
-}
-
-// Internal function used by the link function
-function updateLink(node, href) {
-    // Destination must start with '/'
-    if (!href || href.length < 1 || href.charAt(0) != '/') {
+    if (!disabled && (!href || href.length < 1 || href.charAt(0) !== '/')) {
         throw Error('Invalid value for "href" attribute: ' + href)
     }
 
-    // Add # to the href attribute
-    node.setAttribute('href', '#' + href)
-    node.addEventListener('click', scrollstateHistoryHandler)
+    if (!disabled) {
+        // Add # to the href attribute
+        node.setAttribute('href', '#' + href)
+        node.addEventListener('click', scrollstateHistoryHandler)
+    }
+    else {
+        node.setAttribute('href', 'void:0')
+    }
+
+    isAttached = !disabled
+    lastUsedHref = href
+
+    return {
+        update(nextArg) {
+            const {
+                href: nextHref = isAttached ? node.getAttribute('href') : lastUsedHref,
+                disabled: nextDisabled = false,
+            } = parseLinkArgs(nextArg)
+
+            if (!nextDisabled) {
+                node.setAttribute('href', '#' + nextHref.replace(/^#/, ''))
+                if (!isAttached) {
+                    node.addEventListener('click', scrollstateHistoryHandler)
+                }
+            }
+            else {
+                node.setAttribute('href', 'void:0')
+                node.removeEventListener('click', scrollstateHistoryHandler)
+            }
+
+            lastUsedHref = nextHref
+            isAttached = !nextDisabled
+        },
+    }
 }
 
 /**
