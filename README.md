@@ -26,6 +26,13 @@ Main features:
 
 This module is released under MIT license.
 
+## Video
+
+"So you want to pick a router?" talk by @ItalyPaleAle at Svelte Summit 2020. Includes an explanation of the two kinds of routers and a demo of svelte-spa-router.  
+_(Click on the cover image to play the video on YouTube)_
+
+[![Click to play video: 'So you want to pick a router?'](https://img.youtube.com/vi/EL1qM0cv0eA/0.jpg)](https://www.youtube.com/watch?v=EL1qM0cv0eA)
+
 ## Hash-based routing
 
 With hash-based routing, navigation is possible thanks to storing the current view in the part of the URL after `#`, called "hash" or "fragment".
@@ -58,6 +65,19 @@ npx serve -n -l 5000 dist
 ````
 
 The sample will be running at http://localhost:5000
+
+## Starter template
+
+You can find a starter template with Svelte 3 and svelte-spa-router at [italypaleale/svelte-spa-router-template](https://github.com/italypaleale/svelte-spa-router-template).
+
+To use the template:
+
+```sh
+npx degit italypaleale/svelte-spa-router-template svelte-app
+cd svelte-app
+```
+
+More information can be found on the [template's repo](https://github.com/italypaleale/svelte-spa-router-template).
 
 ## Using svelte-spa-router
 
