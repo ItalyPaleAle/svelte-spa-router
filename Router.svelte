@@ -266,7 +266,7 @@ class RouteItem {
             (typeof path == 'string' && (path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*'))) ||
             (typeof path == 'object' && !(path instanceof RegExp))
         ) {
-            throw Error('Invalid value for "path" argument')
+            throw Error('Invalid value for "path" argument - strings must start with / or *')
         }
 
         const {pattern, keys} = regexparam(path)
