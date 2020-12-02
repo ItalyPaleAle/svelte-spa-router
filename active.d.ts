@@ -5,6 +5,9 @@ interface ActiveOptions {
 
     /** Name of the CSS class to add when the route is active; default is "active" */
     className?: string
+
+    /** Name of the CSS class to add when the route is inactive; nothing added by default */
+    inactiveClassName?: string
 }
 
 /**
