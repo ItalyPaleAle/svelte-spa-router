@@ -9,16 +9,21 @@ let location
 
 // Function that updates all nodes marking the active ones
 function checkActive(el) {
-    // Repeat this for each class
-    (el.className || '').split(' ').forEach((cls) => {
+    const matchesLocation = el.pattern.test(location)
+    toggleClasses(el, el.className, matchesLocation)
+    toggleClasses(el, el.inactiveClassName, !matchesLocation)
+}
+
+function toggleClasses(el, className, shouldAdd) {
+    (className || '').split(' ').forEach((cls) => {
         if (!cls) {
             return
         }
-        // Remove the active class firsts
+        // Remove the class firsts
         el.node.classList.remove(cls)
 
-        // If the pattern matches, then set the active class
-        if (el.pattern.test(location)) {
+        // If the pattern doesn't match, then set the class
+        if (shouldAdd) {
             el.node.classList.add(cls)
         }
     })
@@ -88,6 +93,7 @@ export default function active(node, opts) {
     const el = {
         node,
         className: opts.className,
+        inactiveClassName: opts.inactiveClassName,
         pattern
     }
     nodes.push(el)
