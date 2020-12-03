@@ -300,15 +300,24 @@ class RouteItem {
      * @returns {null|Object.<string, string>} List of paramters from the URL if there's a match, or `null` otherwise.
      */
     match(path) {
-        // If there's a prefix, remove it before we run the matching
+        // If there's a prefix, check if it matches the start of the path.
+        // If not, bail early, else remove it before we run the matching.
         if (prefix) {
-            if (typeof prefix == 'string' && path.startsWith(prefix)) {
-                path = path.substr(prefix.length) || '/'
+            if (typeof prefix == 'string') {
+                if (path.startsWith(prefix)) {
+                    path = path.substr(prefix.length) || '/'
+                }
+                else {
+                    return null
+                }
             }
             else if (prefix instanceof RegExp) {
                 const match = path.match(prefix)
                 if (match && match[0]) {
                     path = path.substr(match[0].length) || '/'
+                }
+                else {
+                    return null
                 }
             }
         }
