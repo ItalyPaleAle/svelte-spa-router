@@ -1,5 +1,5 @@
 <script context="module">
-import {readable, derived} from 'svelte/store'
+import {readable, derived, writable} from 'svelte/store'
 import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
@@ -84,6 +84,18 @@ export const querystring = derived(
     loc,
     ($loc) => $loc.querystring
 )
+
+/**
+ * A route lock is an application wide locking of route navigation.
+ *
+ * When route lock is enabled {@code lock.set(true)}
+ * the hashchange events do not have any effect in routers.
+ *
+ * The route locking enables applications to handle hashchange events manually.
+ * This is useful e.g. for implementing a dirty form confirmation dialog
+ * when navigating to other page.
+ */
+export const lock = writable(false)
 
 /**
  * Navigates to a new page programmatically.
@@ -447,6 +459,10 @@ let componentObj = null
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
 loc.subscribe(async (newLoc) => {
+    if ($lock) {
+        return
+    }
+
     lastLoc = newLoc
 
     // Find a route matching the location
