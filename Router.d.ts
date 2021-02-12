@@ -11,7 +11,7 @@ export interface RouteDetail {
     /** Location path */
     location: string
 
-    /** Location path */
+    /** Last location path */
     lastLocation: string
 
     /** Querystring from the hash */
