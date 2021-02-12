@@ -11,6 +11,9 @@ export interface RouteDetail {
     /** Location path */
     location: string
 
+    /** Location path */
+    lastLocation: string
+
     /** Querystring from the hash */
     querystring: string
 
@@ -69,7 +72,7 @@ export interface WrappedComponent {
  * Wraps a component to add route pre-conditions.
  *
  * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
- * 
+ *
  * @param component Svelte component for the route
  * @param userData Optional object that will be passed to each `conditionsFailed` event
  * @param conditions Route pre-conditions to add, which will be executed in order
@@ -91,7 +94,7 @@ export function push(location: string): Promise<void>
 
 /**
  * Navigates back in history (equivalent to pressing the browser's back button).
- * 
+ *
  * @returns Promise that resolves after the page navigation has completed
  */
 export function pop(): Promise<void>

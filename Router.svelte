@@ -6,7 +6,7 @@ import {wrap as _wrap} from './wrap'
 /**
  * Wraps a component to add route pre-conditions.
  * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
- * 
+ *
  * @param {SvelteComponent} component - Svelte component for the route
  * @param {object} [userData] - Optional object that will be passed to each `conditionsFailed` event
  * @param {...function(RouteDetail): boolean} conditions - Route pre-conditions to add, which will be executed in order
@@ -100,13 +100,13 @@ export async function push(location) {
     await tick()
 
     // Note: this will include scroll state in history even when restoreScrollState is false
-    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)      
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
     window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
 }
 
 /**
  * Navigates back in history (equivalent to pressing the browser's back button).
- * 
+ *
  * @return {Promise<void>} Promise that resolves after the page navigation has completed
  */
 export async function pop() {
@@ -262,7 +262,7 @@ class RouteItem {
         }
 
         // Path must be a regular or expression, or a string starting with '/' or '*'
-        if (!path || 
+        if (!path ||
             (typeof path == 'string' && (path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*'))) ||
             (typeof path == 'object' && !(path instanceof RegExp))
         ) {
@@ -361,7 +361,7 @@ class RouteItem {
 
     /**
      * Executes all conditions (if any) to control whether the route can be shown. Conditions are executed in the order they are defined, and if a condition fails, the following ones aren't executed.
-     * 
+     *
      * @param {RouteDetail} detail - Route detail
      * @returns {bool} Returns true if all the conditions succeeded
      */
@@ -447,7 +447,6 @@ let componentObj = null
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
 loc.subscribe(async (newLoc) => {
-    lastLoc = newLoc
 
     // Find a route matching the location
     let i = 0
@@ -461,9 +460,13 @@ loc.subscribe(async (newLoc) => {
         const detail = {
             route: routesList[i].path,
             location: newLoc.location,
+            lastLocation: lastLoc.location,
             querystring: newLoc.querystring,
             userData: routesList[i].userData
         }
+
+        // Once there's a match, we can rewrite the last location
+        lastLoc = newLoc
 
         // Check if the route can be loaded - if all conditions succeed
         if (!(await routesList[i].checkConditions(detail))) {
@@ -474,7 +477,7 @@ loc.subscribe(async (newLoc) => {
             dispatchNextTick('conditionsFailed', detail)
             return
         }
-        
+
         // Trigger an event to alert that we're loading the route
         // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
         dispatchNextTick('routeLoading', Object.assign({}, detail))
