@@ -11,7 +11,7 @@
 
 # svelte-spa-router
 
-[![Build Status](https://github.com/ItalyPaleAle/svelte-spa-router/workflows/Continuous%20Integration%20tests/badge.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/actions) 
+[![Build Status](https://github.com/ItalyPaleAle/svelte-spa-router/workflows/Continuous%20Integration%20tests/badge.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/actions)
 [![npm](https://img.shields.io/npm/v/svelte-spa-router.svg)](https://www.npmjs.com/package/svelte-spa-router)
 [![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/blob/master/LICENSE.md)
 [![dependencies Status](https://david-dm.org/ItalyPaleAle/svelte-spa-router/status.svg)](https://david-dm.org/ItalyPaleAle/svelte-spa-router)
@@ -28,7 +28,7 @@ This module is released under MIT license.
 
 ## Video
 
-["So you want to pick a router?"]((https://www.youtube.com/watch?v=EL1qM0cv0eA)) talk by @ItalyPaleAle at Svelte Summit 2020. Includes an explanation of the two kinds of routers and a demo of svelte-spa-router.  
+["So you want to pick a router?"]((https://www.youtube.com/watch?v=EL1qM0cv0eA)) talk by @ItalyPaleAle at Svelte Summit 2020. Includes an explanation of the two kinds of routers and a demo of svelte-spa-router.
 _(Click on the cover image to play the video on YouTube)_
 
 [![Click to play video: 'So you want to pick a router?'](https://img.youtube.com/vi/EL1qM0cv0eA/0.jpg)](https://www.youtube.com/watch?v=EL1qM0cv0eA)
@@ -176,7 +176,7 @@ wrap({
 })
 ```
 
-> Note: the value of `asyncComponent` must be the **definition of a function** returning a dynamically-imported component, such as `asyncComponent: () => import('./Foo.svelte')`.  
+> Note: the value of `asyncComponent` must be the **definition of a function** returning a dynamically-imported component, such as `asyncComponent: () => import('./Foo.svelte')`.
 > Do **not** use `asyncComponent: import('./Foo.svelte')`, which is a function invocation instead.
 
 For example, to make the Author and Book routes from the first example dynamically-imported, we'd update the code to:
@@ -321,7 +321,7 @@ The current page is: /books
 The querystring is: show=authors,titles&order=1
 ````
 
-It's important to note that, to keep this component lightweight, svelte-spa-router **does not parse** the "querystring". If you want to parse the value of `$querystring`, you can use third-party modules such as [qs](https://www.npmjs.com/package/qs) in your application.
+It's important to note that, to keep this component lightweight, svelte-spa-router **does not parse** the "querystring". If you want to parse the value of `$querystring`, you can use [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) available in all modern browsers, or third-party modules such as [qs](https://www.npmjs.com/package/qs).
 
 ### Highlight active links
 
@@ -395,13 +395,13 @@ When visiting `#/hola/amigos`, the params prop will be `["/hola/amigos","amigos"
 
 This is consistent with the results of [`RegExp.prototype.exec()`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec).
 
-> When defining a route using a regular expression, you can optionally use [named capturing groups](https://2ality.com/2017/05/regexp-named-capture-groups.html). When using those, in addition to finding your matches in the `params` prop, you can find the matches for named capturing groups in `params.group`.  
+> When defining a route using a regular expression, you can optionally use [named capturing groups](https://2ality.com/2017/05/regexp-named-capture-groups.html). When using those, in addition to finding your matches in the `params` prop, you can find the matches for named capturing groups in `params.group`.
 > For example, consider the route:
 >
 > ```js
 > routes.set(/^\/book\/(?<title>[a-z]+)$/, Book)
 > ```
-> 
+>
 > When visiting `/#/book/mytitle`, the `params` prop will be an array with `["/book/mytitle", "mytitle"]`, and `params.groups` will be a dictionary with `{"title": "mytitle"}`.
 
 ## Advanced usage
