@@ -132,9 +132,11 @@ export async function replace(location) {
 
     const dest = (location.charAt(0) == '#' ? '' : '#') + location
     try {
-        const newState = { ...history.state };
-        delete newState['__svelte_spa_router_scrollX'];
-        delete newState['__svelte_spa_router_scrollY'];
+        const newState = {
+            ...history.state
+        }
+        delete newState['__svelte_spa_router_scrollX']
+        delete newState['__svelte_spa_router_scrollY']
         window.history.replaceState(newState, undefined, dest)
     }
     catch (e) {
