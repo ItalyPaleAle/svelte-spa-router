@@ -100,7 +100,7 @@ export async function push(location) {
     await tick()
 
     // Note: this will include scroll state in history even when restoreScrollState is false
-    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_: window.scrollY}, undefined, undefined)      
+    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined, undefined)      
     window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
 }
 
