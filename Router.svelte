@@ -433,7 +433,7 @@ if (restoreScrollState) {
     afterUpdate(() => {
         // If this exists, then this is a back navigation: restore the scroll position
         if (previousScrollState) {
-            window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
+            window.scrollTo(previousScrollState.__svelte_spa_router_scrollX, previousScrollState.__svelte_spa_router_scrollY)
         }
         else {
             // Otherwise this is a forward navigation: scroll to top
