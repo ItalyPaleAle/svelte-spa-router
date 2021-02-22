@@ -195,7 +195,7 @@ const routes = {
             myFunc: () => {
                 console.log('do something!')
             }
-        }
+        },
 
         // List of route pre-conditions
         conditions: [
