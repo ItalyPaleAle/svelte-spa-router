@@ -178,4 +178,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# IntelliJ IDEA
+*.iml
+.idea
+
 # End of https://www.gitignore.io/api/node,macos,linux,windows,visualstudiocode
