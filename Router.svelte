@@ -6,7 +6,7 @@ import {wrap as _wrap} from './wrap'
     
 /**
  * Preloads a component. If the Component is exporting a preload function, it's gonna be called and the promise is resolved afterwards.
- * @params {WrappedComponent}
+ * @param {WrappedComponent} wrappedComponent
  * @returns {SvelteComponent}
  */
 export function preloader(wrappedComponent) {
@@ -19,7 +19,7 @@ export function preloader(wrappedComponent) {
             resolve(c);
         }
     });
-}    
+} 
     
     
     
