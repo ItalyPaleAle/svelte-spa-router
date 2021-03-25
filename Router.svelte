@@ -13,16 +13,17 @@ export function preloader(wrappedComponent) {
     return new Promise((resolve, reject) => {
 
         wrappedComponent.component().then(componentLoaded => {
-            const c = componentLoaded.default;
-            if (typeof c.prototype.preload === "undefined") {
-                resolve(c);
-            } else {
+            const c = componentLoaded.default
+            if (typeof c.prototype.preload === 'undefined') {
+                resolve(c)
+            } 
+            else {
                 c.prototype.preload().then(() => {
-                    resolve(c);
+                    resolve(c)
                 })
             }
         })
-    });
+    })
 }
     
     
