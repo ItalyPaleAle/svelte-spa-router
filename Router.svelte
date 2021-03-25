@@ -3,6 +3,26 @@ import {readable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
+    
+/**
+ * Preloads a component. If the Component is exporting a preload function, it's gonna be called and the promise is resolved afterwards.
+ * @params {WrappedComponent}
+ * @returns {SvelteComponent}
+ */
+export function preloader(wrappedComponent) {
+    return new Promise(async (resolve, reject) => {
+        let c = (await wrappedComponent.component()).default;
+        if (typeof c.prototype.preload === "undefined") {
+            resolve(c);
+        } else {
+            await c.prototype.preload();
+            resolve(c);
+        }
+    });
+}    
+    
+    
+    
 /**
  * Wraps a component to add route pre-conditions.
  * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
