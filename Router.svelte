@@ -11,14 +11,14 @@ import {wrap as _wrap} from './wrap'
  */
 export function preloader(wrappedComponent) {
     return new Promise(async (resolve, reject) => {
-        let c = (await wrappedComponent.component()).default;
-        if (typeof c.prototype.preload === "undefined") {
+        const c = (await wrappedComponent.component()).default;
+        if (typeof c.prototype.preload !== "function") {
             resolve(c);
         } else {
             await c.prototype.preload();
             resolve(c);
         }
-    });
+    })
 } 
     
     
