@@ -10,16 +10,20 @@ import {wrap as _wrap} from './wrap'
  * @returns {SvelteComponent}
  */
 export function preloader(wrappedComponent) {
-    return new Promise(async (resolve, reject) => {
-        const c = (await wrappedComponent.component()).default;
-        if (typeof c.prototype.preload !== "function") {
-            resolve(c);
-        } else {
-            await c.prototype.preload();
-            resolve(c);
-        }
-    })
-} 
+    return new Promise((resolve, reject) => {
+
+        wrappedComponent.component().then(componentLoaded => {
+            const c = componentLoaded.default;
+            if (typeof c.prototype.preload === "undefined") {
+                resolve(c);
+            } else {
+                c.prototype.preload().then(() => {
+                    resolve(c);
+                })
+            }
+        })
+    });
+}
     
     
     
