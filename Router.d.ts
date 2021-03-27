@@ -82,6 +82,13 @@ export function wrap(
 ): WrappedComponent
 
 /**
+ * Preloads a component. If the Component is exporting a preload function, it's gonna be called and the promise is resolved afterwards.
+ * @param {WrappedComponent<SvelteComponent>} wrappedComponent
+ * @returns {Promise<SvelteComponent>}
+ */
+export function preloader(wrappedComponent: WrappedComponent<SvelteComponent>) : Promise<SvelteComponent>;
+
+/**
  * Navigates to a new page programmatically.
  *
  * @param location Path to navigate to (must start with `/` or '#/')
