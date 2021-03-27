@@ -3,20 +3,19 @@ import {readable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
-    
+
 /**
  * Preloads a component. If the Component is exporting a preload function, it's gonna be called and the promise is resolved afterwards.
- * @param {WrappedComponent} wrappedComponent
- * @returns {SvelteComponent}
+ * @param {WrappedComponent<SvelteComponent>} wrappedComponent
+ * @returns {Promise<SvelteComponent>}
  */
 export function preloader(wrappedComponent) {
     return new Promise((resolve, reject) => {
-
         wrappedComponent.component().then(componentLoaded => {
             const c = componentLoaded.default
             if (typeof c.prototype.preload === 'undefined') {
                 resolve(c)
-            } 
+            }
             else {
                 c.prototype.preload().then(() => {
                     resolve(c)
@@ -25,9 +24,8 @@ export function preloader(wrappedComponent) {
         })
     })
 }
-    
-    
-    
+
+
 /**
  * Wraps a component to add route pre-conditions.
  * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
@@ -125,7 +123,7 @@ export async function push(location) {
     await tick()
 
     // Note: this will include scroll state in history even when restoreScrollState is false
-    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined, undefined)      
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)      
     window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
 }
 
@@ -157,12 +155,7 @@ export async function replace(location) {
 
     const dest = (location.charAt(0) == '#' ? '' : '#') + location
     try {
-        const newState = {
-            ...history.state
-        }
-        delete newState['__svelte_spa_router_scrollX']
-        delete newState['__svelte_spa_router_scrollY']
-        window.history.replaceState(newState, undefined, dest)
+        window.history.replaceState(undefined, undefined, dest)
     }
     catch (e) {
         // eslint-disable-next-line no-console
@@ -223,7 +216,7 @@ function scrollstateHistoryHandler(event) {
     event.preventDefault()
     const href = event.currentTarget.getAttribute('href')
     // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
-    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined, undefined)
+    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
     // This will force an update as desired, but this time our scroll state will be attached
     window.location.hash = href
 }
@@ -447,7 +440,7 @@ if (restoreScrollState) {
         // If this event was from our history.replaceState, event.state will contain
         // our scroll history. Otherwise, event.state will be null (like on forward
         // navigation)
-        if (event.state && event.state.__svelte_spa_router_scrollY) {
+        if (event.state && event.state.scrollY) {
             previousScrollState = event.state
         }
         else {
@@ -458,7 +451,7 @@ if (restoreScrollState) {
     afterUpdate(() => {
         // If this exists, then this is a back navigation: restore the scroll position
         if (previousScrollState) {
-            window.scrollTo(previousScrollState.__svelte_spa_router_scrollX, previousScrollState.__svelte_spa_router_scrollY)
+            window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
         }
         else {
             // Otherwise this is a forward navigation: scroll to top
