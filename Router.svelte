@@ -166,11 +166,14 @@ export function link(node, hrefVar) {
         throw Error('Action "link" can only be used with <a> tags')
     }
 
-    updateLink(node, hrefVar || node.getAttribute('href'))
+    let remove = updateLink(node, hrefVar || node.getAttribute('href'))
 
     return {
         update(updated) {
-            updateLink(node, updated)
+            remove = updateLink(node, updated)
+        },
+        destroy() {
+            remove()
         }
     }
 }
@@ -182,9 +185,14 @@ function updateLink(node, href) {
         throw Error('Invalid value for "href" attribute: ' + href)
     }
 
+    const remove = () => node.removeEventListener('click', scrollstateHistoryHandler)
+    remove()
+
     // Add # to the href attribute
     node.setAttribute('href', '#' + href)
     node.addEventListener('click', scrollstateHistoryHandler)
+
+    return remove
 }
 
 /**
@@ -220,7 +228,7 @@ function scrollstateHistoryHandler(event) {
 {/if}
 
 <script>
-import {createEventDispatcher, afterUpdate} from 'svelte'
+import {createEventDispatcher, afterUpdate, onDestroy} from 'svelte'
 import regexparam from 'regexparam'
 
 /**
@@ -418,7 +426,7 @@ let previousScrollState = null
 $: history.scrollRestoration = restoreScrollState ? 'manual' : 'auto'
 
 if (restoreScrollState) {
-    window.addEventListener('popstate', (event) => {
+    const pop = (event) => {
         // If this event was from our history.replaceState, event.state will contain
         // our scroll history. Otherwise, event.state will be null (like on forward
         // navigation)
@@ -428,7 +436,11 @@ if (restoreScrollState) {
         else {
             previousScrollState = null
         }
-    })
+    }
+
+    window.addEventListener('popstate', pop)
+
+    onDestroy(() => window.removeEventListener('popstate', pop))
 
     afterUpdate(() => {
         // If this exists, then this is a back navigation: restore the scroll position
@@ -451,7 +463,7 @@ let componentObj = null
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
-loc.subscribe(async (newLoc) => {
+const unsubscribe = loc.subscribe(async (newLoc) => {
     lastLoc = newLoc
 
     // Find a route matching the location
@@ -545,4 +557,6 @@ loc.subscribe(async (newLoc) => {
     component = null
     componentObj = null
 })
+
+onDestroy(() => unsubscribe())
 </script>
