@@ -152,7 +152,7 @@ export async function replace(location) {
  * Dictionary with options for the link action.
  * @typedef {Object} LinkActionOpts
  * @property {string} href - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively.
- * @property {bool} disabled - If true, link is disabled
+ * @property {boolean} disabled - If true, link is disabled
  */
 
 /**
@@ -397,7 +397,7 @@ class RouteItem {
      * Executes all conditions (if any) to control whether the route can be shown. Conditions are executed in the order they are defined, and if a condition fails, the following ones aren't executed.
      * 
      * @param {RouteDetail} detail - Route detail
-     * @returns {bool} Returns true if all the conditions succeeded
+     * @returns {boolean} Returns true if all the conditions succeeded
      */
     async checkConditions(detail) {
         for (let i = 0; i < this.conditions.length; i++) {
