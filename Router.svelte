@@ -220,7 +220,7 @@ function scrollstateHistoryHandler(event) {
 {/if}
 
 <script>
-import {createEventDispatcher, afterUpdate} from 'svelte'
+import {onDestroy, createEventDispatcher, afterUpdate} from 'svelte'
 import {parse} from 'regexparam'
 
 /**
@@ -451,7 +451,7 @@ let componentObj = null
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
-loc.subscribe(async (newLoc) => {
+const unsubscribeLoc = loc.subscribe(async (newLoc) => {
     lastLoc = newLoc
 
     // Find a route matching the location
@@ -544,5 +544,9 @@ loc.subscribe(async (newLoc) => {
     // If we're still here, there was no match, so show the empty component
     component = null
     componentObj = null
+})
+
+onDestroy(() => {
+    unsubscribeLoc()
 })
 </script>
