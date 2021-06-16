@@ -1,4 +1,4 @@
-import regexparam from 'regexparam'
+import {parse} from 'regexparam'
 import {loc} from './Router.svelte'
 
 // List of nodes to update
@@ -86,7 +86,7 @@ export default function active(node, opts) {
 
     // If path is not a regular expression already, make it
     const {pattern} = typeof opts.path == 'string' ?
-        regexparam(opts.path) :
+        parse(opts.path) :
         {pattern: opts.path}
 
     // Add the node to the list

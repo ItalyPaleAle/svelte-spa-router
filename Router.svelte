@@ -221,7 +221,7 @@ function scrollstateHistoryHandler(event) {
 
 <script>
 import {createEventDispatcher, afterUpdate} from 'svelte'
-import regexparam from 'regexparam'
+import {parse} from 'regexparam'
 
 /**
  * Dictionary of all routes, in the format `'/path': component`.
@@ -274,7 +274,7 @@ class RouteItem {
             throw Error('Invalid value for "path" argument - strings must start with / or *')
         }
 
-        const {pattern, keys} = regexparam(path)
+        const {pattern, keys} = parse(path)
 
         this.path = path
 
