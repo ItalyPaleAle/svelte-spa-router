@@ -219,6 +219,8 @@ You can navigate between pages with normal anchor (`<a>`) tags. For example:
 <a href="#/book/123">Thus Spoke Zarathustra</a>
 ````
 
+#### The `use:link` action
+
 Rather than having to type `#` before each link, you can also use the `use:link` action:
 
 ````svelte
@@ -228,7 +230,25 @@ import {link} from 'svelte-spa-router'
 <a href="/book/321" use:link>The Little Prince</a>
 ````
 
-You can also use the `use:link={variable}` action to have your link set to a variable and updated reactively (this will always take precedence over `href` attributes, if present):
+The `use:link` action accepts an optional parameter `opts`, which can be one of:
+
+- A dictionary `{href: '/foo', disabled: false}` where both keys are optional:
+  - If you set a value for `href`, your link will be updated to point to that address, reactively (this will always take precedence over `href` attributes, if present)
+  - Setting `disabled: true` disables the link, so clicking on that would have no effect
+- A string with a destination (e.g. `/foo`), which is a shorthand to setting `{href: '/foo'}`.
+
+For example:
+
+````svelte
+<script>
+import {link} from 'svelte-spa-router'
+let myLink = "/book/456"
+</script>
+<!-- Note the {{...}} notation because we're passing an object as parameter for a Svelte action -->
+<a use:link={{href: myLink, disabled: false}}>The Biggest Princess</a>
+````
+
+The above is equivalent to:
 
 ````svelte
 <script>
@@ -237,6 +257,10 @@ let myLink = "/book/456"
 </script>
 <a use:link={myLink}>The Biggest Princess</a>
 ````
+
+Changing the value of `myLink` will reactively update the link's `href` attribute.
+
+#### Navigating programmatically
 
 You can navigate between pages programmatically too:
 

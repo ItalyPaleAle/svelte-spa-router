@@ -104,6 +104,18 @@ export function pop(): Promise<void>
  */
 export function replace(location: string): Promise<void>
 
+/** Type for the opts parameter of the link action */
+export type LinkActionOpts = {
+    /** A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively. */
+    href?: string
+    /** If true, link is disabled */
+    disabled?: boolean
+}
+
+/** Type for the update function of the link action */
+export type LinkActionUpateFunc = ((opts?: LinkActionOpts) => void) | 
+    ((hrefVar?: string) => void)
+
 /**
  * Svelte Action that enables a link element (`<a>`) to use our history management.
  *
@@ -114,9 +126,11 @@ export function replace(location: string): Promise<void>
  * ````
  *
  * @param node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
- * @param hrefVar - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively.
+ * @param opts - Dictionary with options for the link
+ * @param hrefVar - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively. This is a shorthand for opts.href
  */
-export function link(node: HTMLElement, hrefVar?: string): {update: (hrefVar?: string) => void}
+export function link(node: HTMLElement, opts?: LinkActionOpts): {update: LinkActionUpateFunc}
+export function link(node: HTMLElement, hrefVar?: string): {update: LinkActionUpateFunc}
 
 /** Full location from the hash: page and querystring */
 interface Location {
