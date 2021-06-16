@@ -548,7 +548,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
 
             // Invoke the Promise
             const loaded = await obj()
-            // If component owns a routeLoaded function, proceed accordingly based on its return value
+            // If component owns a routeLoaded function, call it and wait if necessary
             if (loaded.routeLoaded) {
                 await loaded.routeLoaded(Object.assign({}, detail))
             }
