@@ -100,7 +100,7 @@ export async function push(location) {
     await tick()
 
     // Note: this will include scroll state in history even when restoreScrollState is false
-    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)      
+    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined, undefined)      
     window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
 }
 
@@ -132,7 +132,12 @@ export async function replace(location) {
 
     const dest = (location.charAt(0) == '#' ? '' : '#') + location
     try {
-        window.history.replaceState(undefined, undefined, dest)
+        const newState = {
+            ...history.state
+        }
+        delete newState['__svelte_spa_router_scrollX']
+        delete newState['__svelte_spa_router_scrollY']
+        window.history.replaceState(newState, undefined, dest)
     }
     catch (e) {
         // eslint-disable-next-line no-console
@@ -232,7 +237,7 @@ function scrollstateHistoryHandler(event) {
     event.preventDefault()
     const href = event.currentTarget.getAttribute('href')
     // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
-    history.replaceState({scrollX: window.scrollX, scrollY: window.scrollY}, undefined, undefined)
+    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined, undefined)
     // This will force an update as desired, but this time our scroll state will be attached
     window.location.hash = href
 }
@@ -254,8 +259,8 @@ function scrollstateHistoryHandler(event) {
 {/if}
 
 <script>
-import {createEventDispatcher, afterUpdate} from 'svelte'
-import regexparam from 'regexparam'
+import {onDestroy, createEventDispatcher, afterUpdate} from 'svelte'
+import {parse} from 'regexparam'
 
 /**
  * Dictionary of all routes, in the format `'/path': component`.
@@ -305,10 +310,10 @@ class RouteItem {
             (typeof path == 'string' && (path.length < 1 || (path.charAt(0) != '/' && path.charAt(0) != '*'))) ||
             (typeof path == 'object' && !(path instanceof RegExp))
         ) {
-            throw Error('Invalid value for "path" argument')
+            throw Error('Invalid value for "path" argument - strings must start with / or *')
         }
 
-        const {pattern, keys} = regexparam(path)
+        const {pattern, keys} = parse(path)
 
         this.path = path
 
@@ -339,15 +344,24 @@ class RouteItem {
      * @returns {null|Object.<string, string>} List of paramters from the URL if there's a match, or `null` otherwise.
      */
     match(path) {
-        // If there's a prefix, remove it before we run the matching
+        // If there's a prefix, check if it matches the start of the path.
+        // If not, bail early, else remove it before we run the matching.
         if (prefix) {
-            if (typeof prefix == 'string' && path.startsWith(prefix)) {
-                path = path.substr(prefix.length) || '/'
+            if (typeof prefix == 'string') {
+                if (path.startsWith(prefix)) {
+                    path = path.substr(prefix.length) || '/'
+                }
+                else {
+                    return null
+                }
             }
             else if (prefix instanceof RegExp) {
                 const match = path.match(prefix)
                 if (match && match[0]) {
                     path = path.substr(match[0].length) || '/'
+                }
+                else {
+                    return null
                 }
             }
         }
@@ -447,7 +461,7 @@ if (restoreScrollState) {
         // If this event was from our history.replaceState, event.state will contain
         // our scroll history. Otherwise, event.state will be null (like on forward
         // navigation)
-        if (event.state && event.state.scrollY) {
+        if (event.state && event.state.__svelte_spa_router_scrollY) {
             previousScrollState = event.state
         }
         else {
@@ -458,7 +472,7 @@ if (restoreScrollState) {
     afterUpdate(() => {
         // If this exists, then this is a back navigation: restore the scroll position
         if (previousScrollState) {
-            window.scrollTo(previousScrollState.scrollX, previousScrollState.scrollY)
+            window.scrollTo(previousScrollState.__svelte_spa_router_scrollX, previousScrollState.__svelte_spa_router_scrollY)
         }
         else {
             // Otherwise this is a forward navigation: scroll to top
@@ -476,7 +490,7 @@ let componentObj = null
 // Handle hash change events
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
-loc.subscribe(async (newLoc) => {
+const unsubscribeLoc = loc.subscribe(async (newLoc) => {
     lastLoc = newLoc
 
     // Find a route matching the location
@@ -569,5 +583,9 @@ loc.subscribe(async (newLoc) => {
     // If we're still here, there was no match, so show the empty component
     component = null
     componentObj = null
+})
+
+onDestroy(() => {
+    unsubscribeLoc()
 })
 </script>

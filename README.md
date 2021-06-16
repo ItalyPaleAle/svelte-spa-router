@@ -26,6 +26,13 @@ Main features:
 
 This module is released under MIT license.
 
+## Video
+
+["So you want to pick a router?"]((https://www.youtube.com/watch?v=EL1qM0cv0eA)) talk by @ItalyPaleAle at Svelte Summit 2020. Includes an explanation of the two kinds of routers and a demo of svelte-spa-router.  
+_(Click on the cover image to play the video on YouTube)_
+
+[![Click to play video: 'So you want to pick a router?'](https://img.youtube.com/vi/EL1qM0cv0eA/0.jpg)](https://www.youtube.com/watch?v=EL1qM0cv0eA)
+
 ## Hash-based routing
 
 With hash-based routing, navigation is possible thanks to storing the current view in the part of the URL after `#`, called "hash" or "fragment".
@@ -58,6 +65,19 @@ npx serve -n -l 5000 dist
 ````
 
 The sample will be running at http://localhost:5000
+
+## Starter template
+
+You can find a starter template with Svelte 3 and svelte-spa-router at [italypaleale/svelte-spa-router-template](https://github.com/italypaleale/svelte-spa-router-template).
+
+To use the template:
+
+```sh
+npx degit italypaleale/svelte-spa-router-template svelte-app
+cd svelte-app
+```
+
+More information can be found on the [template's repo](https://github.com/italypaleale/svelte-spa-router-template).
 
 ## Using svelte-spa-router
 
@@ -301,7 +321,7 @@ The current page is: /books
 The querystring is: show=authors,titles&order=1
 ````
 
-It's important to note that, to keep this component lightweight, svelte-spa-router **does not parse** the "querystring". If you want to parse the value of `$querystring`, you can use third-party modules such as [qs](https://www.npmjs.com/package/qs) in your application.
+It's important to note that, to keep this component lightweight, svelte-spa-router **does not parse** the "querystring". If you want to parse the value of `$querystring`, you can use [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) available in all modern browsers, or third-party modules such as [qs](https://www.npmjs.com/package/qs).
 
 ### Highlight active links
 
@@ -322,7 +342,7 @@ import active from 'svelte-spa-router/active'
 }
 </style>
 
-<a href="/hello/user" use:link use:active={{path: '/hello/*', className: 'active'}}>Say hi!</a>
+<a href="/hello/user" use:link use:active={{path: '/hello/*', className: 'active', inactiveClassName: 'inactive'}}>Say hi!</a>
 <a href="/hello/user" use:link use:active={'/hello/*'}>Say hi with a default className!</a>
 <a href="/hello/user" use:link use:active>Say hi with all default options!</a>
 ````
@@ -331,6 +351,7 @@ The `active` action accepts a dictionary `options` as argument:
 
 - `options.path`: the path that, when matched, makes the link active. In the first example above, we want the link to be active when the route is `/hello/*` (the asterisk matches anything after that). As you can see, this doesn't have to be the same as the path the link points to. When `options.path` is omitted or false-y, it defaults to the path specified in the link's `href` attribute. This parameter can also be a regular expression that will mark the link as active when it matches: for example, setting to the regular expression `/^\/*\/hi$/` will make the link active when it starts with `/` and ends with `/hi`, regardless of what's in between.
 - `options.className`: the name of the CSS class to add. This is optional, and it defaults to `active` if not present.
+- `options.inactiveClassName`: the name of the CSS class to add when the link is _not_ active. This is optional, and it defaults to nothing if not present.
 
 As a shorthand, instead of passing a dictionary as `options`, you can pass a single string or regular expression that will be interpreted as `options.path`.
 

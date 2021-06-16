@@ -62,6 +62,29 @@ describe('use:active action', function() {
         browser.end()
     })
 
+    it('inactive class', (browser) => {
+        // Check if inactive class is toggled
+        browser
+            .url(browser.launchUrl + '/#/hello/world')
+            .waitForElementVisible('ul.navigation-links')
+            // There should be no inactive class when link is active
+            .elements('css selector', 'ul.navigation-links li a.inactive', (elements) => {
+                assert(elements)
+                assert.strictEqual(elements.value.length, 0)
+
+                browser
+                    .url(browser.launchUrl + '/#/notfound')
+                    .waitForElementVisible('ul.navigation-links')
+                    // There should an inactive class when link is not active
+                    .elements('css selector', 'ul.navigation-links li a.inactive', (elements) => {
+                        assert(elements)
+                        assert.strictEqual(elements.value.length, 1)
+
+                        browser.end()
+                    })
+            })
+    })
+
     it('navigating pages', (browser) => {
         browser
             .url(browser.launchUrl + '/#/hello/world')

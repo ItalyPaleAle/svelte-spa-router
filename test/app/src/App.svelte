@@ -4,7 +4,7 @@
 <ul class="navigation-links">
     <li><a href="/" use:link use:active>Home</a></li>
     <li><a href="/brand" use:link><b>Brand</b></a></li>
-    <li><a href="/hello/svelte" use:link use:active={{path: '/hello/*', className: 'active another-class'}}>Say hi!</a></li>
+    <li><a href="/hello/svelte" use:link use:active={{path: '/hello/*', className: 'active another-class', inactiveClassName: 'inactive'}}>Say hi!</a></li>
     <li><a href="/does/not/exist" use:link>Not found</a></li>
 </ul>
 
@@ -57,6 +57,10 @@
 /* Style for "active" links; need to mark this :global because the router adds the class directly */
 :global(a.active) {
     color: crimson;
+}
+/* Style for "inactive" links; need to mark this :global because the router adds the class directly */
+:global(a.inactive) {
+    color: gray;
 }
 </style>
 
