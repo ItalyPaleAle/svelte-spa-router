@@ -142,6 +142,12 @@ export const location: Readable<string>
  */
 export const querystring: Readable<string | undefined>
 
+/**
+ * Readable store that returns the current list of params
+ */
+export const params: Readable<Record<string, string> | undefined>
+// Note: the above is implemented as writable but exported as readable because consumers should not modify the value
+
 /** List of routes */
 export type RouteDefinition = Record<string, typeof SvelteComponent | WrappedComponent> |
     Map<string | RegExp, typeof SvelteComponent | WrappedComponent>
