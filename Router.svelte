@@ -548,6 +548,16 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
 
             // Invoke the Promise
             const loaded = await obj()
+            // If component owns a routeLoaded function, proceed accordingly based on its return value
+            if (loaded.routeLoaded) {
+                const isAborted = !await loaded.routeLoaded(Object.assign({}, detail))
+                if (isAborted) {
+                    component = null
+                    componentObj = null
+                    componentParams = null
+                    return;
+                }
+            }
 
             // Now that we're here, after the promise resolved, check if we still want this component, as the user might have navigated to another page in the meanwhile
             if (newLoc != lastLoc) {
