@@ -454,18 +454,20 @@ let previousScrollState = null
 // Update history.scrollRestoration depending on restoreScrollState
 $: history.scrollRestoration = restoreScrollState ? 'manual' : 'auto'
 
+const popStateChanged = (event) => {
+    // If this event was from our history.replaceState, event.state will contain
+    // our scroll history. Otherwise, event.state will be null (like on forward
+    // navigation)
+    if (event.state && event.state.__svelte_spa_router_scrollY) {
+        previousScrollState = event.state
+    }
+    else {
+        previousScrollState = null
+    }
+}
+
 if (restoreScrollState) {
-    window.addEventListener('popstate', (event) => {
-        // If this event was from our history.replaceState, event.state will contain
-        // our scroll history. Otherwise, event.state will be null (like on forward
-        // navigation)
-        if (event.state && event.state.__svelte_spa_router_scrollY) {
-            previousScrollState = event.state
-        }
-        else {
-            previousScrollState = null
-        }
-    })
+    window.addEventListener('popstate', popStateChanged)
 
     afterUpdate(() => {
         // If this exists, then this is a back navigation: restore the scroll position
@@ -588,5 +590,6 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
 
 onDestroy(() => {
     unsubscribeLoc()
+    window.removeEventListener('popstate', popStateChanged)
 })
 </script>
