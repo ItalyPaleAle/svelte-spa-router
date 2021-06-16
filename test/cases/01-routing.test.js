@@ -37,6 +37,7 @@ describe('<Router> component', function() {
             .assert.containsText('h2.routetitle', 'Home!')
             .expect.element('#currentpath').text.to.equal('/')
         browser.expect.element('#currentqs').text.to.equal('')
+        browser.expect.element('#currentparams').text.to.equal('null')
 
         // /wild
         browser
@@ -45,6 +46,7 @@ describe('<Router> component', function() {
             .assert.containsText('h2.routetitle', 'Wild')
             .expect.element('#currentpath').text.to.equal('/wild')
         browser.expect.element('#currentqs').text.to.equal('')
+        browser.expect.element('#currentparams').text.to.equal('null')
 
         // /hello/svelte
         browser
@@ -53,6 +55,7 @@ describe('<Router> component', function() {
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('')
+        browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
 
         browser.end()
     })
@@ -65,6 +68,7 @@ describe('<Router> component', function() {
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('')
+        browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
 
         browser.end()
     })
@@ -77,6 +81,7 @@ describe('<Router> component', function() {
             .assert.containsText('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('')
+        browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
         
         browser
             .refresh(() => {
@@ -84,6 +89,7 @@ describe('<Router> component', function() {
                     .assert.containsText('h2.routetitle', 'Hi there!')
                     .expect.element('#currentpath').text.to.equal('/hello/svelte')
                 browser.expect.element('#currentqs').text.to.equal('')
+                browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
 
                 browser.end()
             })
@@ -96,6 +102,7 @@ describe('<Router> component', function() {
             .assert.containsText('h2.routetitle', 'NotFound')
             .expect.element('#currentpath').text.to.equal('/does/not/exist')
         browser.expect.element('#currentqs').text.to.equal('')
+        browser.expect.element('#currentparams').text.to.equal('{"wild":"does/not/exist"}')
 
         browser.end()
     })
@@ -127,6 +134,7 @@ describe('<Router> component', function() {
                     .assert.containsText('h2.routetitle', 'Home!')
                     .expect.element('#currentpath').text.to.equal('/brand')
                 browser.expect.element('#currentqs').text.to.equal('')
+                browser.expect.element('#currentparams').text.to.equal('null')
 
                 browser.end()
             })
@@ -174,6 +182,7 @@ describe('<Router> component', function() {
                     .waitForElementVisible('h2.routetitle')
                     .assert.containsText('h2.routetitle', 'Wild')
                     .expect.element('#currentpath').text.to.equal('/wild/something')
+                browser.expect.element('#currentparams').text.to.equal('{"wild":"something"}')
 
                 browser.url((url) => {
                     assert.strictEqual(url.value, browser.launchUrl + '/#/wild/something')
