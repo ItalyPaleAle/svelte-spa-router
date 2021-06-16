@@ -24,6 +24,6 @@ services:
     ports:
         - 8080:80
   selenium-chrome:
-    image: selenium/standalone-chrome:85.0
+    image: selenium/standalone-chrome:91.0
     container_name: selenium-chrome
     shm_size: '2gb'
