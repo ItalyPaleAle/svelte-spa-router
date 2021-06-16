@@ -537,7 +537,8 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
                 // Create a copy of detail so we don't modify the object for the dynamic route (and the dynamic route doesn't modify our object too)
                 dispatchNextTick('routeLoaded', Object.assign({}, detail, {
                     component: component,
-                    name: component.name
+                    name: component.name,
+                    params: componentParams
                 }))
             }
             else {
@@ -575,7 +576,8 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
         dispatchNextTick('routeLoaded', Object.assign({}, detail, {
             component: component,
-            name: component.name
+            name: component.name,
+            params: componentParams
         })).then(() => {
             params.set(componentParams)
         })

@@ -280,11 +280,11 @@ describe('<Router> component', function() {
         browser
             .url(browser.launchUrl)
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/","location":"/","querystring":""}\nrouteLoaded - {"route":"/","location":"/","querystring":"","name":"Home"}')
+            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/","location":"/","querystring":""}\nrouteLoaded - {"route":"/","location":"/","querystring":"","name":"Home","params":null}')
 
         browser.url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/","location":"/","querystring":""}\nrouteLoaded - {"route":"/","location":"/","querystring":"","name":"Home"}\nrouteLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":""}\nrouteLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","name":"Name"}')
+            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/","location":"/","querystring":""}\nrouteLoaded - {"route":"/","location":"/","querystring":"","name":"Home","params":null}\nrouteLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":""}\nrouteLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","name":"Name","params":{"first":"svelte","last":null}}')
 
         browser.end()
     })
@@ -297,7 +297,7 @@ describe('<Router> component', function() {
             .click('p#nameparams', () => {
                 browser
                     .waitForElementPresent('#logbox')
-                    .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":""}\nrouteLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","name":"Name"}\nrouteEvent - {"action":"hi","params":{"first":"svelte","last":null}}')
+                    .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":""}\nrouteLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","name":"Name","params":{"first":"svelte","last":null}}\nrouteEvent - {"action":"hi","params":{"first":"svelte","last":null}}')
                 
                 browser.end()
             })
@@ -332,12 +332,12 @@ describe('<Router> component', function() {
             .expect.element('#pleasewait').text.to.equal('Please wait…')
         browser.expect.element('#loadingmessage').text.to.equal('Message is secret')
         browser.waitForElementPresent('#lucky')
-            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Loading"}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Lucky"}')
+            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Loading","params":{"message":"secret"}}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Lucky","params":null}')
 
         // Condition always fails
         browser.url(browser.launchUrl + '/#/lucky?pass=0')
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Loading"}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Lucky"}\nconditionsFailed - {"route":"/lucky","location":"/lucky","querystring":"pass=0","userData":{"foo":"bar"}}\nrouteLoading - {"route":"/wild/*","location":"/wild/conditions-failed","querystring":""}\nrouteLoaded - {"route":"/wild/*","location":"/wild/conditions-failed","querystring":"","name":"Wild"}')
+            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"}}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Loading","params":{"message":"secret"}}\nrouteLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"name":"Lucky","params":null}\nconditionsFailed - {"route":"/lucky","location":"/lucky","querystring":"pass=0","userData":{"foo":"bar"}}\nrouteLoading - {"route":"/wild/*","location":"/wild/conditions-failed","querystring":""}\nrouteLoaded - {"route":"/wild/*","location":"/wild/conditions-failed","querystring":"","name":"Wild","params":{"wild":"conditions-failed"}}')
 
         browser.end()
     })
@@ -365,12 +365,12 @@ describe('<Router> component', function() {
         browser
             .url(browser.launchUrl + '/#/catalog/3')
             .waitForElementPresent('#logbox')
-            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/catalog/:id?","location":"/catalog/3","querystring":""}\nrouteLoaded - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","name":"Catalog"}')
+            .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/catalog/:id?","location":"/catalog/3","querystring":""}\nrouteLoaded - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","name":"Catalog","params":{"id":"3"}}')
         browser.expect.element('#previous').attribute('href').to.endsWith('#/catalog/2')
         browser.expect.element('#next').attribute('href').to.endsWith('#/catalog/4')
         browser.click('#next', () => {
             browser.waitForElementVisible('#logbox')
-                .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/catalog/:id?","location":"/catalog/3","querystring":""}\nrouteLoaded - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","name":"Catalog"}\nrouteLoading - {"route":"/catalog/:id?","location":"/catalog/4","querystring":""}\nrouteLoaded - {"route":"/catalog/:id?","location":"/catalog/4","querystring":"","name":"Catalog"}')
+                .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/catalog/:id?","location":"/catalog/3","querystring":""}\nrouteLoaded - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","name":"Catalog","params":{"id":"3"}}\nrouteLoading - {"route":"/catalog/:id?","location":"/catalog/4","querystring":""}\nrouteLoaded - {"route":"/catalog/:id?","location":"/catalog/4","querystring":"","name":"Catalog","params":{"id":"4"}}')
             browser.expect.element('#previous').attribute('href').to.endsWith('#/catalog/3')
             browser.expect.element('#next').attribute('href').to.endsWith('#/catalog/5')
         })
