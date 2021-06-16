@@ -1,5 +1,5 @@
 <script context="module">
-import {readable, derived} from 'svelte/store'
+import {readable, writable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
@@ -84,6 +84,13 @@ export const querystring = derived(
     loc,
     ($loc) => $loc.querystring
 )
+
+/**
+ * Store that returns the currently-matched params.
+ * Despite this being writable, consumers should not change the value of the store.
+ * It is exported as a readable store only (in the typings file)
+ */
+export const params = writable(undefined)
 
 /**
  * Navigates to a new page programmatically.
@@ -537,13 +544,16 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         dispatchNextTick('routeLoaded', Object.assign({}, detail, {
             component: component,
             name: component.name
-        }))
+        })).then(() => {
+            params.set(componentParams)
+        })
         return
     }
 
     // If we're still here, there was no match, so show the empty component
     component = null
     componentObj = null
+    params.set(undefined)
 })
 
 onDestroy(() => {
