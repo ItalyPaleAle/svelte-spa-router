@@ -179,6 +179,7 @@ export function link(node, opts) {
 
     return {
         update(updated) {
+            updated = linkOpts(updated)
             updateLink(node, updated)
         }
     }
@@ -189,7 +190,7 @@ function updateLink(node, opts) {
     let href = opts.href || node.getAttribute('href')
 
     // Destination must start with '/' or '#/'
-    if (href && href.length > 1 && href.charAt(0) == '/') {
+    if (href && href.charAt(0) == '/') {
         // Add # to the href attribute
         href = '#' + href
     }
