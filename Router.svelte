@@ -1,6 +1,6 @@
 <script context="module">
 import {readable, derived} from 'svelte/store'
-import {onDestroy, tick} from 'svelte'
+import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
 /**
@@ -220,7 +220,7 @@ function scrollstateHistoryHandler(event) {
 {/if}
 
 <script>
-import {createEventDispatcher, afterUpdate} from 'svelte'
+import {onDestroy, createEventDispatcher, afterUpdate} from 'svelte'
 import {parse} from 'regexparam'
 
 /**
