@@ -453,20 +453,20 @@ let previousScrollState = null
 
 // Update history.scrollRestoration depending on restoreScrollState
 $: history.scrollRestoration = restoreScrollState ? 'manual' : 'auto'
-
-const popStateChanged = (event) => {
-    // If this event was from our history.replaceState, event.state will contain
-    // our scroll history. Otherwise, event.state will be null (like on forward
-    // navigation)
-    if (event.state && event.state.__svelte_spa_router_scrollY) {
-        previousScrollState = event.state
-    }
-    else {
-        previousScrollState = null
-    }
-}
-
+let popStateChanged = null
 if (restoreScrollState) {
+    popStateChanged = (event) => {
+        // If this event was from our history.replaceState, event.state will contain
+        // our scroll history. Otherwise, event.state will be null (like on forward
+        // navigation)
+        if (event.state && event.state.__svelte_spa_router_scrollY) {
+            previousScrollState = event.state
+        }
+        else {
+            previousScrollState = null
+        }
+    }
+    // This is removed in the destroy() invocation below
     window.addEventListener('popstate', popStateChanged)
 
     afterUpdate(() => {
@@ -518,7 +518,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
             dispatchNextTick('conditionsFailed', detail)
             return
         }
-        
+
         // Trigger an event to alert that we're loading the route
         // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
         dispatchNextTick('routeLoading', Object.assign({}, detail))
@@ -590,6 +590,6 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
 
 onDestroy(() => {
     unsubscribeLoc()
-    window.removeEventListener('popstate', popStateChanged)
+    popStateChanged && window.removeEventListener('popstate', popStateChanged)
 })
 </script>
