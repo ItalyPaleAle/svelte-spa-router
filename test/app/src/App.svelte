@@ -47,6 +47,24 @@
 {/each}
 </ul>
 
+<!-- Testing links that can be disabled -->
+<h2>Dynamic links</h2>
+<ul class="navigation-disable-links">
+{#each disableLinks as dl, i (dl.id)}
+    <li>
+        <a id="disable-link-{dl.id}" href="/foo" use:link={dl.opts} use:active>Dynamic Link {dl.id}</a>
+         - 
+        <i id="toggle-link-{dl.id}" on:click={dl.toggle}>
+            {#if dl.opts.disabled}
+                enable link
+            {:else}
+                disable link
+            {/if}
+        </i>
+    </li>
+{/each}
+</ul>
+
 <!-- Test use:active with a regular expression -->
 <p><a href="#/" use:active={/\/*\/hi/}>This link</a> is active when you're matching <code>/*/hi</code></p>
 
@@ -134,4 +152,35 @@ let dynamicLinks = [
         link: '/hello/dynamic-link-3'
     }
 ]
+
+// List of links that can be disabled
+let disableLinks = [
+    {
+        id: 1,
+        opts: {
+            //href: '/hello/disable-link-1',
+            disabled: false
+        }
+    },
+    {
+        id: 2,
+        opts: {
+            //href: '/hello/disable-link-2',
+            disabled: false
+        }
+    },
+    {
+        id: 3,
+        opts: {
+            href: '/hello/disable-link-3',
+            disabled: false
+        }
+    }
+].map((el) => {
+    el.toggle = () => {
+        el.opts.disabled = !el.opts.disabled
+        disableLinks = disableLinks
+    }
+    return el
+})
 </script>

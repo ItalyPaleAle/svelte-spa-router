@@ -149,6 +149,13 @@ export async function replace(location) {
 }
 
 /**
+ * Dictionary with options for the link action.
+ * @typedef {Object} LinkActionOpts
+ * @property {string} href - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively.
+ * @property {bool} disabled - If true, link is disabled
+ */
+
+/**
  * Svelte Action that enables a link element (`<a>`) to use our history management.
  *
  * For example:
@@ -158,71 +165,57 @@ export async function replace(location) {
  * ````
  *
  * @param {HTMLElement} node - The target node (automatically set by Svelte). Must be an anchor tag (`<a>`) with a href attribute starting in `/`
- * @param {string} hrefVar - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively.
+ * @param {string|LinkActionOpts} opts - Options object. For legacy reasons, we support a string too which will be the value for opts.href
  */
-export function link(node, arg) {
-    function parseLinkArgs(arg) {
-        if (typeof arg === 'string') {
-            return {href: arg, disabled: false}
-        }
-        else {
-            return arg || {}
-        }
-    }
-
-    const {
-        href = node.getAttribute('href'),
-        disabled = false,
-    } = parseLinkArgs(arg)
-    let lastUsedHref
-    let isAttached
+export function link(node, opts) {
+    opts = linkOpts(opts)
 
     // Only apply to <a> tags
-    if (
-        (!node && !disabled) ||
-      !node.tagName ||
-      node.tagName.toLowerCase() != 'a'
-    ) {
+    if (!node || !node.tagName || node.tagName.toLowerCase() != 'a') {
         throw Error('Action "link" can only be used with <a> tags')
     }
 
-    if (!disabled && (!href || href.length < 1 || href.charAt(0) !== '/')) {
+    updateLink(node, opts)
+
+    return {
+        update(updated) {
+            updateLink(node, updated)
+        }
+    }
+}
+
+// Internal function used by the link function
+function updateLink(node, opts) {
+    let href = opts.href || node.getAttribute('href')
+
+    // Destination must start with '/' or '#/'
+    if (href && href.length > 1 && href.charAt(0) == '/') {
+        // Add # to the href attribute
+        href = '#' + href
+    }
+    else if (!href || href.length < 2 || href.slice(0, 2) != '#/') {
         throw Error('Invalid value for "href" attribute: ' + href)
     }
 
-    if (!disabled) {
-        // Add # to the href attribute
-        node.setAttribute('href', '#' + href)
-        node.addEventListener('click', scrollstateHistoryHandler)
+    node.setAttribute('href', href)
+    node.addEventListener('click', (event) => {
+        // Prevent default anchor onclick behaviour
+        event.preventDefault()
+        if (!opts.disabled) {
+            scrollstateHistoryHandler(event.currentTarget.getAttribute('href'))
+        }
+    })
+}
+
+// Internal function that ensures the argument of the link action is always an object
+function linkOpts(val) {
+    if (val && typeof val == 'string') {
+        return {
+            href: val
+        }
     }
     else {
-        node.setAttribute('href', 'void:0')
-    }
-
-    isAttached = !disabled
-    lastUsedHref = href
-
-    return {
-        update(nextArg) {
-            const {
-                href: nextHref = isAttached ? node.getAttribute('href') : lastUsedHref,
-                disabled: nextDisabled = false,
-            } = parseLinkArgs(nextArg)
-
-            if (!nextDisabled) {
-                node.setAttribute('href', '#' + nextHref.replace(/^#/, ''))
-                if (!isAttached) {
-                    node.addEventListener('click', scrollstateHistoryHandler)
-                }
-            }
-            else {
-                node.setAttribute('href', 'void:0')
-                node.removeEventListener('click', scrollstateHistoryHandler)
-            }
-
-            lastUsedHref = nextHref
-            isAttached = !nextDisabled
-        },
+        return val || {}
     }
 }
 
@@ -230,12 +223,9 @@ export function link(node, arg) {
  * The handler attached to an anchor tag responsible for updating the
  * current history state with the current scroll state
  *
- * @param {HTMLElementEventMap} event - an onclick event attached to an anchor tag
+ * @param {string} href - Destination
  */
-function scrollstateHistoryHandler(event) {
-    // Prevent default anchor onclick behaviour
-    event.preventDefault()
-    const href = event.currentTarget.getAttribute('href')
+function scrollstateHistoryHandler(href) {
     // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
     history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined, undefined)
     // This will force an update as desired, but this time our scroll state will be attached
