@@ -506,7 +506,8 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
             route: routesList[i].path,
             location: newLoc.location,
             querystring: newLoc.querystring,
-            userData: routesList[i].userData
+            userData: routesList[i].userData,
+            params: (match && typeof match == 'object' && Object.keys(match).length) ? match : null
         }
 
         // Check if the route can be loaded - if all conditions succeed
