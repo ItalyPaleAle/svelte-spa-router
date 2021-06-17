@@ -14,6 +14,9 @@ export interface RouteDetail {
     /** Querystring from the hash */
     querystring: string
 
+    /** Params matched in the route */
+    params: Record<string, string> | null
+
     /** Custom data passed by the user */
     userData?: object
 }

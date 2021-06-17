@@ -360,6 +360,8 @@ event.detail = {
     location: '/book/343',
     // The "querystring" from the page's hash, equivalent to the value of the $querystring readable store
     querystring: 'foo=bar',
+    // Params matched from the route (such as :id from the route)
+    params: { id: '343' },
     // User data passed with the wrap function; can be any kind of object/dictionary
     userData: {...}
 }
@@ -405,10 +407,11 @@ function routeLoading(event) {
 
 function routeLoaded(event) {
     console.log('routeLoaded event')
-    // The first 4 properties are the same as for the routeLoading event
+    // The first 5 properties are the same as for the routeLoading event
     console.log('Route', event.detail.route)
     console.log('Location', event.detail.location)
     console.log('Querystring', event.detail.querystring)
+    console.log('Params', event.detail.params)
     console.log('User data', event.detail.userData)
     // The last two properties are unique to routeLoaded
     console.log('Component', event.detail.component) // This is a Svelte component, so a function
