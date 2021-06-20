@@ -239,6 +239,9 @@ function scrollstateHistoryHandler(href) {
     // This will force an update as desired, but this time our scroll state will be attached
     window.location.hash = href
 }
+
+// Always have the latest value of loc
+let lastLoc = null
 </script>
 
 {#if componentParams}
@@ -481,9 +484,6 @@ if (restoreScrollState) {
     })
 }
 
-// Always have the latest value of loc
-let lastLoc = null
-
 // Current object of the component loaded
 let componentObj = null
 
@@ -491,6 +491,9 @@ let componentObj = null
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
 const unsubscribeLoc = loc.subscribe(async (newLoc) => {
+    if (lastLoc === newLoc) {
+        return
+    }
     lastLoc = newLoc
 
     // Find a route matching the location
