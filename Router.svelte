@@ -491,6 +491,7 @@ let componentObj = null
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
 const unsubscribeLoc = loc.subscribe(async (newLoc) => {
+    // Avoid rendering if location is exactly the same as before (happens on Router unmount/mount)
     if (lastLoc === newLoc) {
         return
     }
