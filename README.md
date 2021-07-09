@@ -11,6 +11,7 @@
 
 # svelte-spa-router
 
+[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/ItalyPaleAle/svelte-spa-router)
 [![Build Status](https://github.com/ItalyPaleAle/svelte-spa-router/workflows/Continuous%20Integration%20tests/badge.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/actions) 
 [![npm](https://img.shields.io/npm/v/svelte-spa-router.svg)](https://www.npmjs.com/package/svelte-spa-router)
 [![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/blob/master/LICENSE.md)
