@@ -549,6 +549,10 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
 
             // Invoke the Promise
             const loaded = await obj()
+            // If component owns a beforeRouteMount function, call it and wait if necessary
+            if (loaded.beforeRouteMount) {
+                await loaded.beforeRouteMount(Object.assign({}, detail))
+            }
 
             // Now that we're here, after the promise resolved, check if we still want this component, as the user might have navigated to another page in the meanwhile
             if (newLoc != lastLoc) {
