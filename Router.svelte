@@ -107,7 +107,7 @@ export async function push(location) {
     await tick()
 
     // Note: this will include scroll state in history even when restoreScrollState is false
-    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined, undefined)      
+    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined)      
     window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
 }
 
@@ -235,7 +235,7 @@ function linkOpts(val) {
  */
 function scrollstateHistoryHandler(href) {
     // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
-    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined, undefined)
+    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined)
     // This will force an update as desired, but this time our scroll state will be attached
     window.location.hash = href
 }
