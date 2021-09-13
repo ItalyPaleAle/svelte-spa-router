@@ -36,17 +36,28 @@ export function wrap(component, userData, ...conditions) {
  */
 function getLocation() {
     const hashPosition = window.location.href.indexOf('#/')
-    let location = (hashPosition > -1) ? window.location.href.substr(hashPosition + 1) : '/'
+    let location =
+        hashPosition > -1 ?
+            window.location.href.substr(hashPosition + 1) :
+            '/'
 
-    // Check if there's a querystring
-    const qsPosition = location.indexOf('?')
-    let querystring = ''
-    if (qsPosition > -1) {
-        querystring = location.substr(qsPosition + 1)
-        location = location.substr(0, qsPosition)
+    // Check if there's a hash... inside the hash
+    const innerHashPosition = location.indexOf('#')
+    let hash = ''
+    if (innerHashPosition > -1) {
+        hash = location.substr(innerHashPosition)
+        location = location.substr(0, innerHashPosition)
     }
 
-    return {location, querystring}
+    // Check if there's a querystring
+    const qsPosition = hash.indexOf('?')
+    let querystring = ''
+    if (qsPosition > -1) {
+        querystring = hash.substr(qsPosition + 1)
+        hash = hash.substr(0, qsPosition)
+    }
+
+    return {location, hash, querystring}
 }
 
 /**
@@ -83,6 +94,14 @@ export const location = derived(
 export const querystring = derived(
     loc,
     ($loc) => $loc.querystring
+)
+
+/**
+ * Readable store that returns the current sub hash
+ */
+export const hash = derived(
+    loc,
+    ($loc) => $loc.hash
 )
 
 /**
@@ -491,6 +510,30 @@ let componentObj = null
 // Listen to changes in the $loc store and update the page
 // Do not use the $: syntax because it gets triggered by too many things
 const unsubscribeLoc = loc.subscribe(async (newLoc) => {
+    if (window.location.hash.match(/^#[^\/]\w*/)) {
+        if (!lastLoc) {
+            // Could be another behavior, but this one seems right to me
+            window.location.hash = '#'
+            return true // don't know if `true` is needed here
+        }
+        
+        // Return to the last route and insert the new hash into the url
+        let returnToHash = '#' + lastLoc.location + window.location.hash
+        if (lastLoc.querystring !== '') {
+            returnToHash = returnToHash + '?' + lastLoc.querystring
+        }
+        
+        window.location.hash = returnToHash
+            
+        return true // don't know if `true` is needed here
+    }
+
+    // If the hash has a sub hash, and it's the first load
+    // we want to scroll to the id in question and then
+    // revert back to the intended route
+    if (newLoc.hash && lastLoc === null) {
+        window.location.hash = newLoc.hash
+    }
     lastLoc = newLoc
 
     // Find a route matching the location
