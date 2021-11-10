@@ -299,7 +299,7 @@ export let routes = {}
 /**
  * Optional layout component to use as a parent for page component.
  */
-export let layout = null;
+export let layout = null
 
 /**
  * Optional prefix for the routes in this router. This is useful for example in the case of nested routers.
