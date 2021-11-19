@@ -2,7 +2,7 @@ import {SvelteComponent} from 'svelte'
 import {AsyncSvelteComponent, RoutePrecondition, WrappedComponent} from './Router'
 
 /** Options object for the call to `wrap` */
-interface WrapOptions {
+export interface WrapOptions {
     /** Svelte component to load (this is incompatible with `asyncComponent`) */ 
     component?: typeof SvelteComponent
 
