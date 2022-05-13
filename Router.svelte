@@ -192,6 +192,22 @@ export function link(node, opts) {
     }
 }
 
+/**
+ * Tries to restore the scroll state from the given history state.
+ *
+ * @param {object} state - The history state to restore from.
+ */
+export function restoreScroll(state) {
+    // If this exists, then this is a back navigation: restore the scroll position
+    if (state) {
+        window.scrollTo(state.__svelte_spa_router_scrollX, state.__svelte_spa_router_scrollY)
+    }
+    else {
+        // Otherwise this is a forward navigation: scroll to top
+        window.scrollTo(0, 0)
+    }
+}
+
 // Internal function used by the link function
 function updateLink(node, opts) {
     let href = opts.href || node.getAttribute('href')
@@ -470,14 +486,7 @@ if (restoreScrollState) {
     window.addEventListener('popstate', popStateChanged)
 
     afterUpdate(() => {
-        // If this exists, then this is a back navigation: restore the scroll position
-        if (previousScrollState) {
-            window.scrollTo(previousScrollState.__svelte_spa_router_scrollX, previousScrollState.__svelte_spa_router_scrollY)
-        }
-        else {
-            // Otherwise this is a forward navigation: scroll to top
-            window.scrollTo(0, 0)
-        }
+        restoreScroll(previousScrollState);
     })
 }
 
