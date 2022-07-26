@@ -459,7 +459,7 @@ if (restoreScrollState) {
         // If this event was from our history.replaceState, event.state will contain
         // our scroll history. Otherwise, event.state will be null (like on forward
         // navigation)
-        if (event.state && event.state.__svelte_spa_router_scrollY) {
+        if (event.state && (event.state.__svelte_spa_router_scrollY || event.state.__svelte_spa_router_scrollX)) {
             previousScrollState = event.state
         }
         else {
