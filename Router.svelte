@@ -486,7 +486,7 @@ if (restoreScrollState) {
     window.addEventListener('popstate', popStateChanged)
 
     afterUpdate(() => {
-        restoreScroll(previousScrollState);
+        restoreScroll(previousScrollState)
     })
 }
 
