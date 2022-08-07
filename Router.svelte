@@ -195,7 +195,7 @@ export function link(node, opts) {
 /**
  * Tries to restore the scroll state from the given history state.
  *
- * @param {object} state - The history state to restore from.
+ * @param {{__svelte_spa_router_scrollX: number, __svelte_spa_router_scrollY: number}} [state] - The history state to restore from.
  */
 export function restoreScroll(state) {
     // If this exists, then this is a back navigation: restore the scroll position
