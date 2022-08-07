@@ -19,7 +19,7 @@ jobs:
       - name: 'Install Node.js'
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: '18.x'
       - name: 'Install dependencies from npm'
         run: |
           npm install
@@ -42,7 +42,7 @@ jobs:
             -p 4444:4444 \
             --link nginx \
             --shm-size=2g \
-            selenium/standalone-chrome:85.0
+            selenium/standalone-chrome:103.0
           # Wait 5 seconds
           sleep 5
       - name: 'Run tests'
