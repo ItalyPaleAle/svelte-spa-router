@@ -31,20 +31,20 @@
   },
   "homepage": "https://github.com/ItalyPaleAle/svelte-spa-router#readme",
   "dependencies": {
-    "regexparam": "2.0.0"
+    "regexparam": "2.0.1"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^19.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "chromedriver": "^91.0.1",
-    "eslint": "^7.28.0",
-    "eslint-plugin-html": "^6.1.2",
-    "eslint-plugin-svelte3": "^3.2.0",
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "chromedriver": "^103.0.0",
+    "eslint": "^8.21.0",
+    "eslint-plugin-html": "^7.1.0",
+    "eslint-plugin-svelte3": "^4.0.0",
     "nightwatch": "^1.7.3",
-    "rollup": "^2.51.2",
+    "rollup": "^2.77.2",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-svelte": "^7.1.0",
-    "serve": "^12.0.0",
-    "svelte": "^3.38.2"
+    "serve": "^14.0.1",
+    "svelte": "^3.49.0"
   }
 }
