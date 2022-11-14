@@ -177,6 +177,9 @@ interface RouterEvent<T> {
 /** Event type for conditionsFailed */
 export type ConditionsFailedEvent = RouterEvent<RouteDetail>
 
+/** Event type for propsFailed */
+export type PropsFailedEvent = RouterEvent<RouteDetail>
+
 /** Event type for routeLoading */
 export type RouteLoadingEvent = RouterEvent<RouteDetail>
 
@@ -218,6 +221,7 @@ export default class Router extends SvelteComponent {
 
     $on(event: 'routeEvent', callback: (event: CustomEvent) => void): () => void
     $on(event: 'conditionsFailed', callback: (event: ConditionsFailedEvent) => void): () => void
+    $on(event: 'propsFailed', callback: (event: PropsFailedEvent) => void): () => void
     $on(event: 'routeLoading', callback: (event: RouteLoadingEvent) => void): () => void
     $on(event: 'routeLoaded', callback: (event: RouteLoadedEvent) => void): () => void
 }

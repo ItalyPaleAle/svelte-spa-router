@@ -100,7 +100,10 @@ if (!urlParams.has('routemap')) {
         // This route has a static prop that is passed to it
         '/foo': wrap({
             component: Foo,
-            props: {staticProp: 'this is static'}
+            props: {
+                staticProp: 'this is static',
+                dynamicProp: async () => Promise.resolve(`this is dynamic - ${new Date}`),
+            }
         }),
 
         // This component contains a nested router

@@ -3,6 +3,24 @@ import {readable, writable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
+
+
+async function runInSequence(functions, dispatchNextTick) {
+    const results = {}
+    for (const fn of functions) {
+        try {
+            results[fn.key] = await fn.value
+        }
+        catch (error) {
+            dispatchNextTick('propsFailed', {
+                prop: fn.key,
+                error,
+            })
+        }
+    }
+
+    return results
+}
 /**
  * Wraps a component to add route pre-conditions.
  * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
@@ -533,6 +551,12 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
         dispatchNextTick('routeLoading', Object.assign({}, detail))
 
+        // Set props, if any
+        props = await runInSequence(Object.entries(routesList[i].props).map(([k, v]) => ({
+            key: k,
+            value: typeof v == 'function' ? v() : Promise.resolve(v),
+        })), dispatchNextTick)       
+
         // If there's a component to show while we're loading the route, display it
         const obj = routesList[i].component
         // Do not replace the component if we're loading the same one as before, to avoid the route being unmounted and re-mounted
@@ -578,9 +602,6 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         else {
             componentParams = null
         }
-
-        // Set static props, if any
-        props = routesList[i].props
 
         // Dispatch the routeLoaded event then exit
         // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
