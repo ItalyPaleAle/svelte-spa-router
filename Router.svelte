@@ -3,24 +3,6 @@ import {readable, writable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
-
-
-async function runInSequence(functions, dispatchNextTick) {
-    const results = {}
-    for (const fn of functions) {
-        try {
-            results[fn.key] = await fn.value
-        }
-        catch (error) {
-            dispatchNextTick('propsFailed', {
-                prop: fn.key,
-                error,
-            })
-        }
-    }
-
-    return results
-}
 /**
  * Wraps a component to add route pre-conditions.
  * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
@@ -551,12 +533,6 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
         dispatchNextTick('routeLoading', Object.assign({}, detail))
 
-        // Set props, if any
-        props = await runInSequence(Object.entries(routesList[i].props).map(([k, v]) => ({
-            key: k,
-            value: typeof v == 'function' ? v() : Promise.resolve(v),
-        })), dispatchNextTick)       
-
         // If there's a component to show while we're loading the route, display it
         const obj = routesList[i].component
         // Do not replace the component if we're loading the same one as before, to avoid the route being unmounted and re-mounted
@@ -589,9 +565,38 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
                 return
             }
 
+            
+
             // If there is a "default" property, which is used by async routes, then pick that
             component = (loaded && loaded.default) || loaded
             componentObj = obj
+
+            // Set props, if any
+            props = {}
+            // Iterate over the props object and resolve any callbacks where applicable
+            Object.entries(routesList[i].props).forEach(([k, v]) => {
+                // Catches any errors gracefully which is not handled by the prop function
+                try {
+                    (typeof v == 'function' ? v() : Promise.resolve(v)).then(propValue => {
+                        props[k] = propValue
+                        dispatchNextTick('propResolved', {
+                            prop: k,
+                            value: propValue,
+                        })
+                    }).catch(error => {
+                        dispatchNextTick('propFailed', {
+                            prop: k,
+                            error,
+                        })
+                    })
+                } 
+                catch (error) {
+                    dispatchNextTick('propFailed', {
+                        prop: k,
+                        error,
+                    })
+                }
+            })
         }
 
         // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
