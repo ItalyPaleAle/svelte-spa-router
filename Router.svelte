@@ -565,8 +565,6 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
                 return
             }
 
-            
-
             // If there is a "default" property, which is used by async routes, then pick that
             component = (loaded && loaded.default) || loaded
             componentObj = obj
@@ -577,19 +575,20 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
             Object.entries(routesList[i].props).forEach(([k, v]) => {
                 // Catches any errors gracefully which is not handled by the prop function
                 try {
-                    (typeof v == 'function' ? v() : Promise.resolve(v)).then(propValue => {
-                        props[k] = propValue
-                        dispatchNextTick('propResolved', {
-                            prop: k,
-                            value: propValue,
+                    (typeof v == 'function' ? v() : Promise.resolve(v))
+                        .then(propValue => {
+                            props[k] = propValue
+                            dispatchNextTick('propResolved', {
+                                prop: k,
+                                value: propValue,
+                            })
+                        }).catch(error => {
+                            dispatchNextTick('propFailed', {
+                                prop: k,
+                                error,
+                            })
                         })
-                    }).catch(error => {
-                        dispatchNextTick('propFailed', {
-                            prop: k,
-                            error,
-                        })
-                    })
-                } 
+                }
                 catch (error) {
                     dispatchNextTick('propFailed', {
                         prop: k,

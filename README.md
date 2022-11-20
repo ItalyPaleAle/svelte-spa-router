@@ -439,7 +439,6 @@ Check out the [Advanced Usage](/Advanced%20Usage.md) documentation for using:
 - [`routeEvent` event](/Advanced%20Usage.md#routeevent-event)
 - [`routeLoading` and `routeLoaded` events](/Advanced%20Usage.md#routeloading-and-routeloaded-events)
 - [Querystring parsing](/Advanced%20Usage.md#querystring-parsing)
-- [Static props](/Advanced%20Usage.md#static-props)
 - [Route transitions](/Advanced%20Usage.md#route-transitions)
 - [Nested routers](/Advanced%20Usage.md#nested-routers)
 - [Route groups](/Advanced%20Usage.md#route-groups)
