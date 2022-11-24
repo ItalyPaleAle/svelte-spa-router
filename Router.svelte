@@ -568,34 +568,6 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
             // If there is a "default" property, which is used by async routes, then pick that
             component = (loaded && loaded.default) || loaded
             componentObj = obj
-
-            // Set props, if any
-            props = {}
-            // Iterate over the props object and resolve any callbacks where applicable
-            Object.entries(routesList[i].props).forEach(([k, v]) => {
-                // Catches any errors gracefully which is not handled by the prop function
-                try {
-                    (typeof v == 'function' ? v() : Promise.resolve(v))
-                        .then(propValue => {
-                            props[k] = propValue
-                            dispatchNextTick('propResolved', {
-                                prop: k,
-                                value: propValue,
-                            })
-                        }).catch(error => {
-                            dispatchNextTick('propFailed', {
-                                prop: k,
-                                error,
-                            })
-                        })
-                }
-                catch (error) {
-                    dispatchNextTick('propFailed', {
-                        prop: k,
-                        error,
-                    })
-                }
-            })
         }
 
         // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
@@ -606,6 +578,41 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         else {
             componentParams = null
         }
+
+        // Set props, if any
+        props = {}
+        // Iterate over the props object and resolve any callbacks where applicable
+        Object.entries(routesList[i].props).forEach(([k, v]) => {
+            // Catches any errors gracefully which is not handled by the prop function
+            try {
+                if (typeof v == 'function') {
+                    const userDefinedPropValue = v(detail.userData)
+                    // resolve if the user provided function returns a promise
+                    if (typeof userDefinedPropValue.then == 'function') {
+                        userDefinedPropValue.then(returnedValue => {
+                            props[k] = returnedValue
+                        })
+                    } 
+                    else {
+                        props[k] = userDefinedPropValue
+                    }
+                } 
+                else {
+                    props[k] = v
+                }
+
+                dispatchNextTick('propResolved', {
+                    prop: k,
+                    value: props[k],
+                })
+            }
+            catch (error) {
+                dispatchNextTick('propFailed', {
+                    prop: k,
+                    error,
+                })
+            }
+        })
 
         // Dispatch the routeLoaded event then exit
         // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
