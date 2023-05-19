@@ -116,9 +116,11 @@ export type LinkActionOpts = {
 }
 
 /** Type for the update function of the link action */
-export type LinkActionUpateFunc = ((opts?: LinkActionOpts) => void) | 
+export type LinkActionUpdateFunc = ((opts?: LinkActionOpts) => void) | 
     ((hrefVar?: string) => void)
 
+/** Type for backwards-compatible (typo: Upate) */
+export type LinkActionUpateFunc = LinkActionUpdateFunc
 /**
  * Svelte Action that enables a link element (`<a>`) to use our history management.
  *
@@ -132,8 +134,8 @@ export type LinkActionUpateFunc = ((opts?: LinkActionOpts) => void) |
  * @param opts - Dictionary with options for the link
  * @param hrefVar - A string to use in place of the link's href attribute. Using this allows for updating link's targets reactively. This is a shorthand for opts.href
  */
-export function link(node: HTMLElement, opts?: LinkActionOpts): {update: LinkActionUpateFunc}
-export function link(node: HTMLElement, hrefVar?: string): {update: LinkActionUpateFunc}
+export function link(node: HTMLElement, opts?: LinkActionOpts): {update: LinkActionUpdateFunc}
+export function link(node: HTMLElement, hrefVar?: string): {update: LinkActionUpdateFunc}
 
 /** Full location from the hash: page and querystring */
 interface Location {
