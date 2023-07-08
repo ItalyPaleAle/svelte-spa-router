@@ -44,7 +44,9 @@
     <li>
         <a id="dynamic-link-{dl.id}" href={dl.link} use:link use:active>Dynamic Link {dl.id}</a>
          - 
-        <i id="delete-link-{dl.id}" on:click={() => dynamicLinks = dynamicLinks.filter(e => e.id != dl.id)}>delete link</i>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-interactive-supports-focus -->
+        <i id="delete-link-{dl.id}" on:click={() => dynamicLinks = dynamicLinks.filter(e => e.id != dl.id)} role="button">delete link</i>
     </li>
 {/each}
 </ul>
@@ -56,7 +58,10 @@
     <li>
         <a id="disable-link-{dl.id}" href="/foo" use:link={dl.opts} use:active>Dynamic Link {dl.id}</a>
          - 
-        <i id="toggle-link-{dl.id}" on:click={dl.toggle}>
+        <!-- svelte-ignore a11y-interactive-supports-focus -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <i role="button"
+         id="toggle-link-{dl.id}" on:click={dl.toggle}>
             {#if dl.opts.disabled}
                 enable link
             {:else}
