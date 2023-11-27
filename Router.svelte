@@ -74,7 +74,7 @@ export const loc = readable(
  */
 export const location = derived(
     loc,
-    ($loc) => $loc.location
+    (_loc) => _loc.location
 )
 
 /**
@@ -82,7 +82,7 @@ export const location = derived(
  */
 export const querystring = derived(
     loc,
-    ($loc) => $loc.querystring
+    (_loc) => _loc.querystring
 )
 
 /**
