@@ -208,6 +208,10 @@ export default class Router extends SvelteComponent {
          */
         routes: RouteDefinition,
         /**
+         * Optional layout component to use as a parent for page component.
+         */
+        layout?: typeof SvelteComponent,
+        /**
          * Optional prefix for the routes in this router. This is useful for example in the case of nested routers.
          */
         prefix?: string | RegExp,
