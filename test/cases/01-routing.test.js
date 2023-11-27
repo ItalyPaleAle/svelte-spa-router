@@ -385,4 +385,13 @@ describe('<Router> component', function() {
 
         browser.end()
     })
+    
+    it('dynamic props', (browser) => {
+        browser
+            .url(browser.launchUrl + '/#/foo')
+            .waitForElementVisible('#dynamicprop')
+            .expect.element('#dynamicprop').text.to.startWith('this is dynamic')
+
+        browser.end()
+    })
 })

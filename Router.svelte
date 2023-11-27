@@ -579,8 +579,40 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
             componentParams = null
         }
 
-        // Set static props, if any
-        props = routesList[i].props
+        // Set props, if any
+        props = {}
+        // Iterate over the props object and resolve any callbacks where applicable
+        Object.entries(routesList[i].props).forEach(([k, v]) => {
+            // Catches any errors gracefully which is not handled by the prop function
+            try {
+                if (typeof v == 'function') {
+                    const userDefinedPropValue = v(detail.userData)
+                    // resolve if the user provided function returns a promise
+                    if (typeof userDefinedPropValue.then == 'function') {
+                        userDefinedPropValue.then(returnedValue => {
+                            props[k] = returnedValue
+                        })
+                    } 
+                    else {
+                        props[k] = userDefinedPropValue
+                    }
+                } 
+                else {
+                    props[k] = v
+                }
+
+                dispatchNextTick('propResolved', {
+                    prop: k,
+                    value: props[k],
+                })
+            }
+            catch (error) {
+                dispatchNextTick('propFailed', {
+                    prop: k,
+                    error,
+                })
+            }
+        })
 
         // Dispatch the routeLoaded event then exit
         // We need to clone the object on every event invocation so we don't risk the object to be modified in the next tick
