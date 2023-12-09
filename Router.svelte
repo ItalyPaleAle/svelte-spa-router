@@ -1,7 +1,6 @@
 <script context="module">
 import {readable, writable, derived} from 'svelte/store'
 import {tick} from 'svelte'
-import {wrap as _wrap} from './wrap'
 
 /**
  * @typedef {Object} Location
