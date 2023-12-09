@@ -20,8 +20,6 @@ describe('use:active action', function() {
                     .elements('css selector', 'ul.navigation-links li a.active[href="#/"]', (elements) => {
                         assert(elements)
                         assert.strictEqual(elements.value.length, 1)
-
-                        browser.end()
                     })
             })
     })
@@ -40,8 +38,6 @@ describe('use:active action', function() {
                     .elements('css selector', 'ul.navigation-links li a.active[href="#/hello/svelte"]', (elements) => {
                         assert(elements)
                         assert.strictEqual(elements.value.length, 1)
-
-                        browser.end()
                     })
             })
     })
@@ -58,8 +54,7 @@ describe('use:active action', function() {
             .click('a[id=dynamic-link-1]')
             .pause(1000)
             //check for active class on link-1
-            .expect.element('a[id=dynamic-link-1]').to.have.attribute('class').which.contains('active')
-        browser.end()
+          .expect.element('a[id=dynamic-link-1]').to.have.attribute('class').which.contains('active')
     })
 
     it('inactive class', (browser) => {
@@ -79,8 +74,6 @@ describe('use:active action', function() {
                     .elements('css selector', 'ul.navigation-links li a.inactive', (elements) => {
                         assert(elements)
                         assert.strictEqual(elements.value.length, 1)
-
-                        browser.end()
                     })
             })
     })
@@ -101,8 +94,6 @@ describe('use:active action', function() {
                     .elements('css selector', 'ul.navigation-links li a.active', (elements) => {
                         assert(elements)
                         assert.strictEqual(elements.value.length, 0)
-
-                        browser.end()
                     })
             })
     })

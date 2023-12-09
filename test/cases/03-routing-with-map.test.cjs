@@ -12,9 +12,7 @@ describe('<Router> component with routes in a Map', function() {
 
         browser
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Home!')
-
-        browser.end()
+            .assert.textContains('h2.routetitle', 'Home!')
     })
 
     it('current path appears', (browser) => {
@@ -22,8 +20,6 @@ describe('<Router> component with routes in a Map', function() {
             .url(browser.launchUrl + '/?routemap=1')
             .waitForElementVisible('#currentpath')
             .expect.element('#currentpath').text.to.equal('/')
-
-        browser.end()
     })
 
     it('route defined as string', (browser) => {
@@ -32,7 +28,7 @@ describe('<Router> component with routes in a Map', function() {
             .url(browser.launchUrl + '/?routemap=1#/')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Home!')
+            .assert.textContains('h2.routetitle', 'Home!')
             .expect.element('#currentpath').text.to.equal('/')
         browser.expect.element('#currentqs').text.to.equal('')
 
@@ -40,11 +36,9 @@ describe('<Router> component with routes in a Map', function() {
         browser
             .url(browser.launchUrl + '/?routemap=1#/hello/svelte')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Hi there!')
+            .assert.textContains('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('')
-
-        browser.end()
     })
 
     it('route defined as RegExp', (browser) => {
@@ -53,7 +47,7 @@ describe('<Router> component with routes in a Map', function() {
             .url(browser.launchUrl + '/?routemap=1#/REGEX/1')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Regex route')
+            .assert.textContains('h2.routetitle', 'Regex route')
             .expect.element('#currentpath').text.to.equal('/REGEX/1')
         browser.expect.element('#currentqs').text.to.equal('')
         browser.expect.element('#regexmatch').text.to.equal('["/REGEX/1","1"]')
@@ -62,7 +56,7 @@ describe('<Router> component with routes in a Map', function() {
         browser
             .url(browser.launchUrl + '/?routemap=1#/Match/hello/world')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Regex route')
+            .assert.textContains('h2.routetitle', 'Regex route')
             .expect.element('#currentpath').text.to.equal('/Match/hello/world')
         browser.expect.element('#currentqs').text.to.equal('')
         // This will end at /hello because /world starts with a slash. Since the regexp doesn't have a $ character, it still matches
@@ -72,11 +66,9 @@ describe('<Router> component with routes in a Map', function() {
         browser
             .url(browser.launchUrl + '/?routemap=1#/REGEX')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'NotFound')
+            .assert.textContains('h2.routetitle', 'NotFound')
             .expect.element('#currentpath').text.to.equal('/REGEX')
         browser.expect.element('#currentqs').text.to.equal('')
-
-        browser.end()
     })
 
     it('querystring from hash', (browser) => {
@@ -85,12 +77,10 @@ describe('<Router> component with routes in a Map', function() {
         browser
             .url(browser.launchUrl + '/?routemap=1#/Match/hola?hello=world')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Regex route')
+            .assert.textContains('h2.routetitle', 'Regex route')
             .expect.element('#currentpath').text.to.equal('/Match/hola')
         browser.expect.element('#currentqs').text.to.equal('hello=world')
         browser.expect.element('#regexmatch').text.to.equal('["/Match/hola","Match","/hola"]')
-
-        browser.end()
     })
 })
 
