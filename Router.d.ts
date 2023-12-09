@@ -69,22 +69,6 @@ export interface WrappedComponent {
 }
 
 /**
- * Wraps a component to add route pre-conditions.
- *
- * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
- * 
- * @param component Svelte component for the route
- * @param userData Optional object that will be passed to each `conditionsFailed` event
- * @param conditions Route pre-conditions to add, which will be executed in order
- * @returns Wrapped component
- */
-export function wrap(
-    component: typeof SvelteComponent,
-    userData?: object,
-    ...conditions: RoutePrecondition[]
-): WrappedComponent
-
-/**
  * Navigates to a new page programmatically.
  *
  * @param location Path to navigate to (must start with `/` or '#/')
