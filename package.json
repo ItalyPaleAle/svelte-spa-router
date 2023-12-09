@@ -42,7 +42,7 @@
     "eslint": "^8.55.0",
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-svelte": "^2.35.1",
-    "nightwatch": "^1.7.13",
+    "nightwatch": "^2.6.23",
     "rollup": "^4.7.0",
     "rollup-plugin-css-only": "^4.5.2",
     "rollup-plugin-svelte": "^7.1.6",
