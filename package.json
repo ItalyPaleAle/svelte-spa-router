@@ -11,7 +11,7 @@
     "start-test-app": "npx serve -n -l 5000 test/app/dist",
     "eslint": "npx eslint -c .eslintrc.js --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
-    "nightwatch": "npx nightwatch -e selenium.chrome",
+    "nightwatch": "npx nightwatch -e selenium.chrome -c nightwatch.conf.cjs",
     "test": "npm run nightwatch"
   },
   "repository": {
@@ -21,6 +21,7 @@
   "keywords": [
     "router",
     "svelte",
+    "svelte3",
     "svelte4",
     "spa"
   ],

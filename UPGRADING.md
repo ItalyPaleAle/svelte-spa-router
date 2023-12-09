@@ -11,6 +11,14 @@
 
 # Upgrading instructions
 
+## Upgrading to 4.x
+
+When upgrading from svelte-spa-router 3.x to 4.x, please note the following breaking changes:
+
+### Works with Svelte 4
+
+svelte-spa-router 4.x is designed to work with Svelte 4.
+
 ## Upgrading to 3.x
 
 When upgrading from svelte-spa-router 2.x to 3.x, please note the following breaking changes:
