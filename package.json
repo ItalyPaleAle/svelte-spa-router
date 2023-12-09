@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "build-test-app": "(cd test/app && npx rollup -c)",
-    "start-test-app": "npx serve -n -l 5000 test/app/dist",
+    "start-test-app": "npx serve -n -l 5050 test/app/dist",
     "eslint": "npx eslint -c .eslintrc.js --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch -e selenium.chrome -c nightwatch.conf.cjs",

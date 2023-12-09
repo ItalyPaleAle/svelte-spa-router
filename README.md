@@ -60,10 +60,10 @@ cd examples/basic-routing
 
 # Build and run (in the folder of a sample)
 npx rollup -c
-npx serve -n -l 5000 dist
+npx serve -n -l 5050 dist
 ````
 
-The sample will be running at http://localhost:5000
+The sample will be running at http://localhost:5050
 
 ## Starter template
 

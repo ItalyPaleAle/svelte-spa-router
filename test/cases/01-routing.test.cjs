@@ -8,18 +8,20 @@ describe('<Router> component', function() {
     this.timeout(4000)
 
     it('renders on the page', (browser) => {
+        browser.restart()
+
         browser
             .url(browser.launchUrl)
             .expect.element('body').to.be.present.before(1000)
 
         browser
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Home!')
-
-        browser.end()
+            .assert.textContains('h2.routetitle', 'Home!')
     })
 
     it('current path appears', (browser) => {
+        browser.restart()
+
         browser
             .url(browser.launchUrl)
             .waitForElementVisible('#currentpath')
@@ -29,12 +31,14 @@ describe('<Router> component', function() {
     })
 
     it('selecting route from hash', (browser) => {
+        browser.restart()
+
         // Main route
         browser
             .url(browser.launchUrl + '/#/')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Home!')
+            .assert.textContains('h2.routetitle', 'Home!')
             .expect.element('#currentpath').text.to.equal('/')
         browser.expect.element('#currentqs').text.to.equal('')
         browser.expect.element('#currentparams').text.to.equal('null')
@@ -43,7 +47,7 @@ describe('<Router> component', function() {
         browser
             .url(browser.launchUrl + '/#/wild')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Wild')
+            .assert.textContains('h2.routetitle', 'Wild')
             .expect.element('#currentpath').text.to.equal('/wild')
         browser.expect.element('#currentqs').text.to.equal('')
         browser.expect.element('#currentparams').text.to.equal('null')
@@ -52,95 +56,95 @@ describe('<Router> component', function() {
         browser
             .url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Hi there!')
+            .assert.textContains('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('')
         browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
-
-        browser.end()
     })
 
     it('loading page with hash', (browser) => {
+        browser.restart()
+
         browser
             .url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementVisible('#currentpath')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Hi there!')
+            .assert.textContains('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('')
         browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
-
-        browser.end()
     })
 
     it('refreshing page', (browser) => {
+        browser.restart()
+
         // /hello/svelte
         browser
             .url(browser.launchUrl + '/#/hello/svelte')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Hi there!')
+            .assert.textContains('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('')
         browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
-        
+
         browser
             .refresh(() => {
                 browser.waitForElementVisible('h2.routetitle')
-                    .assert.containsText('h2.routetitle', 'Hi there!')
+                    .assert.textContains('h2.routetitle', 'Hi there!')
                     .expect.element('#currentpath').text.to.equal('/hello/svelte')
                 browser.expect.element('#currentqs').text.to.equal('')
                 browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
-
-                browser.end()
             })
     })
 
     it('catch-all route', (browser) => {
+        browser.restart()
+
         browser
             .url(browser.launchUrl + '/#/does/not/exist')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'NotFound')
+            .assert.textContains('h2.routetitle', 'NotFound')
             .expect.element('#currentpath').text.to.equal('/does/not/exist')
         browser.expect.element('#currentqs').text.to.equal('')
         browser.expect.element('#currentparams').text.to.equal('{"wild":"does/not/exist"}')
-
-        browser.end()
     })
 
     it('clicking on link', (browser) => {
+        browser.restart()
+
         browser
             .url(browser.launchUrl + '/#/')
             .waitForElementVisible('ul.navigation-links')
             .click('.navigation-links a[href="#/hello/svelte"]', () => {
                 browser
                     .waitForElementVisible('h2.routetitle')
-                    .assert.containsText('h2.routetitle', 'Hi there!')
+                    .assert.textContains('h2.routetitle', 'Hi there!')
                     .expect.element('#currentpath').text.to.equal('/hello/svelte')
 
                 browser
                     .expect.element('#nameparams').text.to.equal('Your name is: svelte')
-
-                browser.end()
             })
     })
 
     it('clicking link with children', (browser) => {
+        browser.restart()
+
         browser
             .url(browser.launchUrl + '/#/hello/world')
             .waitForElementVisible('ul.navigation-links')
             .click('.navigation-links li a b', () => {
                 browser
                     .waitForElementVisible('h2.routetitle')
-                    .assert.containsText('h2.routetitle', 'Home!')
+                    .assert.textContains('h2.routetitle', 'Home!')
                     .expect.element('#currentpath').text.to.equal('/brand')
                 browser.expect.element('#currentqs').text.to.equal('')
                 browser.expect.element('#currentparams').text.to.equal('null')
-
-                browser.end()
             })
     })
 
     it('back and forward buttons', (browser) => {
+        browser.restart()
+
         browser
             .url(browser.launchUrl + '/#/hello/svelte/user')
             .waitForElementVisible('ul.navigation-links')
@@ -166,28 +170,26 @@ describe('<Router> component', function() {
                                 browser
                                     .waitForElementVisible('#nameparams')
                                     .expect.element('#nameparams').text.to.equal('Your name is: svelte')
-
-                                browser.end()
                             })
                     })
             })
     })
 
     it('push method', (browser) => {
+        browser.restart()
+
         browser
             .url(browser.launchUrl + '/#/')
             .waitForElementVisible('p.navigation-buttons')
             .click('.navigation-buttons button:nth-of-type(1)', () => {
                 browser
                     .waitForElementVisible('h2.routetitle')
-                    .assert.containsText('h2.routetitle', 'Wild')
+                    .assert.textContains('h2.routetitle', 'Wild')
                     .expect.element('#currentpath').text.to.equal('/wild/something')
                 browser.expect.element('#currentparams').text.to.equal('{"wild":"something"}')
 
                 browser.url((url) => {
                     assert.strictEqual(url.value, browser.launchUrl + '/#/wild/something')
-
-                    browser.end()
                 })
             })
     })
@@ -204,7 +206,7 @@ describe('<Router> component', function() {
                     .click('.navigation-buttons button:nth-of-type(2)', () => {
                         browser
                             .waitForElementVisible('h2.routetitle')
-                            .assert.containsText('h2.routetitle', 'Wild')
+                            .assert.textContains('h2.routetitle', 'Wild')
                             .expect.element('#currentpath').text.to.equal('/wild/something')
 
                         browser.url((url) => {
@@ -228,7 +230,7 @@ describe('<Router> component', function() {
                     .click('.navigation-buttons button:nth-of-type(3)', () => {
                         browser
                             .waitForElementVisible('h2.routetitle')
-                            .assert.containsText('h2.routetitle', 'Wild')
+                            .assert.textContains('h2.routetitle', 'Wild')
                             .expect.element('#currentpath').text.to.equal('/wild/replaced')
 
                         browser.url((url) => {
@@ -240,7 +242,7 @@ describe('<Router> component', function() {
                                 .click('.navigation-buttons button:nth-of-type(2)', () => {
                                     browser
                                         .waitForElementVisible('h2.routetitle')
-                                        .assert.containsText('h2.routetitle', 'Wild')
+                                        .assert.textContains('h2.routetitle', 'Wild')
                                         .expect.element('#currentpath').text.to.equal('/wild/something')
 
                                     browser.url((url) => {
@@ -260,7 +262,7 @@ describe('<Router> component', function() {
         browser
             .url(browser.launchUrl + '/#/hello/svelte?search=query&sort=0')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Hi there!')
+            .assert.textContains('h2.routetitle', 'Hi there!')
             .expect.element('#currentpath').text.to.equal('/hello/svelte')
         browser.expect.element('#currentqs').text.to.equal('search=query&sort=0')
 
@@ -268,7 +270,7 @@ describe('<Router> component', function() {
         browser
             .refresh(() => {
                 browser.waitForElementVisible('h2.routetitle')
-                    .assert.containsText('h2.routetitle', 'Hi there!')
+                    .assert.textContains('h2.routetitle', 'Hi there!')
                     .expect.element('#currentpath').text.to.equal('/hello/svelte')
                 browser.expect.element('#currentqs').text.to.equal('search=query&sort=0')
 
@@ -318,7 +320,7 @@ describe('<Router> component', function() {
         // Condition always fails
         browser.url(browser.launchUrl + '/#/lucky?pass=0')
             .waitForElementVisible('h2.routetitle')
-            .assert.containsText('h2.routetitle', 'Wild')
+            .assert.textContains('h2.routetitle', 'Wild')
             .expect.element('#currentpath').text.to.equal('/wild/conditions-failed')
         browser.expect.element('#currentqs').text.to.equal('')
 
