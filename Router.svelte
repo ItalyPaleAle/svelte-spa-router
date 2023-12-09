@@ -4,26 +4,6 @@ import {tick} from 'svelte'
 import {wrap as _wrap} from './wrap'
 
 /**
- * Wraps a component to add route pre-conditions.
- * @deprecated Use `wrap` from `svelte-spa-router/wrap` instead. This function will be removed in a later version.
- * 
- * @param {SvelteComponent} component - Svelte component for the route
- * @param {object} [userData] - Optional object that will be passed to each `conditionsFailed` event
- * @param {...function(RouteDetail): boolean} conditions - Route pre-conditions to add, which will be executed in order
- * @returns {WrappedComponent} Wrapped component
- */
-export function wrap(component, userData, ...conditions) {
-    // Use the new wrap method and show a deprecation warning
-    // eslint-disable-next-line no-console
-    console.warn('Method `wrap` from `svelte-spa-router` is deprecated and will be removed in a future version. Please use `svelte-spa-router/wrap` instead. See http://bit.ly/svelte-spa-router-upgrading')
-    return _wrap({
-        component,
-        userData,
-        conditions
-    })
-}
-
-/**
  * @typedef {Object} Location
  * @property {string} location - Location (page/view), for example `/book`
  * @property {string} [querystring] - Querystring from the hash, as a string not parsed
