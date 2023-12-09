@@ -44,7 +44,7 @@
     <li>
         <a id="dynamic-link-{dl.id}" href={dl.link} use:link use:active>Dynamic Link {dl.id}</a>
          - 
-        <i id="delete-link-{dl.id}" on:click={() => dynamicLinks = dynamicLinks.filter(e => e.id != dl.id)}>delete link</i>
+        <i role="button" id="delete-link-{dl.id}" on:click={() => dynamicLinks = dynamicLinks.filter(e => e.id != dl.id)}>delete link</i>
     </li>
 {/each}
 </ul>
@@ -56,7 +56,7 @@
     <li>
         <a id="disable-link-{dl.id}" href="/foo" use:link={dl.opts} use:active>Dynamic Link {dl.id}</a>
          - 
-        <i id="toggle-link-{dl.id}" on:click={dl.toggle}>
+        <i role="button" id="toggle-link-{dl.id}" on:click={dl.toggle}>
             {#if dl.opts.disabled}
                 enable link
             {:else}

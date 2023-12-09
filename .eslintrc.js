@@ -4,20 +4,17 @@ module.exports = {
         node: true,
         browser: true
     },
-    extends: 'eslint:recommended',
+    extends: [
+        'eslint:recommended',
+        'plugin:svelte/recommended'
+    ],
     parserOptions: {
         ecmaVersion: 2019,
-        sourceType: 'module'
+        sourceType: 'module',
+        extraFileExtensions: ['.svelte']
     },
     plugins: [
         'html',
-        'svelte3'
-    ],
-    overrides: [
-        {
-            files: '**/*.svelte',
-            processor: 'svelte3/svelte3'
-        }
     ],
     settings: {
         html: {

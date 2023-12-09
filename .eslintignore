@@ -2,6 +2,9 @@
 test/app/dist
 examples/*/dist
 
+# Test app
+test/app
+
 # Files that use dynamic imports
 test/app/src/routes.js
 examples/dynamic-imports/src/routes.js
