@@ -71,7 +71,7 @@ routes.set('/books', wrap({
 
 ### Async routes and loading placeholders
 
-As mentioned in the main readme, starting with version 3 the `wrap` method is used with dynamically-imported components. This allows (when the bundler supports that, such as with Rollup or Webpack) code-splitting too, so code for less-common routes can be downloaded on-demand from the server rather than shipped in the app's core bundle.
+As mentioned in the main readme, starting with version 3 the `wrap` method is used with dynamically-imported components. This allows (when the bundler supports that, such as with Vite, Rollup or Webpack) code-splitting too, so code for less-common routes can be downloaded on-demand from the server rather than shipped in the app's core bundle.
 
 This is done by setting the `options.asyncComponent` property to a function that returns a dynamically-imported module. For example:
 
