@@ -15,7 +15,7 @@
 [![npm](https://img.shields.io/npm/v/svelte-spa-router.svg)](https://www.npmjs.com/package/svelte-spa-router)
 [![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/blob/master/LICENSE.md)
 
-This module is a router for [Svelte 3](https://github.com/sveltejs/svelte) applications, specifically optimized for Single Page Applications (SPA).
+This module is a router for [Svelte 3 and 4](https://github.com/sveltejs/svelte) applications, specifically optimized for Single Page Applications (SPA).
 
 Main features:
 
@@ -38,7 +38,7 @@ With hash-based routing, navigation is possible thanks to storing the current vi
 
 For example, if your SPA is in a static file called `index.html`, your URLs for navigating within the app look something like `index.html#/profile`, `index.html#/book/42`, etc. (The `index.html` part can usually be omitted for the index file, so you can just create URLs that look like `http://example.com/#/profile`).
 
-When I created this component, other routers for Svelte 3 implemented navigation using the HTML5 history API. While those URLs look nicer (e.g. you can actually navigate to `http://example.com/profile`), they are not ideal for static Single Page Applications. In order for users to be able to share links or even just refresh the page, you are required to have a server on the backend processing the request, and building fully-static apps is much harder as a consequence.
+When I created this component, other routers for Svelte 3+ implemented navigation using the HTML5 history API. While those URLs look nicer (e.g. you can actually navigate to `http://example.com/profile`), they are not ideal for static Single Page Applications. In order for users to be able to share links or even just refresh the page, you are required to have a server on the backend processing the request, and building fully-static apps is much harder as a consequence.
 
 Hash-based routing is simpler, works well even without a server, and it's generally better suited for static SPAs, especially when SEO isn't a concern, as is the case when the app requires authentication. Many popular apps use hash-based routing, including GMail!
 
@@ -60,14 +60,14 @@ cd examples/basic-routing
 
 # Build and run (in the folder of a sample)
 npx rollup -c
-npx serve -n -l 5000 dist
+npx serve -n -l 5050 dist
 ````
 
-The sample will be running at http://localhost:5000
+The sample will be running at http://localhost:5050
 
 ## Starter template
 
-You can find a starter template with Svelte 3 and svelte-spa-router at [italypaleale/svelte-spa-router-template](https://github.com/italypaleale/svelte-spa-router-template).
+You can find a starter template with Svelte 4 and svelte-spa-router at [italypaleale/svelte-spa-router-template](https://github.com/italypaleale/svelte-spa-router-template).
 
 To use the template:
 
@@ -80,7 +80,7 @@ More information can be found on the [template's repo](https://github.com/italyp
 
 ## Using svelte-spa-router
 
-You can include the router in any project using Svelte 3.
+You can include the router in any project using Svelte 4.
 
 ### Install from NPM
 

@@ -39,7 +39,7 @@ export default {
             .then((component) => {
                 return new Promise((resolve) => {
                     // Wait 5 seconds before returning
-                    setTimeout(() => resolve(component), 5000)
+                    setTimeout(() => resolve(component), 5050)
                 })
             }),
         // Show the loading component while the component is being downloaded

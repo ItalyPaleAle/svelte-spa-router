@@ -3,7 +3,7 @@ const seleniumHost = process.env.SELENIUM_HOST || '127.0.0.1'
 const seleniumPort = parseInt(process.env.SELENIUM_PORT || '4444', 10)
 
 // Launch URL - where the server is
-const launchUrl = process.env.LAUNCH_URL || 'http://localhost:5000'
+const launchUrl = process.env.LAUNCH_URL || 'http://localhost:5050'
 
 // Increase max listeners to avoid a warning
 require('events').EventEmitter.defaultMaxListeners = 100
