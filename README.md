@@ -80,7 +80,7 @@ More information can be found on the [template's repo](https://github.com/italyp
 
 ## Using svelte-spa-router
 
-You can include the router in any project using Svelte 4.
+You can include the router in any project using Svelte 3 or 4.
 
 ### Install from NPM
 

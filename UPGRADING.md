@@ -15,9 +15,13 @@
 
 When upgrading from svelte-spa-router 3.x to 4.x, please note the following breaking changes:
 
-### Works with Svelte 4
+> svelte-spa-router 4.x is designed to work with Svelte 3 and 4.
 
-svelte-spa-router 4.x is designed to work with Svelte 4.
+### `wrap` method must be imported from `svelte-spa-router/wrap`
+
+The deprecated `wrap` method exported by `svelte-spa-router` has been removed and replaced with an import from `svelte-spa-router/wrap`.
+
+See [New `wrap` method](#new-wrap-method) for upgrade instructions.
 
 ## Upgrading to 3.x
 
