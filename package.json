@@ -6,6 +6,20 @@
   "svelte": "Router.svelte",
   "types": "Router.d.ts",
   "type": "module",
+  "exports": {
+    "./active": {
+      "types": "./active.d.ts",
+      "import": "./active.js"
+    },
+    "./wrap": {
+      "types": "./wrap.d.ts",
+      "import": "./wrap.js"
+    },
+    ".": {
+      "types": "./Router.d.ts",
+      "svelte": "./Router.svelte"
+    }
+	},
   "scripts": {
     "build-test-app": "(cd test/app && npx rollup -c)",
     "start-test-app": "npx serve -n -l 5050 test/app/dist",
