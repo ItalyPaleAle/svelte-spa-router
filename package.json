@@ -19,14 +19,16 @@
       "types": "./Router.d.ts",
       "svelte": "./Router.svelte"
     }
-	},
+  },
   "scripts": {
     "build-test-app": "(cd test/app && npx rollup -c)",
     "start-test-app": "npx serve -n -l 5050 test/app/dist",
     "eslint": "npx eslint -c .eslintrc.cjs --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch -e selenium.chrome -c nightwatch.conf.cjs",
-    "test": "npm run nightwatch"
+    "test": "npm run nightwatch",
+    "changeset:version": "changeset version && git add --all",
+    "changeset:publish": "changeset publish"
   },
   "repository": {
     "type": "git",
