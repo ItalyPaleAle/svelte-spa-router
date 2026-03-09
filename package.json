@@ -20,6 +20,7 @@
       "svelte": "./Router.svelte"
     }
   },
+  "packageManager": "pnpm@10.4.0",
   "scripts": {
     "build-test-app": "(cd test/app && npx rollup -c)",
     "start-test-app": "npx serve -n -l 5050 test/app/dist",
