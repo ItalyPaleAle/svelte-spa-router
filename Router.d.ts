@@ -1,7 +1,10 @@
 ///<reference types="svelte" />
 
-import {SvelteComponent, ComponentType} from 'svelte'
+import {SvelteComponent, ComponentType as OldComponentType} from 'svelte'
 import {Readable} from 'svelte/store'
+
+// Old or new component type; can't just import the new one yet because don't know if user is on Svelte 5
+type ComponentType = OldComponentType | ((_: any, props?: any) => any)
 
 /** Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoading` and `conditionsFailed` events */
 export interface RouteDetail {

@@ -28,7 +28,8 @@
     "nightwatch": "npx nightwatch -e selenium.chrome -c nightwatch.conf.cjs",
     "test": "npm run nightwatch",
     "changeset:version": "changeset version && git add --all",
-    "changeset:publish": "changeset publish"
+    "changeset:publish": "changeset publish",
+    "changeset": "changeset"
   },
   "repository": {
     "type": "git",
@@ -52,6 +53,7 @@
     "regexparam": "2.0.2"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "chromedriver": "^119.0.1",
