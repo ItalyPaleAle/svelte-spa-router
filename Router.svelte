@@ -1,5 +1,5 @@
 <script module>
-import {readable, writable, derived, get} from 'svelte/store'
+import {readable, writable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 
 /**
@@ -245,29 +245,27 @@ function scrollstateHistoryHandler(href) {
 }
 </script>
 
-{#if $componentStore}
-    {@const Component = $componentStore}
-    {#if $componentParamsStore}
+{#if component}
+    {@const Component = component}
+    {#if componentParams}
         <Component
-            params={$componentParamsStore}
+            params={componentParams}
             routeEvent={routeEvent}
-            {...$propsStore}
+            {...props}
         />
     {:else}
         <Component
             routeEvent={routeEvent}
-            {...$propsStore}
+            {...props}
         />
     {/if}
 {/if}
-
 
 <script>
 import {onDestroy} from 'svelte'
 import {parse} from 'regexparam'
 
-/* eslint-disable prefer-const -- Svelte 5 $props() uses let per official docs: https://svelte.dev/docs/svelte/$props */
-let {
+const {
     /**
      * Dictionary of all routes, in the format `'/path': component`.
      *
@@ -292,13 +290,12 @@ let {
      * If set to true, the router will restore scroll positions on back navigation
      * and scroll to top on forward navigation.
      */
-    restoreScrollState = $bindable(false),
+    restoreScrollState = false,
     conditionsFailed = () => {},
     routeLoaded = () => {},
     routeLoading = () => {},
     routeEvent = () => {},
 } = $props()
-/* eslint-enable prefer-const */
 
 /**
  * Container for a route: path, component
@@ -431,9 +428,8 @@ class RouteItem {
 }
 
 // Set up all routes
-// Routes are intentionally read once at initialization (they don't change)
-/* eslint-disable svelte/valid-compile -- routes are static, initial capture is intended */
 const routesList = []
+// svelte-ignore state_referenced_locally (routes are static, initial capture is intended)
 if (routes instanceof Map) {
     // If it's a map, iterate on it right away
     routes.forEach((route, path) => {
@@ -446,13 +442,11 @@ else {
         routesList.push(new RouteItem(path, routes[path]))
     })
 }
-/* eslint-enable svelte/valid-compile */
 
-// State declarations - using writable stores for component state
-// because $state assignments inside async callbacks don't trigger reactivity
-const componentStore = writable(null)
-const componentParamsStore = writable(null)
-const propsStore = writable({})
+// State declarations for the currently-rendered route
+let component = $state.raw(null)
+let componentParams = $state.raw(null)
+let props = $state.raw({})
 
 let previousScrollState = $state(null)
 let lastLoc = null
@@ -517,7 +511,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         }
 
         if (!(await routesList[i].checkConditions(detail))) {
-            componentStore.set(null)
+            component = null
             componentObj = null
             conditionsFailed({detail: detail})
             dispatchNextTick('conditionsFailed', detail)
@@ -530,10 +524,10 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         const obj = routesList[i].component
         if (componentObj != obj) {
             if (obj.loading) {
-                componentStore.set(obj.loading)
+                component = obj.loading
                 componentObj = obj
-                componentParamsStore.set(obj.loadingParams)
-                propsStore.set({})
+                componentParams = obj.loadingParams
+                props = {}
                 const comp = obj.loading
                 routeLoaded({
                     detail: {
@@ -551,7 +545,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
                 })
             }
             else {
-                componentStore.set(null)
+                component = null
                 componentObj = null
             }
 
@@ -561,7 +555,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
                 return
             }
 
-            componentStore.set((loaded && loaded.default) || loaded)
+            component = (loaded && loaded.default) || loaded
             componentObj = obj
         }
 
@@ -571,10 +565,10 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         if (match && typeof match == 'object' && Object.keys(match).length) {
             matchParams = match
         }
-        componentParamsStore.set(matchParams)
-        propsStore.set(routesList[i].props)
+        componentParams = matchParams
+        props = routesList[i].props
 
-        const comp = get(componentStore)
+        const comp = component
         routeLoaded({
             detail: {
                 ...detail,
@@ -594,7 +588,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         return
     }
 
-    componentStore.set(null)
+    component = null
     componentObj = null
     params.set(undefined)
 })
