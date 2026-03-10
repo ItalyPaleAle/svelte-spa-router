@@ -6,11 +6,5 @@
 {/if}
 
 <script>
-    /**
-     * @typedef {Object} Props
-     * @property {any} [params]
-     */
-
-    /** @type {Props} */
-    let { params = null } = $props();
+let {params = null} = $props()
 </script>

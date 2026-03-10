@@ -1,10 +1,21 @@
+
 <h1>svelte-spa-router example</h1>
 <!-- Navigation links, using the "link" action -->
 <!-- Also, use the "active" action to add the "active" CSS class when the URL matches -->
 <ul class="navigation-links">
     <li><a href="/" use:link use:active>Home</a></li>
     <li><a href="/brand" use:link><b>Brand</b></a></li>
-    <li><a href="/hello/svelte" use:link use:active={{path: '/hello/*', className: 'active another-class', inactiveClassName: 'inactive'}}>Say hi!</a></li>
+    <li>
+        <a
+            href="/hello/svelte"
+            use:link
+            use:active={{
+                path: '/hello/*',
+                className: 'active another-class',
+                inactiveClassName: 'inactive'
+            }}>Say hi!</a
+        >
+    </li>
     <li><a href="/does/not/exist" use:link>Not found</a></li>
 </ul>
 
@@ -21,54 +32,64 @@
 <!-- Show the current path -->
 <p>
     Current path: <code id="currentpath">{$location}</code>
-    <br/>
+    <br />
     Querystring: <code id="currentqs">{$querystring}</code>
-    <br/>
+    <br />
     Params: <code id="currentparams">{JSON.stringify($params)}</code>
 </p>
 
 <!-- Show the router -->
 <Router
-  {routes}
-  conditionsFailed={conditionsFailed}
-  routeLoaded={routeLoaded}
-  routeLoading={routeLoading}
-  routeEvent={routeEvent}
-  {restoreScrollState}
+    {routes}
+    {conditionsFailed}
+    {routeLoaded}
+    {routeLoading}
+    {routeEvent}
+    {restoreScrollState}
 />
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
 <ul class="navigation-dynamic-links">
-{#each dynamicLinks as dl (dl.id)}
-    <li>
-        <a id="dynamic-link-{dl.id}" href={dl.link} use:link use:active>Dynamic Link {dl.id}</a>
-         - 
-        <i role="button" id="delete-link-{dl.id}" onclick={() => dynamicLinks = dynamicLinks.filter(e => e.id != dl.id)}>delete link</i>
-    </li>
-{/each}
+    {#each dynamicLinks as dl (dl.id)}
+        <li>
+            <a id="dynamic-link-{dl.id}" href={dl.link} use:link use:active>Dynamic Link {dl.id}</a>
+            -
+            <i
+                role="button"
+                id="delete-link-{dl.id}"
+                onclick={() => (dynamicLinks = dynamicLinks.filter((e) => e.id != dl.id))}
+                >delete link</i
+            >
+        </li>
+    {/each}
 </ul>
 
 <!-- Testing links that can be disabled -->
 <h2>Dynamic links</h2>
 <ul class="navigation-disable-links">
-{#each disableLinks as dl, i (dl.id)}
-    <li>
-        <a id="disable-link-{dl.id}" href="/foo" use:link={dl.opts} use:active>Dynamic Link {dl.id}</a>
-         - 
-        <i role="button" id="toggle-link-{dl.id}" onclick={dl.toggle}>
-            {#if dl.opts.disabled}
-                enable link
-            {:else}
-                disable link
-            {/if}
-        </i>
-    </li>
-{/each}
+    {#each disableLinks as dl, i (dl.id)}
+        <li>
+            <a id="disable-link-{dl.id}" href="/foo" use:link={dl.opts} use:active
+                >Dynamic Link {dl.id}</a
+            >
+            -
+            <i role="button" id="toggle-link-{dl.id}" onclick={dl.toggle}>
+                {#if dl.opts.disabled}
+                    enable link
+                {:else}
+                    disable link
+                {/if}
+            </i>
+        </li>
+    {/each}
 </ul>
 
 <!-- Test use:active with a regular expression -->
-<p><a href="#/" use:active={/\/*\/hi/}>This link</a> is active when you're matching <code>/*/hi</code></p>
+<p>
+    <a href="#/" use:active={/\/*\/hi/}>This link</a> is active when you're matching
+    <code>/*/hi</code>
+</p>
 
 <!-- Used for testing -->
 <pre id="logbox">{logbox}</pre>

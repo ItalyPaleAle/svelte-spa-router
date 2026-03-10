@@ -3,5 +3,5 @@
 <p>Your message is: {params.wild}</p>
 
 <script>
-	let { params = {} } = $props();
+let {params = {}} = $props()
 </script>

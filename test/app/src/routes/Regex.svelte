@@ -3,5 +3,5 @@
 <p>Match is: <code id="regexmatch">{JSON.stringify(params)}</code></p>
 
 <script>
-	let { params = {} } = $props();
+let {params = {}} = $props()
 </script>
