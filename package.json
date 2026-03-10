@@ -1,6 +1,6 @@
 {
   "name": "svelte-spa-router",
-  "version": "5.0.0",
+  "version": "4.0.2",
   "description": "Router for SPAs using Svelte 5",
   "main": "Router.svelte",
   "svelte": "Router.svelte",
@@ -20,13 +20,17 @@
       "svelte": "./Router.svelte"
     }
   },
+  "packageManager": "pnpm@10.4.0",
   "scripts": {
     "build-test-app": "(cd test/app && npx rollup -c)",
     "start-test-app": "npx serve -n -l 5050 test/app/dist",
     "eslint": "npx eslint -c .eslintrc.cjs --ext .js,.svelte,.html .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch -e selenium.chrome -c nightwatch.conf.cjs",
-    "test": "npm run nightwatch"
+    "test": "npm run nightwatch",
+    "changeset:version": "changeset version && git add --all",
+    "changeset:publish": "changeset publish",
+    "changeset": "changeset"
   },
   "repository": {
     "type": "git",
@@ -51,6 +55,7 @@
     "regexparam": "2.0.2"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "chromedriver": "^119.0.1",
