@@ -429,7 +429,8 @@ class RouteItem {
 
 // Set up all routes
 const routesList = []
-// svelte-ignore state_referenced_locally (routes are static, initial capture is intended)
+// svelte-ignore state_referenced_locally
+// routes are static, initial capture is intended
 if (routes instanceof Map) {
     // If it's a map, iterate on it right away
     routes.forEach((route, path) => {
