@@ -41,10 +41,10 @@
 <!-- Show the router -->
 <Router
     {routes}
-    {conditionsFailed}
-    {routeLoaded}
-    {routeLoading}
-    {routeEvent}
+    {onConditionsFailed}
+    {onRouteLoaded}
+    {onRouteLoading}
+    {onRouteEvent}
     {restoreScrollState}
 />
 
@@ -135,7 +135,7 @@ if (typeof window !== 'undefined') {
 let logbox = $state('')
 
 // Handles the "conditionsFailed" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
-function conditionsFailed(event) {
+function onConditionsFailed(event) {
     // eslint-disable-next-line no-console
     console.error('Caught event conditionsFailed', event.detail)
     logbox += 'conditionsFailed - ' + JSON.stringify(event.detail) + '\n'
@@ -145,7 +145,7 @@ function conditionsFailed(event) {
 }
 
 // Handles the "routeLoaded" event dispatched by the router after a route has been successfully loaded
-function routeLoaded(event) {
+function onRouteLoaded(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeLoaded', event.detail)
     logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
@@ -153,14 +153,14 @@ function routeLoaded(event) {
 
 // Handles the "routeLoading" event dispatched by the router whie a route is being loaded
 // If the route is dynamically imported, such as with the `import()` syntax, then there might be a delay before the route is loaded
-function routeLoading(event) {
+function onRouteLoading(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeLoading', event.detail)
     logbox += 'routeLoading - ' + JSON.stringify(event.detail) + '\n'
 }
 
 // Handles event bubbling up from nested routes
-function routeEvent(event) {
+function onRouteEvent(event) {
     // eslint-disable-next-line no-console
     console.info('Caught event routeEvent', event.detail)
     logbox += 'routeEvent - ' + JSON.stringify(event.detail) + '\n'

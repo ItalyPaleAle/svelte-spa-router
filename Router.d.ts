@@ -199,19 +199,19 @@ export interface RouterProps {
     /**
      * Callback fired when route conditions fail
      */
-    conditionsFailed?: (event: ConditionsFailedEvent) => void
+    onConditionsFailed?: (event: ConditionsFailedEvent) => void
     /**
      * Callback fired when a route starts loading
      */
-    routeLoading?: (event: RouteLoadingEvent) => void
+    onRouteLoading?: (event: RouteLoadingEvent) => void
     /**
      * Callback fired when a route has loaded
      */
-    routeLoaded?: (event: RouteLoadedEvent) => void
+    onRouteLoaded?: (event: RouteLoadedEvent) => void
     /**
      * Callback for events from child components
      */
-    routeEvent?: (event: CustomEvent) => void
+    onRouteEvent?: (event: CustomEvent) => void
 }
 
 /**

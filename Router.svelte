@@ -250,12 +250,12 @@ function scrollstateHistoryHandler(href) {
     {#if componentParams}
         <Component
             params={componentParams}
-            routeEvent={routeEvent}
+            onRouteEvent={onRouteEvent}
             {...props}
         />
     {:else}
         <Component
-            routeEvent={routeEvent}
+            onRouteEvent={onRouteEvent}
             {...props}
         />
     {/if}
@@ -291,10 +291,10 @@ const {
      * and scroll to top on forward navigation.
      */
     restoreScrollState = false,
-    conditionsFailed = () => {},
-    routeLoaded = () => {},
-    routeLoading = () => {},
-    routeEvent = () => {},
+    onConditionsFailed = () => {},
+    onRouteLoaded = () => {},
+    onRouteLoading = () => {},
+    onRouteEvent = () => {},
 } = $props()
 
 /**
@@ -514,12 +514,12 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         if (!(await routesList[i].checkConditions(detail))) {
             component = null
             componentObj = null
-            conditionsFailed({detail: detail})
+            onConditionsFailed({detail: detail})
             dispatchNextTick('conditionsFailed', detail)
             return
         }
 
-        routeLoading({detail: {...detail}})
+        onRouteLoading({detail: {...detail}})
         dispatchNextTick('routeLoading', {...detail})
 
         const obj = routesList[i].component
@@ -530,7 +530,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
                 componentParams = obj.loadingParams
                 props = {}
                 const comp = obj.loading
-                routeLoaded({
+                onRouteLoaded({
                     detail: {
                         ...detail,
                         component: comp,
@@ -570,7 +570,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         props = routesList[i].props
 
         const comp = component
-        routeLoaded({
+        onRouteLoaded({
             detail: {
                 ...detail,
                 component: comp,
