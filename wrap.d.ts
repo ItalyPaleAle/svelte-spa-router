@@ -15,7 +15,7 @@ export interface WrapOptions {
     /** Optional dictionary passed to the `loadingComponent` component as params (for an exported prop called `params`) */
     loadingParams?: object
 
-    /** Optional object that will be passed to events such as `routeLoading`, `routeLoaded`, `conditionsFailed` */
+    /** Optional object that will be passed to callback props such as `onRouteLoading`, `onRouteLoaded`, `onConditionsFailed` */
     userData?: object
 
     /** Optional key-value dictionary of static props that will be passed to the component. The props are expanded with {...props}, so the key in the dictionary becomes the name of the prop. */

@@ -400,14 +400,15 @@ class RouteItem {
     }
 
     /**
-     * Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoading`, `routeLoaded` and `conditionsFailed` events
+     * Dictionary with route details passed to pre-conditions and callback props.
+     * DOM custom events (`routeLoading`, `routeLoaded`, `conditionsFailed`) are still emitted for backwards compatibility.
      * @typedef {Object} RouteDetail
      * @property {string|RegExp} route - Route matched as defined in the route definition (could be a string or a reguar expression object)
      * @property {string} location - Location path
      * @property {string} querystring - Querystring from the hash
      * @property {object} [userData] - Custom data passed by the user
-     * @property {SvelteComponent} [component] - Svelte component (only in `routeLoaded` events)
-     * @property {string} [name] - Name of the Svelte component (only in `routeLoaded` events)
+     * @property {SvelteComponent} [component] - Svelte component (only in `onRouteLoaded`)
+     * @property {string} [name] - Name of the Svelte component (only in `onRouteLoaded`)
      */
 
     /**
@@ -514,12 +515,12 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         if (!(await routesList[i].checkConditions(detail))) {
             component = null
             componentObj = null
-            onConditionsFailed({detail: detail})
+            onConditionsFailed(detail)
             dispatchNextTick('conditionsFailed', detail)
             return
         }
 
-        onRouteLoading({detail: {...detail}})
+        onRouteLoading({...detail})
         dispatchNextTick('routeLoading', {...detail})
 
         const obj = routesList[i].component
@@ -531,12 +532,10 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
                 props = {}
                 const comp = obj.loading
                 onRouteLoaded({
-                    detail: {
-                        ...detail,
-                        component: comp,
-                        name: comp.name,
-                        params: obj.loadingParams
-                    }
+                    ...detail,
+                    component: comp,
+                    name: comp.name,
+                    params: obj.loadingParams
                 })
                 dispatchNextTick('routeLoaded', {
                     ...detail,
@@ -571,12 +570,10 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
 
         const comp = component
         onRouteLoaded({
-            detail: {
-                ...detail,
-                component: comp,
-                name: comp.name,
-                params: matchParams
-            }
+            ...detail,
+            component: comp,
+            name: comp.name,
+            params: matchParams
         })
         dispatchNextTick('routeLoaded', {
             ...detail,

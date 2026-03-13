@@ -3,7 +3,7 @@
 import type {Component} from 'svelte'
 import {Readable} from 'svelte/store'
 
-/** Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoading` and `conditionsFailed` events */
+/** Dictionary with route details passed to pre-conditions and callback props */
 export interface RouteDetail {
     /** Route matched as defined in the route definition (could be a string or a regular expression object) */
     route: string | RegExp
@@ -21,7 +21,7 @@ export interface RouteDetail {
     userData?: object
 }
 
-/** Detail object for the `routeLoaded` event */
+/** Detail object for `onRouteLoaded` */
 export interface RouteDetailLoaded extends RouteDetail {
      /** Svelte component */
      component: Component<any, any>
@@ -155,19 +155,6 @@ export const params: Readable<Record<string, string> | undefined>
 export type RouteDefinition = Record<string, Component<any, any> | WrappedComponent> |
     Map<string | RegExp, Component<any, any> | WrappedComponent>
 
-/** Generic interface for events from the router */
-interface RouterEvent<T> {
-    detail: T
-}
-
-/** Event type for conditionsFailed */
-export type ConditionsFailedEvent = RouterEvent<RouteDetail>
-
-/** Event type for routeLoading */
-export type RouteLoadingEvent = RouterEvent<RouteDetail>
-
-/** Event type for routeLoaded */
-export type RouteLoadedEvent = RouterEvent<RouteDetailLoaded>
 
 /** Props for the Router component */
 export interface RouterProps {
@@ -199,19 +186,19 @@ export interface RouterProps {
     /**
      * Callback fired when route conditions fail
      */
-    onConditionsFailed?: (event: ConditionsFailedEvent) => void
+    onConditionsFailed?: (detail: RouteDetail) => void
     /**
      * Callback fired when a route starts loading
      */
-    onRouteLoading?: (event: RouteLoadingEvent) => void
+    onRouteLoading?: (detail: RouteDetail) => void
     /**
      * Callback fired when a route has loaded
      */
-    onRouteLoaded?: (event: RouteLoadedEvent) => void
+    onRouteLoaded?: (detail: RouteDetailLoaded) => void
     /**
      * Callback for events from child components
      */
-    onRouteEvent?: (event: CustomEvent) => void
+    onRouteEvent?: (detail: unknown) => void
 }
 
 /**

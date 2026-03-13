@@ -135,35 +135,35 @@ if (typeof window !== 'undefined') {
 let logbox = $state('')
 
 // Handles the "conditionsFailed" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
-function onConditionsFailed(event) {
+function onConditionsFailed(detail) {
     // eslint-disable-next-line no-console
-    console.error('Caught event conditionsFailed', event.detail)
-    logbox += 'conditionsFailed - ' + JSON.stringify(event.detail) + '\n'
+    console.error('Caught event conditionsFailed', detail)
+    logbox += 'conditionsFailed - ' + JSON.stringify(detail) + '\n'
 
     // Replace the route
     replace('/wild/conditions-failed')
 }
 
 // Handles the "routeLoaded" event dispatched by the router after a route has been successfully loaded
-function onRouteLoaded(event) {
+function onRouteLoaded(detail) {
     // eslint-disable-next-line no-console
-    console.info('Caught event routeLoaded', event.detail)
-    logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
+    console.info('Caught event routeLoaded', detail)
+    logbox += 'routeLoaded - ' + JSON.stringify(detail) + '\n'
 }
 
 // Handles the "routeLoading" event dispatched by the router whie a route is being loaded
 // If the route is dynamically imported, such as with the `import()` syntax, then there might be a delay before the route is loaded
-function onRouteLoading(event) {
+function onRouteLoading(detail) {
     // eslint-disable-next-line no-console
-    console.info('Caught event routeLoading', event.detail)
-    logbox += 'routeLoading - ' + JSON.stringify(event.detail) + '\n'
+    console.info('Caught event routeLoading', detail)
+    logbox += 'routeLoading - ' + JSON.stringify(detail) + '\n'
 }
 
 // Handles event bubbling up from nested routes
-function onRouteEvent(event) {
+function onRouteEvent(detail) {
     // eslint-disable-next-line no-console
-    console.info('Caught event routeEvent', event.detail)
-    logbox += 'routeEvent - ' + JSON.stringify(event.detail) + '\n'
+    console.info('Caught event routeEvent', detail)
+    logbox += 'routeEvent - ' + JSON.stringify(detail) + '\n'
 }
 
 // Enables the restoreScrollState option by checking for the "scroll=1" querystring parameter

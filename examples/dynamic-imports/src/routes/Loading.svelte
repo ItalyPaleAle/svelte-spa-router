@@ -4,12 +4,11 @@
 <p>Here's your message: {params && params.message}</p>
 
 <script>
+/**
+ * @typedef {Object} Props
+ * @property {any} params - Prop exported that will be filled by the router
+ */
 
-	/**
-	 * @typedef {Object} Props
-	 * @property {any} params - Prop exported that will be filled by the router
-	 */
-
-	/** @type {Props} */
-	const {params} = $props()
+/** @type {Props} */
+const {params} = $props()
 </script>

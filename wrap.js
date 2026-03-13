@@ -24,7 +24,7 @@
  * @property {AsyncSvelteComponent} [asyncComponent] - Function that returns a Promise that fulfills with a Svelte component (e.g. `{asyncComponent: () => import('Foo.svelte')}`)
  * @property {SvelteComponent} [loadingComponent] - Svelte component to be displayed while the async route is loading (as a placeholder); when unset or false-y, no component is shown while component
  * @property {object} [loadingParams] - Optional dictionary passed to the `loadingComponent` component as params (for an exported prop called `params`)
- * @property {object} [userData] - Optional object that will be passed to events such as `routeLoading`, `routeLoaded`, `conditionsFailed`
+ * @property {object} [userData] - Optional object that will be passed to callback props such as `onRouteLoading`, `onRouteLoaded`, `onConditionsFailed`
  * @property {object} [props] - Optional key-value dictionary of static props that will be passed to the component. The props are expanded with {...props}, so the key in the dictionary becomes the name of the prop.
  * @property {RoutePrecondition[]|RoutePrecondition} [conditions] - Route pre-conditions to add, which will be executed in order
  */
@@ -34,7 +34,7 @@
  * 1. Using dynamically-imported component, with (e.g. `{asyncComponent: () => import('Foo.svelte')}`), which also allows bundlers to do code-splitting.
  * 2. Adding route pre-conditions (e.g. `{conditions: [...]}`)
  * 3. Adding static props that are passed to the component
- * 4. Adding custom userData, which is passed to route events (e.g. route loaded events) or to route pre-conditions (e.g. `{userData: {foo: 'bar}}`)
+ * 4. Adding custom userData, which is passed to callback props (e.g. onRouteLoaded) or to route pre-conditions (e.g. `{userData: {foo: 'bar}}`)
  * 
  * @param {WrapOptions} args - Arguments object
  * @returns {WrappedComponent} Wrapped component
