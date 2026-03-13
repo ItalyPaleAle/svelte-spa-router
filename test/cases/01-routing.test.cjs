@@ -251,6 +251,22 @@ describe('<Router> component', function() {
             })
     })
 
+    it('router object mirrors store values', async (browser) => {
+        await browser.url('about:blank')
+
+        browser
+            .url(browser.launchUrl + '/#/hello/svelte?search=query&sort=0')
+            .waitForElementPresent('#currentpath')
+            .waitForElementPresent('#routerlocation')
+            .expect.element('#currentpath').text.to.equal('/hello/svelte')
+        browser.expect.element('#currentqs').text.to.equal('search=query&sort=0')
+        browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
+        browser.expect.element('#routerlocation').text.to.equal('/hello/svelte')
+        browser.expect.element('#routerquerystring').text.to.equal('search=query&sort=0')
+        browser.expect.element('#routerparams').text.to.equal('{"first":"svelte","last":null}')
+        browser.expect.element('#routerloc').text.to.equal('{"location":"/hello/svelte","querystring":"search=query&sort=0"}')
+    })
+
     it('routeLoaded event', (browser) => {
         browser
             .url(browser.launchUrl)
@@ -273,6 +289,20 @@ describe('<Router> component', function() {
                 browser
                     .waitForElementPresent('#logbox')
                     .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null}}\nrouteLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null},"name":"Name"}\nrouteEvent - {"action":"hi","params":{"first":"svelte","last":null}}')
+            })
+    })
+
+    it('routeEvent callback prop on wrapped route', async (browser) => {
+        await browser.url('about:blank')
+
+        browser
+            .url(browser.launchUrl + '/#/foo')
+            .waitForElementPresent('#fooeventtrigger')
+            .waitForElementPresent('#logbox')
+            .click('#fooeventtrigger', () => {
+                browser
+                    .waitForElementPresent('#logbox')
+                    .assert.textContains('#logbox', 'routeEvent - {"action":"foo","staticProp":"this is static"}')
             })
     })
 
