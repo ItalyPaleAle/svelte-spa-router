@@ -539,7 +539,7 @@ $effect(() => {
 async function dispatchNextTick(event, detail) {
     // Execute this code when the current call stack is complete
     await tick()
-    event(detail);
+    event(detail)
 }
 
 // Main routing effect
