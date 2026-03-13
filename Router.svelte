@@ -41,7 +41,7 @@ class Router {
 
     constructor() {
         window.addEventListener('hashchange', () => {
-            this.loc = getLocation()
+            this._loc = getLocation()
         })
     }
 }
