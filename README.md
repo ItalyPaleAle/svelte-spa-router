@@ -15,7 +15,7 @@
 [![npm](https://img.shields.io/npm/v/svelte-spa-router.svg)](https://www.npmjs.com/package/svelte-spa-router)
 [![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/blob/master/LICENSE.md)
 
-This module is a router for [Svelte 3 and 4](https://github.com/sveltejs/svelte) applications, specifically optimized for Single Page Applications (SPA).
+This module is a router for [Svelte 5](https://github.com/sveltejs/svelte) applications (prior versions support Svelte 3 and 4), specifically optimized for Single Page Applications (SPA).
 
 Main features:
 
@@ -38,7 +38,7 @@ With hash-based routing, navigation is possible thanks to storing the current vi
 
 For example, if your SPA is in a static file called `index.html`, your URLs for navigating within the app look something like `index.html#/profile`, `index.html#/book/42`, etc. (The `index.html` part can usually be omitted for the index file, so you can just create URLs that look like `http://example.com/#/profile`).
 
-When I created this component, other routers for Svelte 3+ implemented navigation using the HTML5 history API. While those URLs look nicer (e.g. you can actually navigate to `http://example.com/profile`), they are not ideal for static Single Page Applications. In order for users to be able to share links or even just refresh the page, you are required to have a server on the backend processing the request, and building fully-static apps is much harder as a consequence.
+When I created this component, other routers for Svelte apps implemented navigation using the HTML5 history API. While those URLs look nicer (e.g. you can actually navigate to `http://example.com/profile`), they are not ideal for static Single Page Applications. In order for users to be able to share links or even just refresh the page, you are required to have a server on the backend processing the request, and building fully-static apps is much harder as a consequence.
 
 Hash-based routing is simpler, works well even without a server, and it's generally better suited for static SPAs, especially when SEO isn't a concern, as is the case when the app requires authentication. Many popular apps use hash-based routing, including GMail!
 
@@ -67,6 +67,8 @@ The sample will be running at http://localhost:5050
 
 ## Starter template
 
+> This template is outdated for Svelte 5
+
 You can find a starter template with Svelte 4 and svelte-spa-router at [italypaleale/svelte-spa-router-template](https://github.com/italypaleale/svelte-spa-router-template).
 
 To use the template:
@@ -80,7 +82,7 @@ More information can be found on the [template's repo](https://github.com/italyp
 
 ## Using svelte-spa-router
 
-You can include the router in any project using Svelte 3 or 4.
+You can include the router in any project using Svelte 5 (older major versions support Svelte 3 and 4).
 
 ### Install from NPM
 
@@ -306,7 +308,7 @@ For example, for a route `/name/:first/:last?`, you can create this Svelte compo
 <p>Your name is: <b>{params.first}</b> <b>{#if params.last}{params.last}{/if}</b></p>
 <script>
 // You need to define the component prop "params"
-export let params = {}
+let {params = {}} = $props()
 </script>
 ````
 
@@ -314,27 +316,29 @@ Non-named arguments are returned as `params.wild`.
 
 ### Getting the current page
 
-You can get the current page from the `$location` readable store. This is a Svelte store, so it can be used reactively too.
+You can get the current page from `router.location`.
 
 ````svelte
 <script>
-import {location} from 'svelte-spa-router'
+import {router} from 'svelte-spa-router'
 </script>
-<p>The current page is: {$location}</p>
+<p>The current page is: {router.location}</p>
 ````
+
+If you need both location and querystring together, use `router.loc`.
 
 ### Querystring parameters
 
 You can also extract "querystring" parameters from the hash of the page. This isn't the _real_ querystring, as it's located after the `#` character in the URL, but it can be used in a similar way. For example: `#/books?show=authors,titles&order=1`.
 
-When svelte-spa-router finds a "querystring" in the hash, it separates that from the location and returns it as a string in the Svelte store `$querystring`. For example:
+When svelte-spa-router finds a "querystring" in the hash, it separates that from the location and returns it as a string in `router.querystring`. For example:
 
 ````svelte
 <script>
-import {location, querystring} from 'svelte-spa-router'
+import {router} from 'svelte-spa-router'
 </script>
-<p>The current page is: {$location}</p>
-<p>The querystring is: {$querystring}</p>
+<p>The current page is: {router.location}</p>
+<p>The querystring is: {router.querystring}</p>
 ````
 
 With the example above, this would print:
@@ -344,7 +348,7 @@ The current page is: /books
 The querystring is: show=authors,titles&order=1
 ````
 
-It's important to note that, to keep this component lightweight, svelte-spa-router **does not parse** the "querystring". If you want to parse the value of `$querystring`, you can use [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) available in all modern browsers, or third-party modules such as [qs](https://www.npmjs.com/package/qs).
+It's important to note that, to keep this component lightweight, svelte-spa-router **does not parse** the "querystring". If you want to parse the value of `router.querystring`, you can use [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) available in all modern browsers, or third-party modules such as [qs](https://www.npmjs.com/package/qs).
 
 ### Highlight active links
 
@@ -410,7 +414,7 @@ For example, with this `Name.svelte` route:
 <p>Params is: <code>{JSON.stringify(params)}</code></p>
 <script>
 // You need to define the component prop "params"
-export let params = {}
+let {params = {}} = $props()
 </script>
 ````
 

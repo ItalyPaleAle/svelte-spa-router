@@ -11,6 +11,65 @@
 
 # Upgrading instructions
 
+## Upgrading to 5.x
+
+svelte-spa-router 5.x requires Svelte version 5 or later. When upgrading from svelte-spa-router 4.x to 5.x, please note the following breaking changes:
+
+### Use `router.loc`, `router.location`, and `router.querystring` instead of the store exports
+
+The legacy store exports (`loc`, `location`, `querystring` and `params`) are deprecated in favor of properties on the `router` object.
+
+Update your imports and usages as follows:
+
+```diff
+-import {loc, location, querystring, params} from 'svelte-spa-router'
++import {router} from 'svelte-spa-router'
+
+// usage
+-$loc
+-$location
+-$querystring
+-$params
++router.loc
++router.location
++router.querystring
++router.params
+```
+
+### Use callback props instead of component events
+
+Pass callback props to the router component rather than listening to custom component events.
+
+For example, `on:routeLoading` becomes `onRouteLoading`:
+
+```diff
+ <script>
+-    function handleRouteLoading(event) {
+-        console.log(event.detail)
++    function handleRouteLoading(detail) {
++        console.log(detail)
+     }
+ </script>
+
+-<Router {routes} on:routeLoading={handleRouteLoading} />
++<Router {routes} onRouteLoading={handleRouteLoading} />
+```
+
+Likewise, migrate the other route callbacks too:
+
+```diff
+-<Router
+-    {routes}
+-    on:routeLoaded={handleRouteLoaded}
+-    on:conditionsFailed={handleConditionsFailed}
+-/>
++<Router
++    {routes}
++    onRouteLoaded={handleRouteLoaded}
++    onConditionsFailed={handleConditionsFailed}
++/>
+```
+
 ## Upgrading to 4.x
 
 When upgrading from svelte-spa-router 3.x to 4.x, please note the following breaking changes:
