@@ -22,18 +22,20 @@ The legacy store exports (`loc`, `location`, `querystring` and `params`) are dep
 Update your imports and usages as follows:
 
 ```diff
+<script>
 -import {loc, location, querystring, params} from 'svelte-spa-router'
 +import {router} from 'svelte-spa-router'
 
-// usage
--$loc
--$location
--$querystring
--$params
-+router.loc
-+router.location
-+router.querystring
-+router.params
+// usage examples
+-params.subscribe(p => console.log(p))
++$effect(() => console.log(router.params))
+
+-$: hasQueryString = !!$querystring
++const hasQueryString = $derived(!!router.querystring)
+</script>
+
+-Currently at {$location}
++Currently at {router.location}
 ```
 
 ### Use callback props instead of component events
