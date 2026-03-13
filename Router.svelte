@@ -10,12 +10,14 @@ import {tick} from 'svelte'
 /**
  * Returns the current location from the hash.
  *
+ * @param {string} queriedHref - The href we want to location of. By default, the current href of the page.
  * @returns {Location} Location object
  * @private
  */
-function getLocation() {
-    const hashPosition = window.location.href.indexOf('#/')
-    let location = (hashPosition > -1) ? window.location.href.substr(hashPosition + 1) : '/'
+function getLocation(queriedHref) {
+    const href = queriedHref != undefined ? queriedHref : window.location.href
+    const hashPosition = href.indexOf('#/')
+    let location = (hashPosition > -1) ? href.substr(hashPosition + 1) : '/'
 
     // Check if there's a querystring
     const qsPosition = location.indexOf('?')
@@ -82,12 +84,8 @@ export async function push(location) {
         throw Error('Invalid parameter location')
     }
 
-    // Execute this code when the current call stack is complete
-    await tick()
-
-    // Note: this will include scroll state in history even when restoreScrollState is false
-    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined)      
-    window.location.hash = (location.charAt(0) == '#' ? '' : '#') + location
+    const nextHref = (location.charAt(0) == '#' ? '' : '#') + location
+    scrollstateHistoryHandler(nextHref)
 }
 
 /**
@@ -96,10 +94,18 @@ export async function push(location) {
  * @return {Promise<void>} Promise that resolves after the page navigation has completed
  */
 export async function pop() {
-    // Execute this code when the current call stack is complete
-    await tick()
+    const currLocation = getLocation()
+    const beforeRouteChangePayload = {
+        from: currLocation,
+        to: undefined,
+        replace: false,
+    }
+    if (await beforeRouteChange(beforeRouteChangePayload)) {
+        // Execute this code when the current call stack is complete
+        await tick()
 
-    window.history.back()
+        window.history.back()
+    }
 }
 
 /**
@@ -113,10 +119,20 @@ export async function replace(location) {
         throw Error('Invalid parameter location')
     }
 
+    const dest = (location.charAt(0) == '#' ? '' : '#') + location
+
+    const beforeRouteChangePayload = {
+        from: getLocation(),
+        to: getLocation(dest),
+        replace: true
+    }
+    const canChangeRoute = await beforeRouteChange(beforeRouteChangePayload)
+    if (!canChangeRoute) {
+        return
+    }
+
     // Execute this code when the current call stack is complete
     await tick()
-
-    const dest = (location.charAt(0) == '#' ? '' : '#') + location
     try {
         const newState = {
             ...history.state
@@ -228,11 +244,23 @@ function linkOpts(val) {
  *
  * @param {string} href - Destination
  */
-function scrollstateHistoryHandler(href) {
-    // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
-    history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined)
-    // This will force an update as desired, but this time our scroll state will be attached
-    window.location.hash = href
+async function scrollstateHistoryHandler(href) {
+    const currLocation = getLocation()
+    const nextLocation = getLocation(href)
+    const beforeRouteChangePayload = {
+        from: currLocation,
+        to: nextLocation,
+        replace: false
+    }
+    if (await beforeRouteChange(beforeRouteChangePayload)) {
+        // Execute this code when the current call stack is complete
+        await tick()
+
+        // Setting the url (3rd arg) to href will break clicking for reasons, so don't try to do that
+        history.replaceState({...history.state, __svelte_spa_router_scrollX: window.scrollX, __svelte_spa_router_scrollY: window.scrollY}, undefined)
+        // This will force an update as desired, but this time our scroll state will be attached
+        window.location.hash = href
+    }
 }
 </script>
 
@@ -282,6 +310,16 @@ export let prefix = ''
  * and scroll to top on forward navigation.
  */
 export let restoreScrollState = false
+
+/**
+ * This function will be called before any attempt to go to another route.
+ * 
+ * If it returns false, then the route change is fully cancelled, and the current route and location stays the same.
+ * If it returns true, then the route change proceeds as usual.
+ * 
+ * By default it returns a Promise of true immediatly, but you can adapt it to return false in certain scenarios.
+ */
+export let beforeRouteChange = () => Promise.resolve(true)
 
 /**
  * Container for a route: path, component

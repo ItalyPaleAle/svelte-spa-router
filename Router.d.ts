@@ -33,6 +33,17 @@ export interface RouteDetailLoaded extends RouteDetail {
      name: string
 }
 
+/** Detail object for the `beforeRouteChange` event */
+export interface BeforeRouteChange {
+    /** Location we would be leaving */
+    from: Location
+    /** Location we would be going to. This is may undefined in some cases, like if `pop` is used programmatically.*/
+    to?: Location
+
+    /** Would this event replace history? If false, it would push a new one, or alternatively go back in the history */
+    replace: boolean
+}
+
 /**
  * This is a Svelte component loaded asynchronously.
  * It's meant to be used with the `import()` function, such as `() => import('Foo.svelte')}`
@@ -203,6 +214,22 @@ export default class Router extends SvelteComponent {
          * and scroll to top on forward navigation.
          */
         restoreScrollState?: boolean
+        /**
+         * This function will be called before any attempt to go to another route.
+         * 
+         * If it returns false, then the route change is fully cancelled, and the current route and location
+         * stays the same. If it returns true, then the route change proceeds as usual.
+         * 
+         * By default, it returns a Promise of `true` immediatly, but you can adapt it to return false in certain
+         * scenarios where you do not want the user to leave from a page or go to a page.
+         * 
+         * # Note
+         * 
+         * It will **not** catch any history event manually sent by the browser, such as when the user clicks on
+         * the "back" button. `window.onpopstate` might be of some use for those kinds of cases, although
+         * it is limited.
+         */
+        beforeRouteChange?: (routeChange: BeforeRouteChange) => Promise<boolean>,
     }
 
     $on(event: 'routeEvent', callback: (event: CustomEvent) => void): () => void

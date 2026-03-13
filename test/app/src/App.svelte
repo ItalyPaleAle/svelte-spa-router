@@ -34,6 +34,7 @@
   on:routeLoaded={routeLoaded}
   on:routeLoading={routeLoading}
   on:routeEvent={routeEvent}
+  {beforeChangeRoute}
   {restoreScrollState}
 />
 
@@ -111,6 +112,11 @@ function conditionsFailed(event) {
 
     // Replace the route
     replace('/wild/conditions-failed')
+}
+
+function beforeChangeRoute(beforeChangeRoutePayload) {
+    console.log(beforeChangeRoutePayload)
+    return Promise.resolve(true)
 }
 
 // Handles the "routeLoaded" event dispatched by the router after a route has been successfully loaded
