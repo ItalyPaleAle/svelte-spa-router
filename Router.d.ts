@@ -132,21 +132,47 @@ interface Location {
 
 /**
  * Readable store that returns the current full location (incl. querystring)
+ * @deprecated Use `router.loc` instead.
  */
 export const loc: Readable<Location>
 
 /**
+ * Router state object, containing the current location, querystring and params.
+ */
+export interface RouterState {
+    /** The current full location (incl. querystring) */
+    readonly loc: Location
+
+    /** The current location (excluding querystring) */
+    readonly location: string
+
+    /** The current querystring */
+    readonly querystring: string | undefined
+
+    /** The currently-matched params */
+    readonly params: Record<string, string> | undefined
+}
+
+/**
+ * Router state object, containing the current location, querystring and params.
+ */
+export const router: RouterState
+
+/**
  * Readable store that returns the current location
+ * @deprecated Use `router.location` instead.
  */
 export const location: Readable<string>
 
 /**
  * Readable store that returns the current querystring
+ * @deprecated Use `router.querystring` instead.
  */
 export const querystring: Readable<string | undefined>
 
 /**
  * Readable store that returns the current list of params
+ * @deprecated Use `router.params` instead.
  */
 export const params: Readable<Record<string, string> | undefined>
 // Note: the above is implemented as writable but exported as readable because consumers should not modify the value

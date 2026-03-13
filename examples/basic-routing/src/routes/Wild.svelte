@@ -5,12 +5,11 @@
 <p>Your message is: {params.wild}</p>
 
 <script>
+/**
+ * @typedef {Object} Props
+ * @property {any} [params] - The params prop contains values matched from the URL
+ */
 
-	/**
-	 * @typedef {Object} Props
-	 * @property {any} [params] - The params prop contains values matched from the URL
-	 */
-
-	/** @type {Props} */
-	const {params = {}} = $props()
+/** @type {Props} */
+const {params = {}} = $props()
 </script>

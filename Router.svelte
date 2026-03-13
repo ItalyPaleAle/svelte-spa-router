@@ -2,6 +2,55 @@
 import {readable, writable, derived} from 'svelte/store'
 import {tick} from 'svelte'
 
+class Router {
+    /**
+     * The current full location (incl. querystring)
+     */
+    _loc = $state.raw(getLocation())
+    /**
+     * The current location (excluding querystring)
+     */
+    _location = $derived(this._loc.location)
+    /**
+     * The current querystring
+     */
+    _querystring = $derived(this._loc.querystring)
+    _params = $state.raw(undefined)
+
+    /**
+     * The current full location (incl. querystring)
+     */
+    get loc() {
+        return this._loc
+    }
+    /**
+     * The current location (excluding querystring)
+     */
+    get location() {
+        return this._location
+    }
+    /**
+     * The current querystring
+     */
+    get querystring() {
+        return this._querystring
+    }
+    get params() {
+        return this._params
+    }
+
+    constructor() {
+        window.addEventListener('hashchange', () => {
+            this.loc = getLocation()
+        })
+    }
+}
+
+/**
+ * Router state object, containing the current location, querystring and params.
+ */
+export const router = new Router()
+
 /**
  * @typedef {Object} Location
  * @property {string} location - Location (page/view), for example `/book`
@@ -30,6 +79,7 @@ function getLocation() {
 
 /**
  * Readable store that returns the current full location (incl. querystring)
+ * @deprecated Use router.loc instead
  */
 export const loc = readable(
     null,
@@ -50,6 +100,7 @@ export const loc = readable(
 
 /**
  * Readable store that returns the current location
+ * @deprecated Use router.location instead
  */
 export const location = derived(
     loc,
@@ -58,6 +109,7 @@ export const location = derived(
 
 /**
  * Readable store that returns the current querystring
+ * @deprecated Use router.querystring instead
  */
 export const querystring = derived(
     loc,
@@ -68,6 +120,7 @@ export const querystring = derived(
  * Store that returns the currently-matched params.
  * Despite this being writable, consumers should not change the value of the store.
  * It is exported as a readable store only (in the typings file)
+ * @deprecated Use router.params instead
  */
 export const params = writable(undefined)
 
@@ -583,12 +636,14 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         })
 
         params.set(matchParams)
+        router._params = matchParams
         return
     }
 
     component = null
     componentObj = null
     params.set(undefined)
+    router._params = undefined
 })
 
 onDestroy(() => {
