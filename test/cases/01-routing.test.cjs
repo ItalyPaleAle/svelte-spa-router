@@ -251,6 +251,22 @@ describe('<Router> component', function() {
             })
     })
 
+    it('router object mirrors store values', async (browser) => {
+        await browser.url('about:blank')
+
+        browser
+            .url(browser.launchUrl + '/#/hello/svelte?search=query&sort=0')
+            .waitForElementPresent('#currentpath')
+            .waitForElementPresent('#routerlocation')
+            .expect.element('#currentpath').text.to.equal('/hello/svelte')
+        browser.expect.element('#currentqs').text.to.equal('search=query&sort=0')
+        browser.expect.element('#currentparams').text.to.equal('{"first":"svelte","last":null}')
+        browser.expect.element('#routerlocation').text.to.equal('/hello/svelte')
+        browser.expect.element('#routerquerystring').text.to.equal('search=query&sort=0')
+        browser.expect.element('#routerparams').text.to.equal('{"first":"svelte","last":null}')
+        browser.expect.element('#routerloc').text.to.equal('{"location":"/hello/svelte","querystring":"search=query&sort=0"}')
+    })
+
     it('routeLoaded event', (browser) => {
         browser
             .url(browser.launchUrl)
@@ -273,6 +289,20 @@ describe('<Router> component', function() {
                 browser
                     .waitForElementPresent('#logbox')
                     .expect.element('#logbox').text.to.equal('routeLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null}}\nrouteLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null},"name":"Name"}\nrouteEvent - {"action":"hi","params":{"first":"svelte","last":null}}')
+            })
+    })
+
+    it('routeEvent callback prop on wrapped route', async (browser) => {
+        await browser.url('about:blank')
+
+        browser
+            .url(browser.launchUrl + '/#/foo')
+            .waitForElementPresent('#fooeventtrigger')
+            .waitForElementPresent('#logbox')
+            .click('#fooeventtrigger', () => {
+                browser
+                    .waitForElementPresent('#logbox')
+                    .assert.textContains('#logbox', 'routeEvent - {"action":"foo","staticProp":"this is static"}')
             })
     })
 
@@ -354,5 +384,41 @@ describe('<Router> component', function() {
             .url(browser.launchUrl + '/#/foo')
             .waitForElementVisible('#staticprop')
             .expect.element('#staticprop').text.to.equal('this is static')
+    })
+
+    it('scroll restoration with route conditions does not cause infinite loop', function(browser) {
+        this.timeout(15000)
+
+        // Navigate to a route with conditions while scroll restoration is enabled
+        // This tests the fix for the effect_update_depth_exceeded error
+        browser
+            .url(browser.launchUrl + '?scroll=1#/lucky?pass=1')
+            .waitForElementVisible('#lucky', 8000)
+            .expect.element('#currentpath').text.to.equal('/lucky')
+
+        // Navigate to another route and back
+        browser
+            .click('.navigation-links a[href="#/hello/svelte"]', () => {
+                browser
+                    .waitForElementVisible('#nameparams')
+                    .back(() => {
+                        // Should return to /lucky without errors
+                        browser
+                            .waitForElementVisible('#lucky', 8000)
+                            .expect.element('#currentpath').text.to.equal('/lucky')
+                    })
+            })
+
+        // Verify no console errors (effect_update_depth_exceeded)
+        browser.execute(function() {
+            return window.__consoleErrors || []
+        }, [], function(result) {
+            const errors = result.value || []
+            const reactivityErrors = errors.filter(e =>
+                e.includes('effect_update_depth_exceeded') ||
+                e.includes('Maximum update depth exceeded')
+            )
+            browser.assert.equal(reactivityErrors.length, 0, 'No reactivity loop errors')
+        })
     })
 })

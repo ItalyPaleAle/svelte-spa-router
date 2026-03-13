@@ -9,7 +9,7 @@ module.exports = {
         'plugin:svelte/recommended'
     ],
     parserOptions: {
-        ecmaVersion: 2019,
+        ecmaVersion: 2022,
         sourceType: 'module',
         extraFileExtensions: ['.svelte']
     },

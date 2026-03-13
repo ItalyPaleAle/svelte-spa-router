@@ -9,6 +9,11 @@
 <p><em>Hint:</em> Try changing the URL and add your name, e.g. <code>/hello/alex</code> or <code>/hello/jane/doe</code></p>
 
 <script>
-// The params prop contains values matched from the URL
-export let params = {}
+/**
+ * @typedef {Object} Props
+ * @property {any} [params] - The params prop contains values matched from the URL
+ */
+
+/** @type {Props} */
+const {params = {}} = $props()
 </script>

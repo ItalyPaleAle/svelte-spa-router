@@ -1,6 +1,8 @@
 // Initialize the Svelte app and inject it in the DOM
 import App from './App.svelte'
-const app = new App({
+import { mount } from "svelte";
+
+const app = mount(App, {
     target: document.body
 })
 

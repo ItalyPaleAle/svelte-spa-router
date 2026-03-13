@@ -1,7 +1,7 @@
 {
   "name": "svelte-spa-router",
   "version": "4.0.2",
-  "description": "Router for SPAs using Svelte 4",
+  "description": "Router for SPAs using Svelte 5",
   "main": "Router.svelte",
   "svelte": "Router.svelte",
   "types": "Router.d.ts",
@@ -41,6 +41,7 @@
     "svelte",
     "svelte3",
     "svelte4",
+    "svelte5",
     "spa"
   ],
   "author": "Alessandro Segala (@ItalyPaleAle)",
@@ -60,12 +61,12 @@
     "chromedriver": "^119.0.1",
     "eslint": "^8.55.0",
     "eslint-plugin-html": "^7.1.0",
-    "eslint-plugin-svelte": "^2.35.1",
+    "eslint-plugin-svelte": "^2.45.1",
     "nightwatch": "^2.6.23",
     "rollup": "^4.7.0",
     "rollup-plugin-css-only": "^4.5.2",
-    "rollup-plugin-svelte": "^7.1.6",
+    "rollup-plugin-svelte": "^7.2.2",
     "serve": "^14.2.1",
-    "svelte": "^4.2.8"
+    "svelte": "^5.0.0"
   }
 }
