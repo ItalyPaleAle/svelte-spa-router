@@ -536,12 +536,10 @@ $effect(() => {
     }
 })
 
-// Helper function that dispatches both a Svelte event and a DOM custom event
-function dispatchNextTick(name, detail) {
-    // Dispatch Svelte event
-    // Also dispatch DOM custom event for backwards compatibility
-    const event = new CustomEvent(name, {detail})
-    window.dispatchEvent(event)
+async function dispatchNextTick(event, detail) {
+    // Execute this code when the current call stack is complete
+    await tick()
+    event(detail);
 }
 
 // Main routing effect
@@ -568,13 +566,11 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         if (!(await routesList[i].checkConditions(detail))) {
             component = null
             componentObj = null
-            onConditionsFailed(detail)
-            dispatchNextTick('conditionsFailed', detail)
+            dispatchNextTick(onConditionsFailed, detail)
             return
         }
 
-        onRouteLoading({...detail})
-        dispatchNextTick('routeLoading', {...detail})
+        dispatchNextTick(onRouteLoading, {...detail})
 
         const obj = routesList[i].component
         if (componentObj != obj) {
@@ -584,13 +580,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
                 componentParams = obj.loadingParams
                 props = {}
                 const comp = obj.loading
-                onRouteLoaded({
-                    ...detail,
-                    component: comp,
-                    name: comp.name,
-                    params: obj.loadingParams
-                })
-                dispatchNextTick('routeLoaded', {
+                dispatchNextTick(onRouteLoaded, {
                     ...detail,
                     component: comp,
                     name: comp.name,
@@ -622,13 +612,7 @@ const unsubscribeLoc = loc.subscribe(async (newLoc) => {
         props = routesList[i].props
 
         const comp = component
-        onRouteLoaded({
-            ...detail,
-            component: comp,
-            name: comp.name,
-            params: matchParams
-        })
-        dispatchNextTick('routeLoaded', {
+        dispatchNextTick(onRouteLoaded, {
             ...detail,
             component: comp,
             name: comp.name,

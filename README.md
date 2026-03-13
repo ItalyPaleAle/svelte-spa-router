@@ -280,7 +280,7 @@ replace('/book/3')
 These methods can be used inside Svelte markup too, for example:
 
 ````svelte
-<button on:click={() => push('/page')}>Go somewhere</button>
+<button onclick={() => push('/page')}>Go somewhere</button>
 ````
 
 The `push`, `pop` and `replace` methods perform navigation actions only in the next iteration ("tick") of the JavaScript event loop. This makes it safe to use them also inside `onMount` callbacks within Svelte components.
