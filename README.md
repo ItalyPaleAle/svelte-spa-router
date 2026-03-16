@@ -15,7 +15,7 @@
 [![npm](https://img.shields.io/npm/v/svelte-spa-router.svg)](https://www.npmjs.com/package/svelte-spa-router)
 [![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/blob/master/LICENSE.md)
 
-This module is a router for [Svelte 5](https://github.com/sveltejs/svelte) applications (prior versions support Svelte 3 and 4), specifically optimized for Single Page Applications (SPA).
+This module is a router for [Svelte 5](https://github.com/sveltejs/svelte) applications ([prior versions support Svelte 3 and 4](https://github.com/ItalyPaleAle/svelte-spa-router/blob/v4.0.2/README.md)), specifically optimized for Single Page Applications (SPA).
 
 Main features:
 
