@@ -116,7 +116,7 @@ import {link, push, pop, replace, router} from '../../../Router.svelte'
 
 // Import the "active" action
 // Normally, this would be: `import active from 'svelte-spa-router/active'`
-import active from '../../../active'
+import active from '../../../active.svelte.js'
 
 // Import the list of routes
 import routes from './routes'

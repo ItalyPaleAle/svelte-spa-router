@@ -9,7 +9,7 @@
   "exports": {
     "./active": {
       "types": "./active.d.ts",
-      "import": "./active.js"
+      "svelte": "./active.svelte.js"
     },
     "./wrap": {
       "types": "./wrap.d.ts",
