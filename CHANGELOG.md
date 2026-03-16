@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.0
+
+### Major Changes
+
+- c93e046: breaking: require Svelte 5, remove stores in favor of new router object, remove events in favor of callback props
+
 ## 4.0.2
 
 ### Patch Changes
