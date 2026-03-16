@@ -7,9 +7,6 @@
 // Import the link action
 // Normally, this would be: `import {link} from 'svelte-spa-router'`
 import {link} from '../../../../Router.svelte'
-export let params
-let id
-$: if (params) {
-    id = parseInt(params.id, 10)
-}
+let {params} = $props()
+let id = $derived(params && parseInt(params.id, 10))
 </script>

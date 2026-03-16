@@ -1,18 +1,29 @@
+
 <h1>svelte-spa-router example</h1>
 <!-- Navigation links, using the "link" action -->
 <!-- Also, use the "active" action to add the "active" CSS class when the URL matches -->
 <ul class="navigation-links">
     <li><a href="/" use:link use:active>Home</a></li>
     <li><a href="/brand" use:link><b>Brand</b></a></li>
-    <li><a href="/hello/svelte" use:link use:active={{path: '/hello/*', className: 'active another-class', inactiveClassName: 'inactive'}}>Say hi!</a></li>
+    <li>
+        <a
+            href="/hello/svelte"
+            use:link
+            use:active={{
+                path: '/hello/*',
+                className: 'active another-class',
+                inactiveClassName: 'inactive'
+            }}>Say hi!</a
+        >
+    </li>
     <li><a href="/does/not/exist" use:link>Not found</a></li>
 </ul>
 
 <!-- Navigate with buttons -->
 <p class="navigation-buttons">
-    <button on:click={() => push('/wild/something')}>Visit /wild/something</button>
-    <button on:click={() => pop()}>Go back</button>
-    <button on:click={() => replace('/wild/replaced')}>Replace current page</button>
+    <button onclick={() => push('/wild/something')}>Visit /wild/something</button>
+    <button onclick={() => pop()}>Go back</button>
+    <button onclick={() => replace('/wild/replaced')}>Replace current page</button>
 </p>
 
 <!-- Query string -->
@@ -20,55 +31,65 @@
 
 <!-- Show the current path -->
 <p>
-    Current path: <code id="currentpath">{$location}</code>
-    <br/>
-    Querystring: <code id="currentqs">{$querystring}</code>
-    <br/>
-    Params: <code id="currentparams">{JSON.stringify($params)}</code>
+    Current path: <code id="currentpath">{router.location}</code>
+    <br />
+    Querystring: <code id="currentqs">{router.querystring}</code>
+    <br />
+    Params: <code id="currentparams">{JSON.stringify(router.params)}</code>
 </p>
 
 <!-- Show the router -->
 <Router
-  {routes}
-  on:conditionsFailed={conditionsFailed}
-  on:routeLoaded={routeLoaded}
-  on:routeLoading={routeLoading}
-  on:routeEvent={routeEvent}
-  {restoreScrollState}
+    {routes}
+    {onConditionsFailed}
+    {onRouteLoaded}
+    {onRouteLoading}
+    {onRouteEvent}
+    {restoreScrollState}
 />
 
 <!-- Testing dynamic list of links -->
 <h2>Dynamic links</h2>
 <ul class="navigation-dynamic-links">
-{#each dynamicLinks as dl (dl.id)}
-    <li>
-        <a id="dynamic-link-{dl.id}" href={dl.link} use:link use:active>Dynamic Link {dl.id}</a>
-         - 
-        <i role="button" id="delete-link-{dl.id}" on:click={() => dynamicLinks = dynamicLinks.filter(e => e.id != dl.id)}>delete link</i>
-    </li>
-{/each}
+    {#each dynamicLinks as dl (dl.id)}
+        <li>
+            <a id="dynamic-link-{dl.id}" href={dl.link} use:link use:active>Dynamic Link {dl.id}</a>
+            -
+            <i
+                role="button"
+                id="delete-link-{dl.id}"
+                onclick={() => (dynamicLinks = dynamicLinks.filter((e) => e.id != dl.id))}
+                >delete link</i
+            >
+        </li>
+    {/each}
 </ul>
 
 <!-- Testing links that can be disabled -->
 <h2>Dynamic links</h2>
 <ul class="navigation-disable-links">
-{#each disableLinks as dl, i (dl.id)}
-    <li>
-        <a id="disable-link-{dl.id}" href="/foo" use:link={dl.opts} use:active>Dynamic Link {dl.id}</a>
-         - 
-        <i role="button" id="toggle-link-{dl.id}" on:click={dl.toggle}>
-            {#if dl.opts.disabled}
-                enable link
-            {:else}
-                disable link
-            {/if}
-        </i>
-    </li>
-{/each}
+    {#each disableLinks as dl, i (dl.id)}
+        <li>
+            <a id="disable-link-{dl.id}" href="/foo" use:link={dl.opts} use:active
+                >Dynamic Link {dl.id}</a
+            >
+            -
+            <i role="button" id="toggle-link-{dl.id}" onclick={dl.toggle}>
+                {#if dl.opts.disabled}
+                    enable link
+                {:else}
+                    disable link
+                {/if}
+            </i>
+        </li>
+    {/each}
 </ul>
 
 <!-- Test use:active with a regular expression -->
-<p><a href="#/" use:active={/\/*\/hi/}>This link</a> is active when you're matching <code>/*/hi</code></p>
+<p>
+    <a href="#/" use:active={/\/*\/hi/}>This link</a> is active when you're matching
+    <code>/*/hi</code>
+</p>
 
 <!-- Used for testing -->
 <pre id="logbox">{logbox}</pre>
@@ -91,48 +112,58 @@ import Router from '../../../Router.svelte'
 // Import the "link" action, the methods to control history programmatically from the same module, and the location store
 // The params store contains the current list of params, parsed
 // Normally, this would be: `import {link, push, pop, replace, location, querystring} from 'svelte-spa-router/active'`
-import {link, push, pop, replace, location, querystring, params} from '../../../Router.svelte'
+import {link, push, pop, replace, router} from '../../../Router.svelte'
 
 // Import the "active" action
 // Normally, this would be: `import active from 'svelte-spa-router/active'`
-import active from '../../../active'
+import active from '../../../active.svelte.js'
 
 // Import the list of routes
 import routes from './routes'
 
+// Capture console errors for testing (detects reactivity loops)
+if (typeof window !== 'undefined') {
+    window.__consoleErrors = []
+    const originalError = console.error
+    console.error = (...args) => {
+        window.__consoleErrors.push(args.join(' '))
+        originalError.apply(console, args)
+    }
+}
+
 // Contains logging information used by tests
-let logbox = ''
+let logbox = $state('')
 
 // Handles the "conditionsFailed" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
-function conditionsFailed(event) {
+function onConditionsFailed(detail) {
     // eslint-disable-next-line no-console
-    console.error('Caught event conditionsFailed', event.detail)
-    logbox += 'conditionsFailed - ' + JSON.stringify(event.detail) + '\n'
+    console.error('Caught event conditionsFailed', detail)
+    logbox += 'conditionsFailed - ' + JSON.stringify(detail) + '\n'
 
     // Replace the route
     replace('/wild/conditions-failed')
 }
 
 // Handles the "routeLoaded" event dispatched by the router after a route has been successfully loaded
-function routeLoaded(event) {
+function onRouteLoaded(detail) {
     // eslint-disable-next-line no-console
-    console.info('Caught event routeLoaded', event.detail)
-    logbox += 'routeLoaded - ' + JSON.stringify(event.detail) + '\n'
+    console.info('Caught event routeLoaded', detail)
+    logbox += 'routeLoaded - ' + JSON.stringify(detail) + '\n'
 }
 
 // Handles the "routeLoading" event dispatched by the router whie a route is being loaded
 // If the route is dynamically imported, such as with the `import()` syntax, then there might be a delay before the route is loaded
-function routeLoading(event) {
+function onRouteLoading(detail) {
     // eslint-disable-next-line no-console
-    console.info('Caught event routeLoading', event.detail)
-    logbox += 'routeLoading - ' + JSON.stringify(event.detail) + '\n'
+    console.info('Caught event routeLoading', detail)
+    logbox += 'routeLoading - ' + JSON.stringify(detail) + '\n'
 }
 
 // Handles event bubbling up from nested routes
-function routeEvent(event) {
+function onRouteEvent(detail) {
     // eslint-disable-next-line no-console
-    console.info('Caught event routeEvent', event.detail)
-    logbox += 'routeEvent - ' + JSON.stringify(event.detail) + '\n'
+    console.info('Caught event routeEvent', detail)
+    logbox += 'routeEvent - ' + JSON.stringify(detail) + '\n'
 }
 
 // Enables the restoreScrollState option by checking for the "scroll=1" querystring parameter
@@ -141,7 +172,7 @@ const urlParams = new URLSearchParams(window.location.search)
 const restoreScrollState = !!urlParams.has('scroll')
 
 // List of dynamic links
-let dynamicLinks = [
+let dynamicLinks = $state([
     {
         id: 1,
         link: '/hello/dynamic-link-1'
@@ -154,10 +185,10 @@ let dynamicLinks = [
         id: 3,
         link: '/hello/dynamic-link-3'
     }
-]
+])
 
 // List of links that can be disabled
-let disableLinks = [
+let disableLinks = $state([
     {
         id: 1,
         opts: {
@@ -179,10 +210,10 @@ let disableLinks = [
             disabled: false
         }
     }
-].map((el) => {
+])
+disableLinks.map((el) => {
     el.toggle = () => {
         el.opts.disabled = !el.opts.disabled
-        disableLinks = disableLinks
     }
     return el
 })

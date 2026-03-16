@@ -3,5 +3,5 @@
 <p>Your message is: {params.wild}</p>
 
 <script>
-export let params = {}
+let {params = {}} = $props()
 </script>

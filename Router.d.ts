@@ -1,12 +1,9 @@
 ///<reference types="svelte" />
 
-import {SvelteComponent, ComponentType as OldComponentType} from 'svelte'
+import type {Component} from 'svelte'
 import {Readable} from 'svelte/store'
 
-// Old or new component type; can't just import the new one yet because don't know if user is on Svelte 5
-type ComponentType = OldComponentType | ((_: any, props?: any) => any)
-
-/** Dictionary with route details passed to the pre-conditions functions, as well as the `routeLoading` and `conditionsFailed` events */
+/** Dictionary with route details passed to pre-conditions and callback props */
 export interface RouteDetail {
     /** Route matched as defined in the route definition (could be a string or a regular expression object) */
     route: string | RegExp
@@ -24,10 +21,10 @@ export interface RouteDetail {
     userData?: object
 }
 
-/** Detail object for the `routeLoaded` event */
+/** Detail object for `onRouteLoaded` */
 export interface RouteDetailLoaded extends RouteDetail {
      /** Svelte component */
-     component: ComponentType
+     component: Component<any, any>
 
      /** Name of the Svelte component that was loaded (note: might be minified in production) */
      name: string
@@ -37,7 +34,7 @@ export interface RouteDetailLoaded extends RouteDetail {
  * This is a Svelte component loaded asynchronously.
  * It's meant to be used with the `import()` function, such as `() => import('Foo.svelte')}`
  */
-export type AsyncSvelteComponent = () => Promise<{default: ComponentType}>
+export type AsyncSvelteComponent = () => Promise<{default: Component<any, any>}>
 
 /**
  * Route pre-condition function. This is a callback that receives a RouteDetail object as argument containing information on the route that we're trying to load.
@@ -53,7 +50,7 @@ export type RoutePrecondition = (detail: RouteDetail) => (boolean | Promise<bool
 /** Object returned by the `wrap` method */
 export interface WrappedComponent {
     /** Component to load (this is always asynchronous) */
-    component: ComponentType
+    component: Component<any, any>
 
     /** Route pre-conditions to validate */
     conditions?: RoutePrecondition[]
@@ -135,78 +132,103 @@ interface Location {
 
 /**
  * Readable store that returns the current full location (incl. querystring)
+ * @deprecated Use `router.loc` instead.
  */
 export const loc: Readable<Location>
 
 /**
+ * Router state object, containing the current location, querystring and params.
+ */
+export interface RouterState {
+    /** The current full location (incl. querystring) */
+    readonly loc: Location
+
+    /** The current location (excluding querystring) */
+    readonly location: string
+
+    /** The current querystring */
+    readonly querystring: string | undefined
+
+    /** The currently-matched params */
+    readonly params: Record<string, string> | undefined
+}
+
+/**
+ * Router state object, containing the current location, querystring and params.
+ */
+export const router: RouterState
+
+/**
  * Readable store that returns the current location
+ * @deprecated Use `router.location` instead.
  */
 export const location: Readable<string>
 
 /**
  * Readable store that returns the current querystring
+ * @deprecated Use `router.querystring` instead.
  */
 export const querystring: Readable<string | undefined>
 
 /**
  * Readable store that returns the current list of params
+ * @deprecated Use `router.params` instead.
  */
 export const params: Readable<Record<string, string> | undefined>
 // Note: the above is implemented as writable but exported as readable because consumers should not modify the value
 
 /** List of routes */
-export type RouteDefinition = Record<string, ComponentType | WrappedComponent> |
-    Map<string | RegExp, ComponentType | WrappedComponent>
+export type RouteDefinition = Record<string, Component<any, any> | WrappedComponent> |
+    Map<string | RegExp, Component<any, any> | WrappedComponent>
 
-/** Generic interface for events from the router */
-interface RouterEvent<T> {
-    detail: T
+
+/** Props for the Router component */
+export interface RouterProps {
+    /**
+     * Dictionary of all routes, in the format `'/path': component`.
+     *
+     * For example:
+     * ````js
+     * import HomeRoute from './routes/HomeRoute.svelte'
+     * import BooksRoute from './routes/BooksRoute.svelte'
+     * import NotFoundRoute from './routes/NotFoundRoute.svelte'
+     * routes = {
+     *     '/': HomeRoute,
+     *     '/books': BooksRoute,
+     *     '*': NotFoundRoute
+     * }
+     * ````
+     */
+    routes: RouteDefinition
+    /**
+     * Optional prefix for the routes in this router. This is useful for example in the case of nested routers.
+     */
+    prefix?: string | RegExp
+    /**
+     * If set to true, the router will restore scroll positions on back navigation
+     * and scroll to top on forward navigation.
+     */
+    restoreScrollState?: boolean
+    /**
+     * Callback fired when route conditions fail
+     */
+    onConditionsFailed?: (detail: RouteDetail) => void
+    /**
+     * Callback fired when a route starts loading
+     */
+    onRouteLoading?: (detail: RouteDetail) => void
+    /**
+     * Callback fired when a route has loaded
+     */
+    onRouteLoaded?: (detail: RouteDetailLoaded) => void
+    /**
+     * Callback for events from child components
+     */
+    onRouteEvent?: (detail: unknown) => void
 }
-
-/** Event type for conditionsFailed */
-export type ConditionsFailedEvent = RouterEvent<RouteDetail>
-
-/** Event type for routeLoading */
-export type RouteLoadingEvent = RouterEvent<RouteDetail>
-
-/** Event type for routeLoaded */
-export type RouteLoadedEvent = RouterEvent<RouteDetailLoaded>
 
 /**
  * Router component
  */
-export default class Router extends SvelteComponent {
-    // Props
-    $$prop_def: {
-        /**
-         * Dictionary of all routes, in the format `'/path': component`.
-         *
-         * For example:
-         * ````js
-         * import HomeRoute from './routes/HomeRoute.svelte'
-         * import BooksRoute from './routes/BooksRoute.svelte'
-         * import NotFoundRoute from './routes/NotFoundRoute.svelte'
-         * routes = {
-         *     '/': HomeRoute,
-         *     '/books': BooksRoute,
-         *     '*': NotFoundRoute
-         * }
-         * ````
-         */
-        routes: RouteDefinition,
-        /**
-         * Optional prefix for the routes in this router. This is useful for example in the case of nested routers.
-         */
-        prefix?: string | RegExp,
-        /**
-         * If set to true, the router will restore scroll positions on back navigation
-         * and scroll to top on forward navigation.
-         */
-        restoreScrollState?: boolean
-    }
-
-    $on(event: 'routeEvent', callback: (event: CustomEvent) => void): () => void
-    $on(event: 'conditionsFailed', callback: (event: ConditionsFailedEvent) => void): () => void
-    $on(event: 'routeLoading', callback: (event: RouteLoadingEvent) => void): () => void
-    $on(event: 'routeLoaded', callback: (event: RouteLoadedEvent) => void): () => void
-}
+declare const Router: Component<RouterProps>
+export default Router

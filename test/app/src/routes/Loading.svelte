@@ -6,5 +6,5 @@
 {/if}
 
 <script>
-export let params = null
+let {params = null} = $props()
 </script>

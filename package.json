@@ -1,7 +1,7 @@
 {
   "name": "svelte-spa-router",
   "version": "4.0.2",
-  "description": "Router for SPAs using Svelte 4",
+  "description": "Router for SPAs using Svelte 5",
   "main": "Router.svelte",
   "svelte": "Router.svelte",
   "types": "Router.d.ts",
@@ -9,7 +9,7 @@
   "exports": {
     "./active": {
       "types": "./active.d.ts",
-      "import": "./active.js"
+      "svelte": "./active.svelte.js"
     },
     "./wrap": {
       "types": "./wrap.d.ts",
@@ -24,7 +24,7 @@
   "scripts": {
     "build-test-app": "(cd test/app && npx rollup -c)",
     "start-test-app": "npx serve -n -l 5050 test/app/dist",
-    "eslint": "npx eslint -c .eslintrc.cjs --ext .js,.svelte,.html .",
+    "eslint": "npx eslint .",
     "lint": "npm run eslint",
     "nightwatch": "npx nightwatch -e selenium.chrome -c nightwatch.conf.cjs",
     "test": "npm run nightwatch",
@@ -41,6 +41,7 @@
     "svelte",
     "svelte3",
     "svelte4",
+    "svelte5",
     "spa"
   ],
   "author": "Alessandro Segala (@ItalyPaleAle)",
@@ -54,18 +55,20 @@
     "regexparam": "2.0.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "@changesets/cli": "^2.29.8",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "chromedriver": "^119.0.1",
-    "eslint": "^8.55.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-html": "^7.1.0",
-    "eslint-plugin-svelte": "^2.35.1",
+    "eslint-plugin-svelte": "^3.15.0",
+    "globals": "^16.0.0",
     "nightwatch": "^2.6.23",
     "rollup": "^4.7.0",
     "rollup-plugin-css-only": "^4.5.2",
-    "rollup-plugin-svelte": "^7.1.6",
+    "rollup-plugin-svelte": "^7.2.2",
     "serve": "^14.2.1",
-    "svelte": "^4.2.8"
+    "svelte": "^5.0.0"
   }
 }

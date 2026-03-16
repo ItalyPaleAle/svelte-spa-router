@@ -9,8 +9,8 @@ Thanks to the many features of Svelte or other components in the ecosystem, svel
   - [Route pre-conditions](#route-pre-conditions) ("route guards")
   - [Adding user data to routes](#user-data)
   - [Static props](#static-props)
-- [`routeEvent` event](#routeevent-event)
-- [`routeLoading` and `routeLoaded` events](#routeloading-and-routeloaded-events)
+- [`onRouteEvent`](#onrouteevent)
+- [`onRouteLoading` and `onRouteLoaded`](#onrouteloading-and-onrouteloaded-callback-props)
 - [Querystring parsing](#querystring-parsing)
 - [Route transitions](#route-transitions)
 - [Nested routers](#nested-routers)
@@ -25,7 +25,7 @@ The `wrap` method allows a few more interesting features, however:
 
 - In addition to dynamically-importing components, you can define a component to be shown while a dynamically-imported one is being requested
 - You can add pre-conditions to routes (sometimes called "route guards")
-- You can add custom user data that is then used with the [`routeLoading` and `routeLoaded` events](#routeloading-and-routeloaded-events)
+- You can add custom user data that is then used with the [`onRouteLoading` and `onRouteLoaded` callback props](#onrouteloading-and-onrouteloaded)
 - You can set static props, which are passed to the component as mounted by the router
 
 ### The `wrap` method
@@ -42,7 +42,7 @@ It accepts a single `options` argument that is an object with the following prop
 - `options.asyncComponent`: Used to dynamically-import components. This must be a function definition that returns a dynamically-imported component, such as: `asyncComponent: () => import('./Foo.svelte')`
 - `options.loadingComponent`: Used together with `asyncComponent`, this is a Svelte component, that must be part of the bundle, which is displayed while `asyncComponent` is being downloaded. If this is empty, then the router will not display any component while the request is in progress.
 - `options.loadingParams`: When using a `loadingComponent`, this is an optional dictionary that will be passed to the component as the `params` prop.
-- `options.userData`: Optional dictionary that will be passed to events such as `routeLoading`, `routeLoaded`, `conditionsFailed`.
+- `options.userData`: Optional dictionary that will be passed to callbacks such as `onRouteLoading`, `onRouteLoaded`, `onConditionsFailed`.
 - `options.conditions`: Optional array of route pre-condition functions to add, which will be executed in order.
 - `options.props`: Optional dictionary of props that are passed to the component when mounted. The props are expanded with the spread operator (`{...props}`), so the key of each element becomes the name of the prop.
 
@@ -128,9 +128,9 @@ const routes = {
 
 ### User data
 
-The `wrap` method can also be used to add a dictionary with custom user data, that will be passed to all pre-condition functions (more on that below), and to the [`routeLoading`, `routeLoaded`](#routeloading-and-routeloaded-events), and [`conditionsFailed`](#route-pre-conditions) events.
+The `wrap` method can also be used to add a dictionary with custom user data, that will be passed to all pre-condition functions (more on that below), and to the [`onRouteLoading`, `onRouteLoaded`](#onrouteloading-and-onrouteloaded), and [`onConditionsFailed`](#route-pre-conditions) callback props.
 
-This is useful to pass custom callbacks (as properties inside the dictionary) that can be used by the `routeLoading`, `routeLoaded`, and `conditionsFailed` event listeners to take specific actions.
+This is useful to pass custom callbacks (as properties inside the dictionary) that can be used by the `onRouteLoading`, `onRouteLoaded`, and `onConditionsFailed` callback handlers to take specific actions.
 
 For example:
 
@@ -157,11 +157,11 @@ You can define pre-conditions on routes, also known as "route guards". You can d
 
 Pre-conditions are defined in the `options.conditions` argument for the `wrap` function, which is an array of callbacks.
 
-Each pre-condition function receives a dictionary `detail` with the same structure as the `routeLoading` event (more information [below](#routeloading-and-routeloaded-events)):
+Each pre-condition function receives a dictionary `detail` with the same structure as `onRouteLoading` (more information [below](#onrouteloading-and-onrouteloaded)):
 
 - `detail.route`: the route that was matched, exactly as defined in the route definition object
-- `detail.location`: the current path (just like the `$location` readable store)
-- `detail.querystring`: the current "querystring" parameters from the page's hash (just like the `$querystring` readable store)
+- `detail.location`: the current path (equivalent to `router.location`)
+- `detail.querystring`: the current "querystring" parameters from the page's hash (equivalent to `router.querystring`)
 - `detail.userData`: custom user data passed with the `wrap` function (see above)
 
 The pre-condition functions must return a boolean indicating wether the condition succeeded (true) or failed (false).
@@ -246,27 +246,27 @@ const routes = {
 }
 ```
 
-In case a condition fails, the router emits the `conditionsFailed` event, with the same `detail` dictionary.
+In case a condition fails, the router calls the `onConditionsFailed` callback prop with the same `detail` dictionary.
 
-You can listen to the `conditionsFailed` event and perform actions in case no route wasn't loaded because of a failed pre-condition:
+You can handle `onConditionsFailed` and perform actions in case no route wasn't loaded because of a failed pre-condition:
 
 ````svelte
-<Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoaded={routeLoaded} />
+<Router {routes} {onConditionsFailed} {onRouteLoaded} />
 
 <script>
-// Handles the "conditionsFailed" event dispatched by the router when a component can't be loaded because one of its pre-condition failed
-function conditionsFailed(event) {
-    console.error('conditionsFailed event', event.detail)
+// Handles when a component can't be loaded because one of its pre-condition failed
+function onConditionsFailed(detail) {
+    console.error('onConditionsFailed', detail)
 
     // Perform any action, for example replacing the current route
-    if (event.detail.userData.foo == 'bar') {
+    if (detail.userData.foo == 'bar') {
         replace('/hello/world')
     }
 }
 
-// Handles the "routeLoaded" event dispatched by the router when a component was loaded
-function routeLoaded(event) {
-    console.log('routeLoaded event', event.detail)
+// Handles when a component was loaded
+function onRouteLoaded(detail) {
+    console.log('onRouteLoaded', detail)
 }
 </script>
 ````
@@ -308,23 +308,24 @@ const routes = {
 </script>
 ```
 
-## `routeEvent` event
+## `onRouteEvent`
 
-The custom `routeEvent` event can be used to bubble events from a component displayed by the router, to the router's parent component.
+The `onRouteEvent` callback prop can be used to bubble events from a component displayed by the router, to the router's parent component.
 
 For example, assume that your Svelte component `App` contains the router's component `Router`. Inside the router, the current view is displaying the `Foo` component. If `Foo` emitted an event, `Router` would receive it and would ignore it by default
 
-Using the custom event **`routeEvent`**, instead, allows your components within the router (such as `Foo`) to bubble an event to the `Router` component's parent.
+Using **`onRouteEvent`**, instead, allows your components within the router (such as `Foo`) to bubble a payload to the `Router` component's parent.
 
 Example for `App.svelte`:
 
 ```svelte
-<Router {routes} on:routeEvent={routeEvent} />
+<Router {routes} {onRouteEvent} />
+
 <script>
 import Router from 'svelte-spa-router'
 import Foo from './Foo.svelte'
 const routes = {'*': Foo}
-function routeEvent(event) {
+function onRouteEvent(detail) {
     // Do something
 }
 </script>
@@ -333,32 +334,32 @@ function routeEvent(event) {
 Example for `Foo.svelte`:
 
 ```svelte
-<button on:click={() => dispatch('routeEvent', {foo: 'bar'})}>Hello</button>
+<button onclick={() => onRouteEvent({foo: 'bar'})}>Hello</button>
+
 <script>
-import {createEventDispatcher} from 'svelte'
-const dispatch = createEventDispatcher()
+let {onRouteEvent = () => {}} = $props()
 </script>
 ```
 
-## `routeLoading` and `routeLoaded` events
+## `onRouteLoading` and `onRouteLoaded`
 
-These two events are used by the router to notify the application when routes are being mounted. You can optionally listen to these events and trigger any custom logic.
+These two callbacks are used by the router to notify the application when routes are being mounted. You can optionally listen to these callbacks and trigger any custom logic.
 
-First, the router emits `routeLoading` when it's about to mount a new component. If the component is [dynamically-imported](/README.md#dynamically-imported-routes-and-code-splitting) and needs to be requested, this event is fired when the component is being requested. In all other cases, such as if the dynamically-imported component has already been loaded, or if the component is statically included in the bundle, the `routeLoading` event is still fired right before `routeLoaded`.
+First, the router calls `onRouteLoading` when it's about to mount a new component. If the component is [dynamically-imported](/README.md#dynamically-imported-routes-and-code-splitting) and needs to be requested, this callback is fired when the component is being requested. In all other cases, such as if the dynamically-imported component has already been loaded, or if the component is statically included in the bundle, `onRouteLoading` is still called right before `onRouteLoaded`.
 
-Eventually, the router emits the `routeLoaded` event after a route has been successfully loaded (and injected in the DOM).
+Eventually, the router calls `onRouteLoaded` after a route has been successfully loaded (and injected in the DOM).
 
-The event listener for **`routeLoading`** receives an `event` object that contains the following `detail` object:
+The callback for **`onRouteLoading`** receives the following `detail` object directly:
 
 ````js
-// For the routeLoading event
-event.detail = {
+// For onRouteLoading
+detail = {
     // The route that was matched, as in the route definition object
     route: '/book/:id',
-    // The current path, equivalent to the value of the $location readable store
+    // The current path, equivalent to the value of router.location
     // Note that this is different from the route property as the former is the route definition, while this is the actual path the user requested
     location: '/book/343',
-    // The "querystring" from the page's hash, equivalent to the value of the $querystring readable store
+    // The "querystring" from the page's hash, equivalent to the value of router.querystring
     querystring: 'foo=bar',
     // Params matched from the route (such as :id from the route)
     params: { id: '343' },
@@ -367,12 +368,12 @@ event.detail = {
 }
 ````
 
-For the **`routeLoaded`** event, the `event.detail` argument contains the four properties above in addition to:
+For **`onRouteLoaded`**, the `detail` argument contains the four properties above in addition to:
 
 ```js
-// For the routeLoaded event
-event.detail = {
-    // This includes the four properties of the detail object sent to routeLoading:
+// For onRouteLoaded
+detail = {
+    // This includes the four properties of the detail object sent to onRouteLoading:
     route: '/book/:id',
     location: '/book/343',
     querystring: 'foo=bar',
@@ -390,32 +391,32 @@ event.detail = {
 For example:
 
 ````svelte
-<Router 
-  {routes}
-  on:routeLoading={routeLoading}
-  on:routeLoaded={routeLoaded}
+<Router
+    {routes}
+    {onRouteLoading}
+    {onRouteLoaded}
 />
 
 <script>
-function routeLoading(event) {
-    console.log('routeLoading event')
-    console.log('Route', event.detail.route)
-    console.log('Location', event.detail.location)
-    console.log('Querystring', event.detail.querystring)
-    console.log('User data', event.detail.userData)
+function onRouteLoading(detail) {
+    console.log('onRouteLoading')
+    console.log('Route', detail.route)
+    console.log('Location', detail.location)
+    console.log('Querystring', detail.querystring)
+    console.log('User data', detail.userData)
 }
 
-function routeLoaded(event) {
-    console.log('routeLoaded event')
-    // The first 5 properties are the same as for the routeLoading event
-    console.log('Route', event.detail.route)
-    console.log('Location', event.detail.location)
-    console.log('Querystring', event.detail.querystring)
-    console.log('Params', event.detail.params)
-    console.log('User data', event.detail.userData)
-    // The last two properties are unique to routeLoaded
-    console.log('Component', event.detail.component) // This is a Svelte component, so a function
-    console.log('Name', event.detail.name)
+function onRouteLoaded(detail) {
+    console.log('onRouteLoaded')
+    // The first 5 properties are the same as for onRouteLoading
+    console.log('Route', detail.route)
+    console.log('Location', detail.location)
+    console.log('Querystring', detail.querystring)
+    console.log('Params', detail.params)
+    console.log('User data', detail.userData)
+    // The last two properties are unique to onRouteLoaded
+    console.log('Component', detail.component) // This is a Svelte component, so a function
+    console.log('Name', detail.name)
 }
 </script>
 ````
@@ -428,14 +429,14 @@ For help with the `wrap` function, check the [route wrapping](#route-wrapping) s
 
 As the main documentation for svelte-spa-router mentions, you can extract parameters from the "querystring" in the hash of the page. This allows you to build apps that navigate to pages such as `#/search?query=hello+world&sort=title`.
 
-The router has built-in support for returning the value of the "querystring", but it only returns the full string and doesn't perform any parsing. Components can access the "querystring" part of the hash from the `$querystring` store in the svelte-spa-router component. For example:
+The router has built-in support for returning the value of the "querystring", but it only returns the full string and doesn't perform any parsing. Components can access the "querystring" part of the hash from `router.querystring`. For example:
 
 ````svelte
 <script>
-import {location, querystring} from 'svelte-spa-router'
+import {router} from 'svelte-spa-router'
 </script>
-<p>The current page is: {$location}</p>
-<p>The querystring is: {$querystring}</p>
+<p>The current page is: {router.location}</p>
+<p>The querystring is: {router.querystring}</p>
 ````
 
 When visiting the page `#/search?query=hello+world&sort=title`, this would generate:
@@ -452,11 +453,11 @@ Here's an example on using `qs` by changing the component above to:
 ````svelte
 <script>
 import {parse} from 'qs'
-import {querystring} from 'svelte-spa-router'
+import {router} from 'svelte-spa-router'
 
-// Use a reactive statement to ensure parsed
-// is updated every time $querystring changes
-$: parsed = parse($querystring)
+// Use a derived to ensure parsed is updated
+// every time router.querystring changes
+const parsed = $derived(parse(router.querystring || ''))
 </script>
 <code>{JSON.stringify(parsed)}</code>
 ````
