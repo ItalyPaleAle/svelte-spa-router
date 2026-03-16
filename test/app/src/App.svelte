@@ -31,19 +31,11 @@
 
 <!-- Show the current path -->
 <p>
-    Current path: <code id="currentpath">{$location}</code>
+    Current path: <code id="currentpath">{router.location}</code>
     <br />
-    Querystring: <code id="currentqs">{$querystring}</code>
+    Querystring: <code id="currentqs">{router.querystring}</code>
     <br />
-    Params: <code id="currentparams">{JSON.stringify($params)}</code>
-    <br />
-    Router path: <code id="routerlocation">{router.location}</code>
-    <br />
-    Router querystring: <code id="routerquerystring">{router.querystring}</code>
-    <br />
-    Router params: <code id="routerparams">{JSON.stringify(router.params)}</code>
-    <br />
-    Router loc: <code id="routerloc">{JSON.stringify(router.loc)}</code>
+    Params: <code id="currentparams">{JSON.stringify(router.params)}</code>
 </p>
 
 <!-- Show the router -->
@@ -120,7 +112,7 @@ import Router from '../../../Router.svelte'
 // Import the "link" action, the methods to control history programmatically from the same module, and the location store
 // The params store contains the current list of params, parsed
 // Normally, this would be: `import {link, push, pop, replace, location, querystring} from 'svelte-spa-router/active'`
-import {link, push, pop, replace, location, querystring, params, router} from '../../../Router.svelte'
+import {link, push, pop, replace, router} from '../../../Router.svelte'
 
 // Import the "active" action
 // Normally, this would be: `import active from 'svelte-spa-router/active'`

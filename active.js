@@ -1,5 +1,5 @@
 import {parse} from 'regexparam'
-import {loc} from './Router.svelte'
+import {router} from './Router.svelte'
 
 // List of nodes to update
 const nodes = []
@@ -30,12 +30,15 @@ function toggleClasses(el, className, shouldAdd) {
 }
 
 // Listen to changes in the location
-loc.subscribe((value) => {
-    // Update the location
-    location = value.location + (value.querystring ? '?' + value.querystring : '')
+$effect.root(() => {
+    $effect(() => {
+        const value = router.loc
+        // Update the location
+        location = value.location + (value.querystring ? '?' + value.querystring : '')
 
-    // Update all nodes
-    nodes.map(checkActive)
+        // Update all nodes
+        nodes.map(checkActive)
+    })
 })
 
 /**

@@ -1,6 +1,5 @@
 <script module>
-import {readable, writable, derived} from 'svelte/store'
-import {tick} from 'svelte'
+import {tick, untrack} from 'svelte'
 
 class Router {
     /**
@@ -76,53 +75,6 @@ function getLocation() {
 
     return {location, querystring}
 }
-
-/**
- * Readable store that returns the current full location (incl. querystring)
- * @deprecated Use router.loc instead
- */
-export const loc = readable(
-    null,
-    // eslint-disable-next-line prefer-arrow-callback
-    function start(set) {
-        set(getLocation())
-
-        const update = () => {
-            set(getLocation())
-        }
-        window.addEventListener('hashchange', update, false)
-
-        return function stop() {
-            window.removeEventListener('hashchange', update, false)
-        }
-    }
-)
-
-/**
- * Readable store that returns the current location
- * @deprecated Use router.location instead
- */
-export const location = derived(
-    loc,
-    (_loc) => _loc.location
-)
-
-/**
- * Readable store that returns the current querystring
- * @deprecated Use router.querystring instead
- */
-export const querystring = derived(
-    loc,
-    (_loc) => _loc.querystring
-)
-
-/**
- * Store that returns the currently-matched params.
- * Despite this being writable, consumers should not change the value of the store.
- * It is exported as a readable store only (in the typings file)
- * @deprecated Use router.params instead
- */
-export const params = writable(undefined)
 
 /**
  * Navigates to a new page programmatically.
@@ -504,7 +456,6 @@ let componentParams = $state.raw(null)
 let props = $state.raw({})
 
 let previousScrollState = $state(null)
-let lastLoc = null
 let componentObj = null
 let popStateChanged = null
 
@@ -542,96 +493,108 @@ async function dispatchNextTick(event, detail) {
     event(detail)
 }
 
-// Main routing effect
-const unsubscribeLoc = loc.subscribe(async (newLoc) => {
-    lastLoc = newLoc
+$effect(() => {
+    // React to loc changing and untrack everything else to prevent accidental dependencies;
+    // cancel operation after async work in case a new loc change happened in the meantime.
+    const newLoc = router.loc
+    let cancelled = false
 
-    // Find a route matching the location
-    let i = 0
-    while (i < routesList.length) {
-        const match = routesList[i].match(newLoc.location)
-        if (!match) {
-            i++
-            continue
-        }
-
-        const detail = {
-            route: routesList[i].path,
-            location: newLoc.location,
-            querystring: newLoc.querystring,
-            userData: routesList[i].userData,
-            params: (match && typeof match == 'object' && Object.keys(match).length) ? match : null
-        }
-
-        if (!(await routesList[i].checkConditions(detail))) {
-            component = null
-            componentObj = null
-            dispatchNextTick(onConditionsFailed, detail)
-            return
-        }
-
-        dispatchNextTick(onRouteLoading, {...detail})
-
-        const obj = routesList[i].component
-        if (componentObj != obj) {
-            if (obj.loading) {
-                component = obj.loading
-                componentObj = obj
-                componentParams = obj.loadingParams
-                props = {}
-                const comp = obj.loading
-                dispatchNextTick(onRouteLoaded, {
-                    ...detail,
-                    component: comp,
-                    name: comp.name,
-                    params: obj.loadingParams
-                })
+    untrack(async () => {
+        // Find a route matching the location
+        let i = 0
+        while (i < routesList.length) {
+            const match = routesList[i].match(newLoc.location)
+            if (!match) {
+                i++
+                continue
             }
-            else {
+
+            const detail = {
+                route: routesList[i].path,
+                location: newLoc.location,
+                querystring: newLoc.querystring,
+                userData: routesList[i].userData,
+                params: (match && typeof match == 'object' && Object.keys(match).length) ? match : null
+            }
+
+            if (!(await routesList[i].checkConditions(detail))) {
+                if (cancelled) {
+                    return
+                }
                 component = null
                 componentObj = null
-            }
-
-            const loaded = await obj()
-
-            if (newLoc != lastLoc) {
+                dispatchNextTick(onConditionsFailed, detail)
                 return
             }
 
-            component = (loaded && loaded.default) || loaded
-            componentObj = obj
+            if (cancelled) {
+                return
+            }
+
+            dispatchNextTick(onRouteLoading, {...detail})
+
+            const obj = routesList[i].component
+            if (componentObj != obj) {
+                if (obj.loading) {
+                    component = obj.loading
+                    componentObj = obj
+                    componentParams = obj.loadingParams
+                    props = {}
+                    const comp = obj.loading
+                    dispatchNextTick(onRouteLoaded, {
+                        ...detail,
+                        component: comp,
+                        name: comp.name,
+                        params: obj.loadingParams
+                    })
+                }
+                else {
+                    component = null
+                    componentObj = null
+                }
+
+                const loaded = await obj()
+
+                if (cancelled) {
+                    return
+                }
+
+                component = (loaded && loaded.default) || loaded
+                componentObj = obj
+            }
+
+            // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
+            // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
+            let matchParams = null
+            if (match && typeof match == 'object' && Object.keys(match).length) {
+                matchParams = match
+            }
+            componentParams = matchParams
+            props = routesList[i].props
+
+            const comp = component
+            dispatchNextTick(onRouteLoaded, {
+                ...detail,
+                component: comp,
+                name: comp.name,
+                params: matchParams
+            })
+
+            router._params = matchParams
+            return
         }
 
-        // Set componentParams only if we have a match, to avoid a warning similar to `<Component> was created with unknown prop 'params'`
-        // Of course, this assumes that developers always add a "params" prop when they are expecting parameters
-        let matchParams = null
-        if (match && typeof match == 'object' && Object.keys(match).length) {
-            matchParams = match
-        }
-        componentParams = matchParams
-        props = routesList[i].props
+        component = null
+        componentObj = null
+        router._params = undefined
+    })
 
-        const comp = component
-        dispatchNextTick(onRouteLoaded, {
-            ...detail,
-            component: comp,
-            name: comp.name,
-            params: matchParams
-        })
-
-        params.set(matchParams)
-        router._params = matchParams
-        return
+    return () => {
+        cancelled = true
     }
-
-    component = null
-    componentObj = null
-    params.set(undefined)
-    router._params = undefined
 })
 
 onDestroy(() => {
-    unsubscribeLoc()
     popStateChanged && window.removeEventListener('popstate', popStateChanged)
 })
 </script>

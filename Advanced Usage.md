@@ -160,8 +160,8 @@ Pre-conditions are defined in the `options.conditions` argument for the `wrap` f
 Each pre-condition function receives a dictionary `detail` with the same structure as `onRouteLoading` (more information [below](#onrouteloading-and-onrouteloaded)):
 
 - `detail.route`: the route that was matched, exactly as defined in the route definition object
-- `detail.location`: the current path (just like the `$location` readable store)
-- `detail.querystring`: the current "querystring" parameters from the page's hash (just like the `$querystring` readable store)
+- `detail.location`: the current path (equivalent to `router.location`)
+- `detail.querystring`: the current "querystring" parameters from the page's hash (equivalent to `router.querystring`)
 - `detail.userData`: custom user data passed with the `wrap` function (see above)
 
 The pre-condition functions must return a boolean indicating wether the condition succeeded (true) or failed (false).
@@ -356,10 +356,10 @@ The callback for **`onRouteLoading`** receives the following `detail` object dir
 detail = {
     // The route that was matched, as in the route definition object
     route: '/book/:id',
-    // The current path, equivalent to the value of the $location readable store
+    // The current path, equivalent to the value of router.location
     // Note that this is different from the route property as the former is the route definition, while this is the actual path the user requested
     location: '/book/343',
-    // The "querystring" from the page's hash, equivalent to the value of the $querystring readable store
+    // The "querystring" from the page's hash, equivalent to the value of router.querystring
     querystring: 'foo=bar',
     // Params matched from the route (such as :id from the route)
     params: { id: '343' },
@@ -429,14 +429,14 @@ For help with the `wrap` function, check the [route wrapping](#route-wrapping) s
 
 As the main documentation for svelte-spa-router mentions, you can extract parameters from the "querystring" in the hash of the page. This allows you to build apps that navigate to pages such as `#/search?query=hello+world&sort=title`.
 
-The router has built-in support for returning the value of the "querystring", but it only returns the full string and doesn't perform any parsing. Components can access the "querystring" part of the hash from the `$querystring` store in the svelte-spa-router component. For example:
+The router has built-in support for returning the value of the "querystring", but it only returns the full string and doesn't perform any parsing. Components can access the "querystring" part of the hash from `router.querystring`. For example:
 
 ````svelte
 <script>
-import {location, querystring} from 'svelte-spa-router'
+import {router} from 'svelte-spa-router'
 </script>
-<p>The current page is: {$location}</p>
-<p>The querystring is: {$querystring}</p>
+<p>The current page is: {router.location}</p>
+<p>The querystring is: {router.querystring}</p>
 ````
 
 When visiting the page `#/search?query=hello+world&sort=title`, this would generate:
@@ -453,11 +453,11 @@ Here's an example on using `qs` by changing the component above to:
 ````svelte
 <script>
 import {parse} from 'qs'
-import {querystring} from 'svelte-spa-router'
+import {router} from 'svelte-spa-router'
 
-// Use a reactive statement to ensure parsed
-// is updated every time $querystring changes
-$: parsed = parse($querystring)
+// Use a derived to ensure parsed is updated
+// every time router.querystring changes
+const parsed = $derived(parse(router.querystring || ''))
 </script>
 <code>{JSON.stringify(parsed)}</code>
 ````

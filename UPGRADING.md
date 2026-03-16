@@ -17,7 +17,7 @@ svelte-spa-router 5.x requires Svelte version 5 or later. When upgrading from sv
 
 ### Use `router.loc`, `router.location`, and `router.querystring` instead of the store exports
 
-The legacy store exports (`loc`, `location`, `querystring` and `params`) are deprecated in favor of properties on the `router` object.
+The legacy store exports (`loc`, `location`, `querystring` and `params`) are removed in favor of properties on the `router` object.
 
 Update your imports and usages as follows:
 
