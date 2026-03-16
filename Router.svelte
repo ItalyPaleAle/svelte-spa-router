@@ -267,7 +267,6 @@ function scrollstateHistoryHandler(href) {
 {/if}
 
 <script>
-import {onDestroy} from 'svelte'
 import {parse} from 'regexparam'
 
 const {
@@ -457,8 +456,6 @@ let props = $state.raw({})
 
 let previousScrollState = $state(null)
 let componentObj = null
-let popStateChanged = null
-
 
 // Effects
 $effect(() => {
@@ -467,7 +464,7 @@ $effect(() => {
 
 $effect(() => {
     if (restoreScrollState) {
-        popStateChanged = (event) => {
+        const popStateChanged = (event) => {
             if (event.state && (event.state.__svelte_spa_router_scrollY || event.state.__svelte_spa_router_scrollX)) {
                 previousScrollState = event.state
             }
@@ -592,9 +589,5 @@ $effect(() => {
     return () => {
         cancelled = true
     }
-})
-
-onDestroy(() => {
-    popStateChanged && window.removeEventListener('popstate', popStateChanged)
 })
 </script>
