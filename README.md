@@ -1,21 +1,10 @@
-<table>
-  <tr>
-    <td>
-      <a href="https://www.amazon.com/dp/B08D6T6BKS/"><img src="https://static.packt-cdn.com/products/9781839213625/cover/smaller" width="120" /></a>
-    </td>
-    <td>
-      <h3>Svelte 3 Up and Running</h3>
-      <p>Want to learn Svelte 3 and how to build a Single-Page App (SPA) with it (and with this router)? Check out my book <a href="https://www.amazon.com/dp/B08D6T6BKS/">Svelte 3 Up and Running</a> on Amazon.</p>
-    </td>
-</table>
-
 # svelte-spa-router
 
 [![Build Status](https://github.com/ItalyPaleAle/svelte-spa-router/workflows/Continuous%20Integration%20tests/badge.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/actions) 
 [![npm](https://img.shields.io/npm/v/svelte-spa-router.svg)](https://www.npmjs.com/package/svelte-spa-router)
 [![GitHub](https://img.shields.io/github/license/ItalyPaleAle/svelte-spa-router.svg)](https://github.com/ItalyPaleAle/svelte-spa-router/blob/master/LICENSE.md)
 
-This module is a router for [Svelte 5](https://github.com/sveltejs/svelte) applications ([prior versions support Svelte 3 and 4](https://github.com/ItalyPaleAle/svelte-spa-router/blob/v4.0.2/README.md)), specifically optimized for Single Page Applications (SPA).
+This module is a router for [Svelte 5](https://github.com/sveltejs/svelte) applications, specifically optimized for Single Page Applications (SPA).
 
 Main features:
 
@@ -24,6 +13,8 @@ Main features:
 - Uses the tiny [regexparam](https://github.com/lukeed/regexparam) for parsing routes, with support for parameters (e.g. `/book/:id?`) and more
 
 This module is released under MIT license.
+
+> For support for Svelte 3 and 4, please use the ([v4 branch](https://github.com/ItalyPaleAle/svelte-spa-router/blob/v4.0.2/README.md))
 
 ## Video
 
@@ -82,14 +73,19 @@ More information can be found on the [template's repo](https://github.com/italyp
 
 ## Using svelte-spa-router
 
-You can include the router in any project using Svelte 5 (older major versions support Svelte 3 and 4).
+You can include the router in any project using Svelte 5.
 
 ### Install from NPM
 
 To add svelte-spa-router to your project:
 
 ````sh
+# Using npm
 npm install svelte-spa-router
+# Using yarn
+yarn install svelte-spa-router
+# Using pnpm
+pnpm install svelte-spa-router
 ````
 
 ### Supported browsers
