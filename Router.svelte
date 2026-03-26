@@ -478,12 +478,6 @@ $effect(() => {
     }
 })
 
-$effect(() => {
-    if (previousScrollState !== null) {
-        restoreScroll(previousScrollState)
-    }
-})
-
 async function dispatchNextTick(event, detail) {
     // Execute this code when the current call stack is complete
     await tick()
@@ -578,12 +572,20 @@ $effect(() => {
             })
 
             router._params = matchParams
+            if (restoreScrollState) {
+                restoreScroll(previousScrollState)
+                previousScrollState = null
+            }
             return
         }
 
         component = null
         componentObj = null
         router._params = undefined
+        if (restoreScrollState) {
+            restoreScroll(previousScrollState)
+            previousScrollState = null
+        }
     })
 
     return () => {
