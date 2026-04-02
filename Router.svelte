@@ -454,7 +454,7 @@ let component = $state.raw(null)
 let componentParams = $state.raw(null)
 let props = $state.raw({})
 
-let previousScrollState = $state(null)
+let previousScrollState = null
 let componentObj = null
 
 // Effects
@@ -475,12 +475,6 @@ $effect(() => {
 
         window.addEventListener('popstate', popStateChanged)
         return () => window.removeEventListener('popstate', popStateChanged)
-    }
-})
-
-$effect(() => {
-    if (previousScrollState !== null) {
-        restoreScroll(previousScrollState)
     }
 })
 
@@ -578,12 +572,20 @@ $effect(() => {
             })
 
             router._params = matchParams
+            if (restoreScrollState) {
+                restoreScroll(previousScrollState)
+                previousScrollState = null
+            }
             return
         }
 
         component = null
         componentObj = null
         router._params = undefined
+        if (restoreScrollState) {
+            restoreScroll(previousScrollState)
+            previousScrollState = null
+        }
     })
 
     return () => {
