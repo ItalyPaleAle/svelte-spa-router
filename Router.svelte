@@ -454,7 +454,7 @@ let component = $state.raw(null)
 let componentParams = $state.raw(null)
 let props = $state.raw({})
 
-let previousScrollState = $state(null)
+let previousScrollState = null
 let componentObj = null
 
 // Effects
