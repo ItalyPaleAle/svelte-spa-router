@@ -15,7 +15,9 @@ export default {
     plugins: [
         svelte({
             // enable run-time checks when not in production
-            dev: true,
+            compilerOptions: {
+                dev: true
+            }
         }),
         // we'll extract any component CSS out into
         // a separate file better for performance
@@ -30,7 +32,8 @@ export default {
         // https://github.com/rollup/rollup-plugin-commonjs
         resolve({
             browser: true,
-            dedupe: ['svelte']
+            dedupe: ['svelte'],
+            exportConditions: ['svelte', 'browser']
         }),
         commonjs()
     ]

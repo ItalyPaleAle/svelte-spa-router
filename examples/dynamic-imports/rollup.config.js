@@ -16,7 +16,7 @@ export default {
         svelte({
             // enable run-time checks when not in production
             compilerOptions: {
-                dev: true,
+                dev: true
             },
         }),
         // we'll extract any component CSS out into
@@ -30,7 +30,10 @@ export default {
         // some cases you'll need additional configuration 
         // consult the documentation for details:
         // https://github.com/rollup/rollup-plugin-commonjs
-        resolve(),
+        resolve({
+            browser: true,
+            exportConditions: ['svelte', 'browser']
+        }),
         commonjs()
     ]
 }
