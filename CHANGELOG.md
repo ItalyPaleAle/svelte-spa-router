@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.1
+
+### Patch Changes
+
+- 0774dab: fix: restore router scroll state after route render
+
 ## 5.0.0
 
 ### Major Changes
