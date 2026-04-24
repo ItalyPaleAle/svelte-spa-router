@@ -169,6 +169,7 @@ export default [
                 'error',
                 'after'
             ],
+            'no-useless-assignment': 0,
             // Keep disabled to avoid known issues with Svelte files.
             'no-multiple-empty-lines': 0
         }
