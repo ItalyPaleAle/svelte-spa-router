@@ -4,9 +4,9 @@ test/app/dist/*.js
 test/app/dist/*.js.map
 
 # Example apps
-examples/*/dist/bundle*
-examples/*/dist/*.js
-examples/*/dist/*.js.map
+examples/*/dist
+examples/*/node_modules
+examples/*/.vite
 
 # This is a module published on NPM, so we can ignore package-lock.json
 package-lock.json

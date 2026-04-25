@@ -1,18 +1,10 @@
 {
-    "eslint.validate": [
-        "javascript",
-        "html",
-        "svelte"
-    ],
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
     "search.exclude": {
         "**/node_modules": true,
         "dist/": true
-    },
-    "files.exclude": {
-        "**/node_modules": true
     },
     "[html]": {
         "editor.tabSize": 2

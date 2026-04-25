@@ -37,39 +37,20 @@ Hash-based routing is simpler, works well even without a server, and it's genera
 
 Check out the code in the [examples](/examples) folder for some usage examples.
 
-To run the samples, clone the repository, install the dependencies, then build each sample using Rollup:
+To run the samples, clone the repository, install the dependencies, then run with `npm run dev`:
 
 ````sh
-git clone https://github.com/ItalyPaleAle/svelte-spa-router
-cd svelte-spa-router
-npm install
-
 # Navigate to a sample
 cd examples/…
 # For example
 cd examples/basic-routing
 
-# Build and run (in the folder of a sample)
-npx rollup -c
-npx serve -n -l 5050 dist
+# Start a development server
+npm install
+npm run dev
 ````
 
-The sample will be running at http://localhost:5050
-
-## Starter template
-
-> This template is outdated for Svelte 5
-
-You can find a starter template with Svelte 4 and svelte-spa-router at [italypaleale/svelte-spa-router-template](https://github.com/italypaleale/svelte-spa-router-template).
-
-To use the template:
-
-```sh
-npx degit italypaleale/svelte-spa-router-template svelte-app
-cd svelte-app
-```
-
-More information can be found on the [template's repo](https://github.com/italypaleale/svelte-spa-router-template).
+The sample will be running at http://localhost:5173
 
 ## Using svelte-spa-router
 
