@@ -106,30 +106,14 @@
 </style>
 
 <script>
-// Import the router component
-// Normally, this would be: `import Router from 'svelte-spa-router'`
-import Router from '../../../Router.svelte'
-// Import the "link" action, the methods to control history programmatically from the same module, and the location store
-// The params store contains the current list of params, parsed
-// Normally, this would be: `import {link, push, pop, replace, location, querystring} from 'svelte-spa-router/active'`
-import {link, push, pop, replace, router} from '../../../Router.svelte'
+// Import the router component, the "link" action, and methods to control history programmatically
+import Router, {link, push, pop, replace, router} from 'svelte-spa-router'
 
 // Import the "active" action
-// Normally, this would be: `import active from 'svelte-spa-router/active'`
-import active from '../../../active.svelte.js'
+import active from 'svelte-spa-router/active'
 
 // Import the list of routes
 import routes from './routes'
-
-// Capture console errors for testing (detects reactivity loops)
-if (typeof window !== 'undefined') {
-    window.__consoleErrors = []
-    const originalError = console.error
-    console.error = (...args) => {
-        window.__consoleErrors.push(args.join(' '))
-        originalError.apply(console, args)
-    }
-}
 
 // Contains logging information used by tests
 let logbox = $state('')

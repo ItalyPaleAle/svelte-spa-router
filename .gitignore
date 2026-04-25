@@ -1,12 +1,18 @@
 # Test app
-test/app/dist/bundle*
-test/app/dist/*.js
-test/app/dist/*.js.map
+test/app/dist
+test/app/node_modules
+test/app/.vite
 
 # Example apps
 examples/*/dist
 examples/*/node_modules
 examples/*/.vite
+
+# Playwright
+playwright-report
+test-results
+/blob-report
+/playwright/.cache
 
 # This is a module published on NPM, so we can ignore package-lock.json
 package-lock.json

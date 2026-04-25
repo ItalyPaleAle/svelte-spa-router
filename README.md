@@ -138,7 +138,7 @@ That's it! You already have all that you need for a fully-functional routing exp
 
 ### Dynamically-imported components and code-splitting
 
-Starting with version 3.0, svelte-spa-router supports dynamically-imported components (via the `import()` construct). The advantage of using dynamic imports is that, if your bundler supports that, you can enable code-splitting and reduce the size of the bundle you send to your users. This has been tested with bundlers including Rollup and Webpack.
+Starting with version 3.0, svelte-spa-router supports dynamically-imported components (via the `import()` construct). The advantage of using dynamic imports is that, if your bundler supports that, you can enable code-splitting and reduce the size of the bundle you send to your users. This has been tested with bundlers including Vite, Rollup and Webpack.
 
 To use dynamically-imported components, you need to leverage the `wrap` method (which can be used for a variety of actions, as per the docs on [route wrapping](/Advanced%20Usage.md#route-wrapping)). First, import the `wrap` method:
 
