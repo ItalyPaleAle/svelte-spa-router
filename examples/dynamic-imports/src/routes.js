@@ -1,8 +1,7 @@
 /* eslint-disable */
 
 // Import the wrap method
-// Normally, this would be: `import {wrap} from 'svelte-spa-router/wrap'`
-import {wrap} from '../../../wrap'
+import wrap from 'svelte-spa-router/wrap'
 
 // Components: only Home, Loading and NotFound are statically included in the bundle
 import Home from './routes/Home.svelte'

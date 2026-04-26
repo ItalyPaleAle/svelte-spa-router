@@ -18,5 +18,5 @@ export default {
     '/wild/*': Wild,
 
     // Catch-all, must be last
-    '*': NotFound,
+    '*': NotFound
 }

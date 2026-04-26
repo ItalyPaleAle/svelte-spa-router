@@ -1,0 +1,70 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": true,
+        "includes": [
+            "**",
+            "!dist",
+            "!.svelte-kit",
+            "!.claude",
+            "!test/app/dist",
+            "!test/app/src/routes.js",
+            "!examples/*/dist",
+            "!examples/dynamic-imports/src/routes.js",
+            "!**/*.svelte",
+            "!**/*.cjs"
+        ]
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "lf",
+        "lineWidth": 120
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "suspicious": {
+                "noExplicitAny": "off",
+                "noDoubleEquals": "off"
+            },
+            "style": {
+                "useTemplate": "off",
+                "noParameterAssign": "off",
+                "useNodejsImportProtocol": "off"
+            },
+            "complexity": {
+                "noForEach": "off"
+            }
+        }
+    },
+    "assist": {
+        "enabled": true,
+        "actions": {
+            "source": {
+                "organizeImports": "off"
+            }
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single",
+            "semicolons": "asNeeded",
+            "trailingCommas": "none",
+            "arrowParentheses": "always",
+            "bracketSpacing": false
+        }
+    },
+    "json": {
+        "formatter": {
+            "trailingCommas": "none"
+        }
+    }
+}

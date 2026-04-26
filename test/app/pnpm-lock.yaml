@@ -10,7 +10,7 @@ importers:
     dependencies:
       svelte-spa-router:
         specifier: file:../../
-        version: file:../..
+        version: file:../..(svelte@5.55.5)
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
@@ -337,6 +337,8 @@ packages:
 
   svelte-spa-router@file:../..:
     resolution: {directory: ../.., type: directory}
+    peerDependencies:
+      svelte: ^5.0.0
 
   svelte@5.55.5:
     resolution: {integrity: sha512-2uCs/LZ9us+AktdzYJM8OcxQ8qnPS1kpaO7syGT/MgO+6Qr1Ybl+TqPq+97u7PHqmmMlye5ZkoyXONy5mjjAbw==}
@@ -647,9 +649,10 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
-  svelte-spa-router@file:../..:
+  svelte-spa-router@file:../..(svelte@5.55.5):
     dependencies:
       regexparam: 2.0.2
+      svelte: 5.55.5
 
   svelte@5.55.5:
     dependencies:

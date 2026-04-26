@@ -1,4 +1,4 @@
-# Runs CI tests: Playwright and linting
+# Runs CI checks: type check, build, Playwright tests, and Biome lint/format
 name: Continuous Integration tests
 
 on:
@@ -29,6 +29,14 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
 
+      - name: Type-check package source
+        run: |
+          pnpm run check
+
+      - name: Build package
+        run: |
+          pnpm run build
+
       - name: Install test app dependencies
         run: |
           pnpm --dir test/app install --frozen-lockfile
@@ -45,9 +53,9 @@ jobs:
         run: |
           pnpm test
 
-      - name: Run linter
+      - name: Lint and format check (Biome)
         run: |
-          pnpm run lint
+          pnpm exec biome ci .
 
       - name: Upload Playwright report
         if: always()
