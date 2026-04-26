@@ -63,9 +63,6 @@ export interface WrappedComponent {
 
     /** Optional user data dictionary */
     userData?: object
-
-    /** Internal flag used by the router to identify wrapped routes */
-    _sveltesparouter: true
 }
 
 /** Type for the opts parameter of the link action */

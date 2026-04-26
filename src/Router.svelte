@@ -325,11 +325,11 @@ class RouteItem {
     _keys: string[] | false
 
     constructor(path: string | RegExp, component: Component<any, any> | WrappedComponent) {
-        if (
-            !component ||
-            (typeof component != 'function' &&
-                (typeof component != 'object' || (component as WrappedComponent)._sveltesparouter !== true))
-        ) {
+        // The _sveltesparouter marker is set by `wrap()` via Object.defineProperty and is intentionally absent from the public WrappedComponent type
+        const isWrapped = (c: unknown): c is WrappedComponent =>
+            typeof c == 'object' && c !== null && (c as {_sveltesparouter?: unknown})._sveltesparouter === true
+
+        if (!component || (typeof component != 'function' && !isWrapped(component))) {
             throw Error('Invalid component object')
         }
 
@@ -346,8 +346,8 @@ class RouteItem {
         this.path = path
 
         // Check if the component is wrapped and we have conditions
-        if (typeof component == 'object' && (component as WrappedComponent)._sveltesparouter === true) {
-            const wrapped = component as WrappedComponent
+        if (isWrapped(component)) {
+            const wrapped = component
             this.component = wrapped.component as AsyncRouteComponent
             this.conditions = wrapped.conditions || []
             this.userData = wrapped.userData

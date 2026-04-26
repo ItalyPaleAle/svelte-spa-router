@@ -78,15 +78,23 @@ export function wrap(args: WrapOptions): WrappedComponent {
         asyncComponent.loadingParams = args.loadingParams || undefined
     }
 
-    // Returns an object that contains all the functions to execute too
-    // The _sveltesparouter flag is to confirm the object was created by this router
-    return {
+    // Build the wrapped component
+    // _sveltesparouter is defined as a read-only, non-enumerable, non-configurable property so callers can't tamper with the marker the router uses to detect wrapped routes
+    const wrapped: WrappedComponent = {
         component: asyncComponent,
         userData: args.userData,
         conditions: conditions?.length ? conditions : undefined,
-        props: args.props && Object.keys(args.props).length ? args.props : {},
-        _sveltesparouter: true
+        props: args.props && Object.keys(args.props).length ? args.props : {}
     }
+
+    Object.defineProperty(wrapped, '_sveltesparouter', {
+        value: true,
+        writable: false,
+        enumerable: false,
+        configurable: false
+    })
+
+    return wrapped
 }
 
 export default wrap
