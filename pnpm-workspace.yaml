@@ -1,0 +1,4 @@
+packages:
+- test/app
+- examples/*
+- .

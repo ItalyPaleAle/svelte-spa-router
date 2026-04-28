@@ -28,7 +28,7 @@
         "lint": "biome check .",
         "lint:fix": "biome check --write .",
         "format": "biome format --write .",
-        "pretest": "pnpm run build && pnpm --dir test/app install && pnpm run build-test-app",
+        "pretest": "pnpm run build && pnpm run build-test-app",
         "test": "playwright test",
         "test:e2e": "playwright test",
         "prepack": "pnpm run build",
