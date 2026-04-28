@@ -21,7 +21,8 @@ export interface RouteDetail {
     querystring: string
 
     /** Params matched in the route */
-    params: Record<string, string> | null // TODO the real type is `Record<string, string | null> | RegExpExecArray | null` - adjust in next major or keep for convenience?
+    params: Record<string, string> | null
+    // TODO the real type is `Record<string, string | null> | RegExpExecArray | null` - adjust in next major or keep for convenience?
 
     /** Custom data passed by the user */
     userData?: object
