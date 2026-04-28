@@ -25,7 +25,7 @@
     "forwardPorts": [5050],
 
     // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": "npm install",
+    "postCreateCommand": "pnpm install",
 
     // Connect as a non-root user
     "remoteUser": "node"

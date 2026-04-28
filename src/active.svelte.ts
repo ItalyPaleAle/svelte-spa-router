@@ -47,7 +47,7 @@ $effect.root(() => {
         location = value.location + (value.querystring ? '?' + value.querystring : '')
 
         // Update all nodes
-        nodes.map(checkActive)
+        nodes.forEach(checkActive)
     })
 })
 
