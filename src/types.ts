@@ -92,7 +92,8 @@ export interface RouterState {
     readonly querystring: string | undefined
 
     /** The currently-matched params */
-    readonly params: Record<string, string> | null | undefined  // TODO the real type is `Record<string, string | null> | RegExpExecArray | null | undefined` - adjust in next major or keep for convenience?
+    readonly params: Record<string, string> | null | undefined
+    // TODO the real type is `Record<string, string | null> | RegExpExecArray | null | undefined` - adjust in next major or keep for convenience?
 }
 
 /** Options for the `active` action */

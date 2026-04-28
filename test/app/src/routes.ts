@@ -3,6 +3,9 @@
 // Import the "wrap" function
 import {wrap} from 'svelte-spa-router/wrap'
 
+// Types
+import type {RouteDefinition} from 'svelte-spa-router'
+
 // Components
 import Catalog from './routes/Catalog.svelte'
 import Home from './routes/Home.svelte'
@@ -15,8 +18,8 @@ import NotFound from './routes/NotFound.svelte'
 
 const wrappedLuckyRoute = wrap({
     // Add an artificial delay so we can experience the component loading
-    asyncComponent: () => import('./routes/Lucky.svelte')
-        .then((res) => {
+    asyncComponent: () =>
+        import('./routes/Lucky.svelte').then((res) => {
             return new Promise((resolve) => {
                 setTimeout(() => resolve(res), 2000)
             })
@@ -33,12 +36,11 @@ const wrappedLuckyRoute = wrap({
             // If there's a querystring parameter, override the random choice (tests need to be deterministic)
             if (detail.querystring == 'pass=1') {
                 return true
-            }
-            else if (detail.querystring == 'pass=0') {
+            } else if (detail.querystring == 'pass=0') {
                 return false
             }
             // Random
-            return (Math.random() > 0.5)
+            return Math.random() > 0.5
         },
         // This is an async condition
         async (detail) => {
@@ -64,7 +66,7 @@ const wrappedLuckyRoute = wrap({
 // This demonstrates how to pass routes as a POJO (Plain Old JavaScript Object) or a JS Map
 // In this code sample we're using both (controlling at runtime what's enabled, by checking for the 'routemap=1' querystring parameter) just because we are using this code sample for tests too
 // In your code, you'll likely want to choose one of the two options only
-let routes
+let routes: RouteDefinition
 const urlParams = new URLSearchParams(window.location.search)
 if (!urlParams.has('routemap')) {
     // The simples way to define routes is to use a dictionary.
@@ -112,10 +114,9 @@ if (!urlParams.has('routemap')) {
         }),
 
         // Catch-all, must be last
-        '*': NotFound,
+        '*': NotFound
     }
-}
-else {
+} else {
     routes = new Map()
 
     // Exact path
@@ -130,10 +131,13 @@ else {
     // Wildcard parameter
     routes.set('/wild', Wild)
     // Special route that has custom data that will be passed to the `routeLoaded` event
-    routes.set('/wild/data', wrap({
-        component: Wild,
-        userData: {hello: 'world'}
-    }))
+    routes.set(
+        '/wild/data',
+        wrap({
+            component: Wild,
+            userData: {hello: 'world'}
+        })
+    )
     routes.set('/wild/*', Wild)
 
     // This route has a pre-condition function that lets people in only 50% of times (and a second pre-condition that is always true)
@@ -141,10 +145,13 @@ else {
     routes.set('/lucky', wrappedLuckyRoute)
 
     // This route has a static prop that is passed to it
-    routes.set('/foo', wrap({
-        component: Foo,
-        props: {staticProp: 'this is static'}
-    }))
+    routes.set(
+        '/foo',
+        wrap({
+            component: Foo,
+            props: {staticProp: 'this is static'}
+        })
+    )
 
     // Regular expressions
     routes.set(/^\/regex\/(.*)?/i, Regex)
@@ -152,9 +159,12 @@ else {
 
     // This component contains a nested router
     // Thanks to being able to define routes via regular expressions, this allows us to use a single line rather than 2 ('/nested' and '/nested/*')
-    routes.set(/^\/nested(\/(.*))?/, wrap({
-        asyncComponent: () => import('./routes/Nested.svelte')
-    }))
+    routes.set(
+        /^\/nested(\/(.*))?/,
+        wrap({
+            asyncComponent: () => import('./routes/Nested.svelte')
+        })
+    )
 
     // Catch-all, must be last
     routes.set('*', NotFound)
