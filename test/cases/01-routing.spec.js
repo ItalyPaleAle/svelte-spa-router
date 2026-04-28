@@ -160,15 +160,15 @@ test.describe('<Router> component', () => {
         await page.goto('/')
         await expect(page.locator('#logbox')).toHaveText(
             'routeLoading - {"route":"/","location":"/","querystring":"","params":null}\n' +
-            'routeLoaded - {"route":"/","location":"/","querystring":"","params":null,"name":"Home"}'
+                'routeLoaded - {"route":"/","location":"/","querystring":"","params":null,"name":"Home"}'
         )
 
         await page.goto('/#/hello/svelte')
         await expect(page.locator('#logbox')).toHaveText(
             'routeLoading - {"route":"/","location":"/","querystring":"","params":null}\n' +
-            'routeLoaded - {"route":"/","location":"/","querystring":"","params":null,"name":"Home"}\n' +
-            'routeLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null}}\n' +
-            'routeLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null},"name":"Name"}'
+                'routeLoaded - {"route":"/","location":"/","querystring":"","params":null,"name":"Home"}\n' +
+                'routeLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null}}\n' +
+                'routeLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null},"name":"Name"}'
         )
     })
 
@@ -178,8 +178,8 @@ test.describe('<Router> component', () => {
         await page.locator('p#nameparams').click()
         await expect(page.locator('#logbox')).toHaveText(
             'routeLoading - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null}}\n' +
-            'routeLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null},"name":"Name"}\n' +
-            'routeEvent - {"action":"hi","params":{"first":"svelte","last":null}}'
+                'routeLoaded - {"route":"/hello/:first/:last?","location":"/hello/svelte","querystring":"","params":{"first":"svelte","last":null},"name":"Name"}\n' +
+                'routeEvent - {"action":"hi","params":{"first":"svelte","last":null}}'
         )
     })
 
@@ -199,7 +199,7 @@ test.describe('<Router> component', () => {
         await expect(page.locator('#loadingmessage')).toHaveText('Message is secret')
         await expect(page.locator('#lucky')).toBeVisible({timeout: 10_000})
         await expect(page.locator('#currentpath')).toHaveText('/lucky')
-        await expect(page.locator('#lucky')).toHaveText('You\'re in!')
+        await expect(page.locator('#lucky')).toHaveText("You're in!")
 
         // Condition always fails
         await page.goto('/#/lucky?pass=0')
@@ -216,19 +216,19 @@ test.describe('<Router> component', () => {
         await expect(page.locator('#lucky')).toBeVisible({timeout: 10_000})
         await expect(page.locator('#logbox')).toHaveText(
             'routeLoading - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":null}\n' +
-            'routeLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":{"message":"secret"},"name":"Loading"}\n' +
-            'routeLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":null,"name":"Lucky"}'
+                'routeLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":{"message":"secret"},"name":"Loading"}\n' +
+                'routeLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":null,"name":"Lucky"}'
         )
 
         // Condition always fails
         await page.goto('/#/lucky?pass=0')
         await expect(page.locator('#logbox')).toHaveText(
             'routeLoading - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":null}\n' +
-            'routeLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":{"message":"secret"},"name":"Loading"}\n' +
-            'routeLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":null,"name":"Lucky"}\n' +
-            'conditionsFailed - {"route":"/lucky","location":"/lucky","querystring":"pass=0","userData":{"foo":"bar"},"params":null}\n' +
-            'routeLoading - {"route":"/wild/*","location":"/wild/conditions-failed","querystring":"","params":{"wild":"conditions-failed"}}\n' +
-            'routeLoaded - {"route":"/wild/*","location":"/wild/conditions-failed","querystring":"","params":{"wild":"conditions-failed"},"name":"Wild"}'
+                'routeLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":{"message":"secret"},"name":"Loading"}\n' +
+                'routeLoaded - {"route":"/lucky","location":"/lucky","querystring":"pass=1","userData":{"foo":"bar"},"params":null,"name":"Lucky"}\n' +
+                'conditionsFailed - {"route":"/lucky","location":"/lucky","querystring":"pass=0","userData":{"foo":"bar"},"params":null}\n' +
+                'routeLoading - {"route":"/wild/*","location":"/wild/conditions-failed","querystring":"","params":{"wild":"conditions-failed"}}\n' +
+                'routeLoaded - {"route":"/wild/*","location":"/wild/conditions-failed","querystring":"","params":{"wild":"conditions-failed"},"name":"Wild"}'
         )
     })
 
@@ -249,7 +249,7 @@ test.describe('<Router> component', () => {
         await page.goto('/#/catalog/3')
         await expect(page.locator('#logbox')).toHaveText(
             'routeLoading - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","params":{"id":"3"}}\n' +
-            'routeLoaded - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","params":{"id":"3"},"name":"Catalog"}'
+                'routeLoaded - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","params":{"id":"3"},"name":"Catalog"}'
         )
         await expect(page.locator('#previous')).toHaveAttribute('href', /#\/catalog\/2$/)
         await expect(page.locator('#next')).toHaveAttribute('href', /#\/catalog\/4$/)
@@ -257,9 +257,9 @@ test.describe('<Router> component', () => {
         await page.locator('#next').click()
         await expect(page.locator('#logbox')).toHaveText(
             'routeLoading - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","params":{"id":"3"}}\n' +
-            'routeLoaded - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","params":{"id":"3"},"name":"Catalog"}\n' +
-            'routeLoading - {"route":"/catalog/:id?","location":"/catalog/4","querystring":"","params":{"id":"4"}}\n' +
-            'routeLoaded - {"route":"/catalog/:id?","location":"/catalog/4","querystring":"","params":{"id":"4"},"name":"Catalog"}'
+                'routeLoaded - {"route":"/catalog/:id?","location":"/catalog/3","querystring":"","params":{"id":"3"},"name":"Catalog"}\n' +
+                'routeLoading - {"route":"/catalog/:id?","location":"/catalog/4","querystring":"","params":{"id":"4"}}\n' +
+                'routeLoaded - {"route":"/catalog/:id?","location":"/catalog/4","querystring":"","params":{"id":"4"},"name":"Catalog"}'
         )
         await expect(page.locator('#previous')).toHaveAttribute('href', /#\/catalog\/3$/)
         await expect(page.locator('#next')).toHaveAttribute('href', /#\/catalog\/5$/)

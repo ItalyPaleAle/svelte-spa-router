@@ -37,17 +37,21 @@ Hash-based routing is simpler, works well even without a server, and it's genera
 
 Check out the code in the [examples](/examples) folder for some usage examples.
 
-To run the samples, clone the repository, install the dependencies, then run with `npm run dev`:
+To run the samples, clone the repository, build the package, then start a sample:
 
 ````sh
+# From the repo root: install deps and build the package
+pnpm install
+pnpm run build
+
 # Navigate to a sample
 cd examples/…
 # For example
 cd examples/basic-routing
 
 # Start a development server
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ````
 
 The sample will be running at http://localhost:5173

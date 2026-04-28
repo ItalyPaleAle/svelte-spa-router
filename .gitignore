@@ -1,3 +1,8 @@
+# Built package output (emitted by `pnpm run build`)
+/dist
+# Build cache used internally by @sveltejs/package
+/.svelte-kit
+
 # Test app
 test/app/dist
 test/app/node_modules
