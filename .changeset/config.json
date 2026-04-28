@@ -7,5 +7,9 @@
     "access": "public",
     "baseBranch": "main",
     "updateInternalDependencies": "patch",
-    "ignore": []
+    "ignore": [
+      "svelte-spa-router-example-dynamic-imports",
+      "svelte-spa-router-example-basic-routing",
+      "svelte-spa-router-test-app"
+    ]
 }
