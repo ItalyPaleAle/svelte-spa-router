@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.1.0
+
+### Minor Changes
+
+- addf1cc: Migrate codebase to TypeScript
+
+  The codebase has been migrated to modern TypeScript, with better testing infrastructure powered by Playwright.
+
+  The external API surface is unchanged, but exported type declarations should now be more accurate.
+
 ## 5.0.1
 
 ### Patch Changes
