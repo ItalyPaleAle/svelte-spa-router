@@ -65,7 +65,7 @@ class RouterStateImpl {
     _location: string = $derived(this._loc.location)
     /** The current querystring */
     _querystring: string | undefined = $derived(this._loc.querystring)
-    _params: Record<string, string> | null | undefined = $state.raw(undefined)
+    _params: Record<string, string> | RegExpExecArray | null | undefined = $state.raw(undefined)
 
     /** The current full location (incl. querystring) */
     get loc(): Location {
@@ -79,7 +79,7 @@ class RouterStateImpl {
     get querystring(): string | undefined {
         return this._querystring
     }
-    get params(): Record<string, string> | null | undefined {
+    get params(): Record<string, string> | RegExpExecArray | null | undefined {
         return this._params
     }
 
@@ -502,7 +502,7 @@ $effect(() => {
                 location: newLoc.location,
                 querystring: newLoc.querystring || '',
                 userData: routesList[i].userData,
-                params: matchParams
+                params: matchParams as Record<string, string> | null
             }
 
             if (!(await routesList[i].checkConditions(detail))) {
@@ -552,7 +552,7 @@ $effect(() => {
                 componentObj = obj
             }
 
-            componentParams = match
+            componentParams = matchParams
             routeProps = routesList[i].props
 
             const comp = component
@@ -561,7 +561,7 @@ $effect(() => {
                     ...detail,
                     component: comp,
                     name: comp.name,
-                    params: matchParams
+                    params: matchParams as Record<string, string> | null
                 })
             }
 
@@ -589,12 +589,9 @@ $effect(() => {
 
 function matchToParams(
     match: Record<string, string | null> | RegExpExecArray
-): Record<string, string> | null {
-    if (Array.isArray(match) || !Object.keys(match).length) {
-        return null
-    }
+): Record<string, string> | RegExpExecArray | null {
     // Preserve all keys, including null values for unmatched optional params
-    return match as unknown as Record<string, string>
+    return match && typeof match == 'object' && Object.keys(match).length ? match as RegExpExecArray | Record<string, string> : null
 }
 </script>
 

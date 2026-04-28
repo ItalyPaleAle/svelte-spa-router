@@ -37,6 +37,7 @@ test.describe('<Router> component with routes in a Map', () => {
         await expect(page.locator('#currentpath')).toHaveText('/REGEX/1')
         await expect(page.locator('#currentqs')).toHaveText('')
         await expect(page.locator('#regexmatch')).toHaveText('["/REGEX/1","1"]')
+        await expect(page.locator('#currentparams')).toHaveText('["/REGEX/1","1"]')
 
         // /^\/(pattern|match)(\/[a-z0-9]+)?/i
         await page.goto('/?routemap=1#/Match/hello/world')
