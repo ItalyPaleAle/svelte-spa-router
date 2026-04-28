@@ -8,8 +8,8 @@
     "baseBranch": "main",
     "updateInternalDependencies": "patch",
     "ignore": [
-      "svelte-spa-router-example-dynamic-imports",
-      "svelte-spa-router-example-basic-routing",
-      "svelte-spa-router-test-app"
+        "svelte-spa-router-example-dynamic-imports",
+        "svelte-spa-router-example-basic-routing",
+        "svelte-spa-router-test-app"
     ]
 }
