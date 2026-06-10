@@ -84,9 +84,14 @@ class RouterStateImpl {
     }
 
     constructor() {
-        window.addEventListener('hashchange', () => {
-            this._loc = getLocation()
-        })
+        if(typeof window !== 'undefined') {
+            window.addEventListener('hashchange', () => {
+                this._loc = getLocation()
+            })
+        } else {
+            // eslint-disable-next-line no-console
+            console.warn("[svelte-spa-router] window 'window' is not defined, skipping initiation")
+        }
     }
 }
 
@@ -95,8 +100,9 @@ export const router = new RouterStateImpl()
 
 /** Returns the current location from the hash. */
 function getLocation(): Location {
-    const hashPosition = window.location.href.indexOf('#/')
-    let location = hashPosition > -1 ? window.location.href.substr(hashPosition + 1) : '/'
+    const currentHref = typeof window !== 'undefined' ?  window.location.href : ''
+    const hashPosition = currentHref.indexOf('#/')
+    let location = hashPosition > -1 ? currentHref.substr(hashPosition + 1) : '/'
 
     // Check if there's a querystring
     const qsPosition = location.indexOf('?')
