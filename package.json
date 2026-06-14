@@ -64,7 +64,7 @@
     "devDependencies": {
         "@biomejs/biome": "^2.4.12",
         "@changesets/cli": "^2.29.8",
-        "@playwright/test": "^1.59.1",
+        "@playwright/test": "^1.60.0",
         "@sveltejs/package": "^2.5.7",
         "@tsconfig/svelte": "^5.0.8",
         "svelte": "^5.0.0",
