@@ -66,6 +66,7 @@
         "@changesets/cli": "^2.29.8",
         "@playwright/test": "^1.60.0",
         "@sveltejs/package": "^2.5.7",
+        "@sveltejs/vite-plugin-svelte": "^7.0.0",
         "@tsconfig/svelte": "^5.0.8",
         "svelte": "^5.0.0",
         "svelte-check": "^4.4.6",
