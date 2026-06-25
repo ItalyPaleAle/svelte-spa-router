@@ -24,6 +24,9 @@ importers:
       '@sveltejs/package':
         specifier: ^2.5.7
         version: 2.5.7(svelte@5.55.5)(typescript@5.9.3)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^7.0.0
+        version: 7.0.0(svelte@5.55.5)(vite@8.0.10)
       '@tsconfig/svelte':
         specifier: ^5.0.8
         version: 5.0.8
