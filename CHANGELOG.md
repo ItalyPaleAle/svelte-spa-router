@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.1.1
+
+### Patch Changes
+
+- 9887d02: fix: transpile TypeScript to JavaScript in packaged Svelte components
+
+  The published `dist/Router.svelte` shipped its `<script>` blocks as raw TypeScript because no preprocessor was configured for `svelte-package`. A `svelte.config.js` using `vitePreprocess({script: true})` now transpiles the `<script>` blocks so packaged components contain plain JavaScript.
+
+- 5c5e1f0: fix: rendering in SSR context
+
+  Makes svelte-spa-router work with Astro and other frameworks doing SSR.
+
 ## 5.1.0
 
 ### Minor Changes
