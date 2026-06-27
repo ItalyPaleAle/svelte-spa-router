@@ -30,7 +30,7 @@ Hash-based routing is simpler, works well even without a server, and it's genera
 
 ["So you want to pick a router?"](https://www.youtube.com/watch?v=EL1qM0cv0eA) talk by [@ItalyPaleAle](https://github.com/ItalyPaleAle) at Svelte Summit 2020. It includes an explanation of the two kinds of routers and a demo of svelte-spa-router.
 
-[![Click to play video: 'So you want to pick a router?'](/img/router-video-cover.jpg)](https://www.youtube.com/watch?v=EL1qM0cv0eA)
+[![Click to play video: 'So you want to pick a router?'](/img/router-video-cover.webp)](https://www.youtube.com/watch?v=EL1qM0cv0eA)
 
 ## Supported browsers
 
