@@ -1,7 +1,22 @@
 ---
 title: "Getting started"
-weight: 22
+weight: 21
 ---
+
+You can use svelte-spa-router in any project built with Svelte 5.
+
+## Install from NPM
+
+To add svelte-spa-router to your project:
+
+```sh
+# Using npm
+npm install svelte-spa-router
+# Using yarn
+yarn install svelte-spa-router
+# Using pnpm
+pnpm install svelte-spa-router
+```
 
 ## Define your routes
 
@@ -58,6 +73,29 @@ Then, display the router anywhere you'd like by placing the component in the mar
 The `routes` prop is the dictionary defined above.
 
 That's it! You already have all that you need for a fully-functional routing experience.
+
+## Sample code
+
+Check out the code in the [examples](https://github.com/ItalyPaleAle/svelte-spa-router/tree/main/examples) folder for some usage examples.
+
+To run the samples, clone the repository, build the package, then start a sample:
+
+```sh
+# From the repo root: install deps and build the package
+pnpm install
+pnpm run build
+
+# Navigate to a sample
+cd examples/…
+# For example
+cd examples/basic-routing
+
+# Start a development server
+pnpm install
+pnpm run dev
+```
+
+The sample will be running at http://localhost:5173
 
 ## Next steps
 

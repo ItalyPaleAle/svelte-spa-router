@@ -32,9 +32,19 @@ Hash-based routing is simpler, works well even without a server, and it's genera
 
 [![Click to play video: 'So you want to pick a router?'](https://img.youtube.com/vi/EL1qM0cv0eA/0.jpg)](https://www.youtube.com/watch?v=EL1qM0cv0eA)
 
+## Supported browsers
+
+svelte-spa-router aims to support modern browsers, including recent versions of:
+
+- Chrome
+- Edge ("traditional" and Chromium-based)
+- Firefox
+- Safari
+
+Support for Internet Explorer is not a goal for this project. Some users have reportedly been able to use svelte-spa-router with IE11 after transpilation (e.g. with Babel), but this is not guaranteed.
+
 ## Start here
 
-- [Installation](/docs/installation)
 - [Getting started](/docs/getting-started)
 - [Navigation](/docs/navigation)
 - [Advanced Usage](/advanced)

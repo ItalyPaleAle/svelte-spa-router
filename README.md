@@ -73,7 +73,6 @@ All documentation lives on the [website](https://svelte-spa-router.italypaleale.
 
 Quick links:
 
-- [Installation](https://svelte-spa-router.italypaleale.me/docs/installation/)
 - [Getting started](https://svelte-spa-router.italypaleale.me/docs/getting-started/)
 - [Navigation](https://svelte-spa-router.italypaleale.me/docs/navigation/)
 - [Advanced usage](https://svelte-spa-router.italypaleale.me/advanced/)
