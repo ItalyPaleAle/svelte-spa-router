@@ -10,6 +10,7 @@
         "includes": [
             "**",
             "!dist",
+            "!docs",
             "!.svelte-kit",
             "!.claude",
             "!test/app/dist",
