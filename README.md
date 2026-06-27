@@ -21,7 +21,7 @@ This package is released under MIT license.
 ["So you want to pick a router?"]((https://www.youtube.com/watch?v=EL1qM0cv0eA)) talk by @ItalyPaleAle at Svelte Summit 2020. Includes an explanation of the two kinds of routers and a demo of svelte-spa-router.  
 _(Click on the cover image to play the video on YouTube)_
 
-[![Click to play video: 'So you want to pick a router?'](https://img.youtube.com/vi/EL1qM0cv0eA/0.jpg)](https://www.youtube.com/watch?v=EL1qM0cv0eA)
+[![Click to play video: 'So you want to pick a router?'](/docs/static/img/router-video-cover.jpg)](https://www.youtube.com/watch?v=EL1qM0cv0eA)
 
 ## Hash-based routing
 
