@@ -1,0 +1,13 @@
+{
+  "name": "svelte-spa-router-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "hugo server",
+    "build": "hugo --gc --minify --cleanDestinationDir"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "24.12.2"
+  }
+}

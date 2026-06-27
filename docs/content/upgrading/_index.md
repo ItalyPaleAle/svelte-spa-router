@@ -1,15 +1,9 @@
-<table>
-  <tr>
-    <td>
-      <a href="https://www.amazon.com/dp/B08D6T6BKS/"><img src="https://static.packt-cdn.com/products/9781839213625/cover/smaller" width="120" /></a>
-    </td>
-    <td>
-      <h3>Svelte 3 Up and Running</h3>
-      <p>Want to learn Svelte 3 and how to build a Single-Page App (SPA) with it (and with this router)? Check out my book <a href="https://www.amazon.com/dp/B08D6T6BKS/">Svelte 3 Up and Running</a> on Amazon.</p>
-    </td>
-</table>
+---
+title: "Upgrading"
+weight: 40
+---
 
-# Upgrading instructions
+This page documents the breaking changes between major versions of svelte-spa-router and how to migrate your application.
 
 ## Upgrading to 5.x
 
@@ -105,15 +99,15 @@ If your application was decoding URL parameters before, remove that invocation w
 
 The `wrap` method exported by `svelte-spa-router` has been deprecated. Even though it remains available and functional (albeit showing a warning in the console), it will be removed in a later version of the router.
 
-Please use the new `wrap` method exported by `svelte-spa-router/wrap` instead. This method's signature accepts a single argument which is an object of properties. It adds support for many other features too, such as dynamically-imported routes.
+Please use the new `wrap` method exported by `svelte-spa-router/wrap` instead. This method's signature accepts a single argument which is an object of properties. It adds support for many other features too, such as dynamically-imported routes.
 
-To learn more about the new `wrap` method and its features, check out the documentation on [Route wrapping](/Advanced%20Usage.md#route-wrapping).
+To learn more about the new `wrap` method and its features, check out the documentation on [Route wrapping](/advanced/route-wrapping).
 
 To upgrade, maintaining the same functionality:
 
 ❌ Version 2.x:
 
-````js
+```js
 // Old import path
 import {wrap} from 'svelte-spa-router'
 
@@ -131,11 +125,11 @@ const routes = {
         // ...more pre-condition functions
     )
 }
-````
+```
 
 ✅ Version 3.x:
 
-````js
+```js
 // New import path
 import {wrap} from 'svelte-spa-router/wrap'
 
@@ -156,7 +150,7 @@ const routes = {
         // See the documentation for the other possible properties for wrap
     })
 }
-````
+```
 
 ## Upgrading to 2.x
 
@@ -168,39 +162,39 @@ When using the `use:active` action, the syntax for the options has changed as it
 
 ❌ Version 1.x:
 
-````svelte
+```svelte
 <a href="/hello/user" use:link use:active={'/hello/*', 'active'}>Say hi!</a>
 <a href="/hello/user" use:link use:active={'/hello/*'}>Say hi with a default className!</a>
 <a href="/hello/user" use:link use:active>Say hi with all default options!</a>
-````
+```
 
 ✅ Version 2.x:
 
-````svelte
+```svelte
 <a href="/hello/user" use:link use:active={{path: '/hello/*', className: 'active'}}>Say hi!</a>
 <a href="/hello/user" use:link use:active={'/hello/*'}>Say hi with a default className!</a>
 <a href="/hello/user" use:link use:active>Say hi with all default options!</a>
-````
+```
 
 ### Changes to route pre-conditions and `routeLoaded` and `conditionsFailed` events
 
 We are now defining a "route detail" object that is used in all the following scenarios: route pre-conditions, `routeLoaded` event, and `conditionsFailed` event.
 
-The "route detail" object contains the following properties: 
+The "route detail" object contains the following properties:
 
 - `detail.component`: the Svelte component that is being evaluated (this is a JavaScript function)
 - `detail.name`: name of the Svelte component (a string)
 - `detail.location`: the current path (just like the `$location` readable store)
 - `detail.querystring`: the current "querystring" parameters from the page's hash (just like the `$querystring` readable store)
-- `detail.userData`: custom user data passed with the [`wrap` function](/Advanced%20Usage.md#route-pre-conditions)
+- `detail.userData`: custom user data passed with the [`wrap` function](/advanced/route-wrapping#route-pre-conditions)
 
-Note that unlike the similar object in version 1.x, `detail.component` is now the actual Svelte component, and the name is in `detail.name` instead.
+Note that unlike the similar object in version 1.x, `detail.component` is now the actual Svelte component, and the name is in `detail.name` instead.
 
 This object is passed as the only argument to route pre-conditions, and it's also passed in `event.detail` in the `routeLoaded` and `conditionsFailed` events.
 
 ❌ Version 1.x:
 
-````js
+```js
 // Route pre-conditions
 const routes = {
     '/hello': wrap(
@@ -221,11 +215,11 @@ function conditionsFailed(event) {
 function routeLoaded(event) {
     console.error(event.detail.component)
 }
-````
+```
 
 ✅ Version 2.x:
 
-````js
+```js
 // Route pre-conditions
 const routes = {
     '/hello': wrap(
@@ -258,4 +252,4 @@ function routeLoaded(event) {
     // Component name is now on event.detail.name
     console.error(event.detail.name)
 }
-````
+```

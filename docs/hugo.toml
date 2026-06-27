@@ -1,0 +1,41 @@
+baseURL = "https://svelte-spa-router.italypaleale.me/"
+locale = "en-us"
+title = "svelte-spa-router"
+disableKinds = ["rss"]
+
+[module]
+  [[module.imports]]
+    path = "github.com/italypaleale/hugo-assets"
+
+# Required for render hooks + unsafe HTML in markdown
+[markup]
+  [markup.highlight]
+    # Use CSS classes styled by main.css Chroma rules
+    noClasses = false
+    # Fallback only; noClasses = false overrides this
+    style = "github"
+    lineNos = false
+    lineNumbersInTable = false
+    guessSyntax = true
+    tabWidth = 2
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      # Allow raw HTML in markdown content
+      unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+    ordered = false
+
+[params]
+  description        = "A router for Single Page Applications built with Svelte 5"
+  github_url         = "https://github.com/italypaleale/svelte-spa-router"
+  github_repo        = "https://github.com/italypaleale/svelte-spa-router"
+  github_branch      = "main"
+  PlausibleAnalytics = true
+
+  [params.theme]
+    scheme = "coral"
+
+# Taxonomy pages aren't needed for a docs site
+[taxonomies]
