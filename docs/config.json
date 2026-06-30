@@ -1,0 +1,15 @@
+{
+  "baseURL": "https://svelte-spa-router.italypaleale.me/",
+  "title": "svelte-spa-router",
+  "locale": "en-us",
+  "description": "A router for Single Page Applications built with Svelte 5",
+  "plausibleAnalytics": true,
+  "github": {
+    "url": "https://github.com/italypaleale/svelte-spa-router",
+    "repo": "https://github.com/italypaleale/svelte-spa-router",
+    "branch": "main"
+  },
+  "theme": {
+    "scheme": "coral"
+  }
+}
