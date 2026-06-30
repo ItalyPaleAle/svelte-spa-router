@@ -1,6 +1,10 @@
 /.pnpm-store
 /.vercel
 /.cache
+/vercel.json
+/.vercel
+/.env*.local
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/hugo,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=hugo,node
