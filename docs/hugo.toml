@@ -3,8 +3,12 @@ baseURL = "https://svelte-spa-router.italypaleale.me/"
 locale = "en-us"
 title = "svelte-spa-router"
 disableKinds = ["rss"]
+enableRobotsTXT = true
 
 [module]
+  [module.hugoVersion]
+    extended = true
+    min = '0.164.0'
   [[module.imports]]
     path = "github.com/italypaleale/hugo-assets"
 
@@ -31,6 +35,9 @@ disableKinds = ["rss"]
   github_repo = "https://github.com/italypaleale/svelte-spa-router"
   github_branch = "main"
   PlausibleAnalytics = true
+
+  [params.robots]
+    llmsTXT = true
 
   [params.theme]
     scheme = "coral"
