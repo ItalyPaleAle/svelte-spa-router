@@ -7,7 +7,8 @@
   "github": {
     "url": "https://github.com/italypaleale/svelte-spa-router",
     "repo": "https://github.com/italypaleale/svelte-spa-router",
-    "branch": "main"
+    "branch": "main",
+    "path": "docs"
   },
   "theme": {
     "scheme": "coral"
