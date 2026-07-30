@@ -34,6 +34,7 @@ enableRobotsTXT = true
   github_url = "https://github.com/italypaleale/svelte-spa-router"
   github_repo = "https://github.com/italypaleale/svelte-spa-router"
   github_branch = "main"
+  github_path = "docs"
   PlausibleAnalytics = true
 
   [params.robots]
